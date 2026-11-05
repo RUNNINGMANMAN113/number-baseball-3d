@@ -49,6 +49,36 @@
 .guess-pitcher{padding:8px 12px;background:#dceff5;border-radius:8px;margin:9px 2px 6px;color:#276580;font-weight:900;font-size:12px}
 .guess-note{padding:9px 14px 12px;color:#63869a;font-size:11px;border-top:1px solid #dbeaf0}
 @media(max-width:520px){.guess-row{grid-template-columns:minmax(54px,.7fr) minmax(90px,1.2fr) minmax(102px,1.1fr);gap:4px;padding:9px 6px}.guess-digits{font-size:20px}.guess-chip{font-size:12px;padding:4px 6px;min-width:28px}}
+
+/* v17 Position editor: roles shown alongside player names */
+.setup-team .roster{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.setup-pos-row{display:grid;grid-template-columns:minmax(0,1fr) 73px;gap:5px;align-items:center;min-width:0}
+.setup-pos-row input{min-width:0!important;width:100%}
+.setup-pos-row select{width:100%;font-size:12px;font-weight:900;padding:9px 3px;color:#f5fcff;background:#245d78;border:1px solid #6da5bf;border-radius:8px;cursor:pointer}
+.setup-pos-row label{grid-column:1/-1;margin:0!important}
+.setup-pos-row select:focus{outline:2px solid #ffe18b}
+.setup-bench{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.setup-bench small{font-size:11px;color:#a4d3e6}
+.setup-inline-note{font-size:11px;color:#b6d5e5;line-height:1.6;margin:4px 0 10px}
+#positionWarning{display:block;font-size:13px;font-weight:800;color:#ffe7a3;min-height:18px;margin:8px 0}
+.kbo-player .kbo-pos{display:block;font-weight:900;color:#1686aa;font-size:11px;margin-bottom:4px}
+.kbo-player.used{opacity:1!important;background:#d9f5dd!important;border-color:#4ba978!important;cursor:pointer!important}
+.kbo-player.used .kbo-pos{color:#257d54}
+.pos-chip{display:inline-block;background:#d5ecf9;border-radius:5px;padding:2px 5px;color:#195c82;font-weight:900;font-size:11px;margin-left:5px}
+@media(max-width:530px){.setup-team .roster{grid-template-columns:1fr}.setup-pos-row{grid-template-columns:minmax(0,1fr) 86px}}
+
+/* v18: reorder the starting batting order without changing positions */
+.setup-team .batting-setup-roster{grid-template-columns:minmax(0,1fr)}
+.setup-batting-row{grid-template-columns:25px 29px minmax(0,1fr) 73px 30px;gap:4px;position:relative;border-radius:8px;transition:background .12s}
+.setup-batting-row .bat-order{font-size:12px;font-weight:900;color:#24637d;text-align:center}
+.setup-batting-row .bat-drag{cursor:grab;touch-action:none;user-select:none;padding:7px 3px;background:#d4ecf7;color:#285d76;border:1px solid #99c7db;border-radius:7px;text-align:center;font-size:18px;line-height:1}
+.setup-batting-row .bat-drag:active{cursor:grabbing}
+.setup-batting-row .bat-move-actions{display:flex;flex-direction:column;gap:2px}
+.setup-batting-row .bat-move-actions button{padding:1px 3px;min-height:16px;line-height:1;font-size:11px;color:#286078;background:#d4ecf7;border:1px solid #9dc9da;border-radius:4px}
+.setup-batting-row.drag-over{background:#bde9ff;outline:2px dashed #1b87b4;outline-offset:2px}
+.setup-batting-row.dragging{opacity:.48}
+.setup-batting-row .bat-drag:focus-visible{outline:3px solid #e7a838}
+@media(max-width:530px){.setup-batting-row{grid-template-columns:25px 29px minmax(0,1fr) 73px 30px}}
 </style><style id="casual-theme">
 :root{color:#203b51;background:#eaf8ff}
 body{background:linear-gradient(145deg,#bfeeff 0%,#effbff 40%,#d9f5e4 100%);color:#24445a}
@@ -209,7 +239,42 @@ button:hover{filter:brightness(1.06)}
 .highlight-item small{color:#698999;font-size:11px;display:block;margin-bottom:3px}
 .highlight-hero{background:#dbf4e1;padding:10px;border-radius:9px;margin-bottom:9px;color:#225f3b;font-weight:850}
 @media(min-width:900px){.keypad-grid button{min-height:48px}}
-</style></head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다.</p><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout"><section class="view"><div class="stage" id="stage"><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section>
+
+/* v15 · 2026 KBO player chooser */
+.kbo-open{background:#e1f6ff!important;color:#075c82!important;border:1px solid #a3d8ed!important;font-weight:800!important;padding:8px 12px!important;margin:4px 0 10px!important;width:100%;border-radius:9px!important}
+.kbo-picker-overlay{position:fixed;inset:0;background:#041422e8;z-index:300;display:grid;place-items:center;padding:16px;overflow:auto}
+.kbo-picker-overlay.hidden{display:none}
+.kbo-picker-panel{background:#f2faff;color:#16354c;width:min(920px,100%);max-height:94vh;overflow:auto;border-radius:19px;padding:19px 22px;border:2px solid #7cc3e8;box-shadow:0 18px 80px #0009}
+.kbo-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.kbo-picker-head h2{margin:0 0 4px;color:#174560;font-size:22px}.kbo-picker-head p{color:#567286;font-size:12px;margin:0 0 12px;line-height:1.5}
+.kbo-dismiss{width:40px;height:40px;border-radius:8px;background:#dfedf4!important;color:#204c65!important;font-size:22px!important}
+.kbo-club-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:12px 0}
+.kbo-club{background:#fff!important;border:2px solid #d0e3f0!important;border-radius:13px;display:grid;justify-items:center;gap:6px;min-height:117px;padding:10px 4px!important;color:#173a54!important;cursor:pointer}
+.kbo-club.selected{border-color:#1684b0!important;background:#e8faff!important;box-shadow:0 0 0 2px #c0e8f7}
+.kbo-club-badge{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:950;font-size:17px;letter-spacing:-.6px;color:white;border:3px solid #fff;box-shadow:0 1px 9px #07334f55;line-height:1.2}
+.kbo-club-name{font-size:12px;font-weight:850;text-align:center}
+.kbo-picker-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:13px 0}
+.kbo-picker-controls select,.kbo-picker-controls input{color:#13354d!important;background:white!important;border:1px solid #b9d3e3!important;padding:9px;border-radius:8px;font-size:13px}
+.kbo-picker-controls select{min-width:180px}.kbo-picker-controls input{flex:1;min-width:130px}
+.kbo-filter{display:flex;gap:7px}.kbo-filter button{background:#e4f0f7!important;color:#34576a!important;border-radius:9px;padding:8px 15px!important}
+.kbo-filter button.active{background:#176991!important;color:#fff!important}
+.kbo-player-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:3px 0 8px}
+.kbo-player{background:white!important;border:1px solid #bfd9e8!important;color:#16384e!important;border-radius:9px;padding:10px 5px!important;text-align:center;min-height:45px}
+.kbo-player:hover{background:#dcf3fe!important;border-color:#1684b0!important}.kbo-player.used{opacity:.42;cursor:not-allowed}.kbo-message{min-height:25px;color:#1e6b4a;font-size:13px;font-weight:750;margin:8px 0}.kbo-source{font-size:11px;color:#637b8b;border-top:1px solid #d1e2ec;padding-top:11px;line-height:1.6;margin-top:8px}
+.kbo-picker-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}.kbo-picker-actions button{background:#e5eef4!important;color:#244e65!important;border-radius:9px!important}
+.kbo-no-results{padding:19px;color:#708494;text-align:center;grid-column:1/-1}
+@media(max-width:640px){.kbo-club-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.kbo-player-list{grid-template-columns:repeat(2,minmax(0,1fr))}.kbo-picker-panel{padding:13px}.kbo-club{min-height:100px}.kbo-picker-head h2{font-size:18px}}
+</style></head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다.</p><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div id="positionWarning" role="status" aria-live="polite"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><div id="kboPicker" class="kbo-picker-overlay hidden" role="dialog" aria-modal="true" aria-label="2026 KBO 선수 선택기">
+ <div class="kbo-picker-panel">
+  <div class="kbo-picker-head"><div><h2>⚾ 2026 KBO 선수 선택하기</h2><p>구단 → 투수·타자(기본 포지션 표시) → 선수 클릭. 클릭한 순서대로 라인업에 입력됩니다. 현재 로스터는 2026시즌 정적 자료입니다.</p></div><button id="kboClose" class="kbo-dismiss" type="button" aria-label="닫기">×</button></div>
+  <div id="kboClubGrid" class="kbo-club-grid"></div>
+  <div id="kboSelectedClub" class="kbo-message" aria-live="polite">구단을 선택하세요.</div>
+  <div class="kbo-picker-controls"><div class="kbo-filter"><button type="button" class="active" data-kbo-role="batters">타자</button><button type="button" data-kbo-role="pitchers">투수</button></div><label for="kboSlot">입력 위치</label><select id="kboSlot"></select><input id="kboSearch" type="search" placeholder="선수 이름 검색" aria-label="선수 검색"/></div>
+  <div id="kboPlayerList" class="kbo-player-list"></div>
+  <div id="kboPickMessage" class="kbo-message" aria-live="polite"></div>
+  <div class="kbo-source" id="kboSource">기준일이 다른 출처가 포함되어 있습니다. 참고 선수 목록은 특정 날짜의 1군 엔트리 전체를 보증하지 않습니다. 구단 배지는 공식 로고의 복제가 아닌 자체 제작 식별 배지입니다.</div>
+  <div class="kbo-picker-actions"><button type="button" id="kboClearChosen">이 팀의 자동 선택 기록 초기화</button><button type="button" id="kboDone">선택 완료</button></div>
+ </div>
+</div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout"><section class="view"><div class="stage" id="stage"><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section>
 <section class="panel roster-panel" aria-label="선수 현황 및 라인업">
   <div class="roster-head">
     <h2>📋 선수 현황 / 라인업</h2>
@@ -243,7 +308,7 @@ const teamNames=['PLAYER','AI ALLSTARS'];
 let playerNames=[[],[]],pitcherNames=[[],[]],managerAnimation=null,pendingManagerVisit=false;
 function safeName(x){return String(x).replace(/[<>&"'`]/g,'').trim().slice(0,22)}
 function buildSetup(){
- $('setupTeams').innerHTML=[0,1].map(t=>`<section class="setup-team"><h3>${t?'AI 팀 (홈)':'내 팀 (원정)'}</h3><label>팀 이름</label><input id="teamName${t}" maxlength="18" value="${teamNames[t]}"><label>선발 타자 9명</label><div class="roster">${Array.from({length:9},(_,i)=>`<input id="batName${t}_${i}" maxlength="20" value="${t?'AI':'나'} ${i+1}번 타자">`).join('')}</div><label>선발투수 및 불펜 10명</label><div class="roster">${Array.from({length:11},(_,i)=>`<input id="pitName${t}_${i}" maxlength="20" value="${t?'AI':'나'} ${i===0?'선발투수':'구원투수 '+i}">`).join('')}</div></section>`).join('');
+ $('setupTeams').innerHTML=[0,1].map(t=>`<section class="setup-team"><h3>${t?'AI 팀 (홈)':'내 팀 (원정)'}</h3><button type="button" class="kbo-open" data-kbo-team="${t}">⚾ 선수 선택하기 · KBO 2026</button><label>팀 이름</label><input id="teamName${t}" maxlength="18" value="${teamNames[t]}"><label>선발 타자 9명 · 이름과 수비 포지션</label><div class="setup-inline-note">포지션을 바꾸면 기존 해당 포지션 선수와 자동 교환됩니다. 9개 포지션은 중복 불가.</div><div class="roster batting-setup-roster">${Array.from({length:9},(_,i)=>`<div class="setup-pos-row setup-batting-row" data-team="${t}" data-index="${i}"><span class="bat-order">${i+1}</span><button type="button" class="bat-drag" draggable="true" title="드래그해서 타순 변경" aria-label="${i+1}번 타자를 다른 타순으로 끌어 이동">⠿</button><input aria-label="${i+1}번 타자 이름" id="batName${t}_${i}" maxlength="20" value="${t?'AI':'나'} ${i+1}번 타자">${setupSelectPosition(t,'batters',i)}<span class="bat-move-actions"><button type="button" data-bat-move="-1" data-team="${t}" data-index="${i}" title="한 타순 위로" ${i===0?'disabled':''}>▲</button><button type="button" data-bat-move="1" data-team="${t}" data-index="${i}" title="한 타순 아래로" ${i===8?'disabled':''}>▼</button></span></div>`).join('')}</div><p class="setup-inline-note" id="batOrderNotice${t}">⠿ 손잡이를 끌어 타순을 바꾸거나 ▲▼ 버튼을 사용하세요. 이름과 포지션은 함께 이동합니다.</p><label>투수 11명 · SP / RP / CP</label><div class="roster">${Array.from({length:11},(_,i)=>`<div class="setup-pos-row"><input aria-label="투수 ${i+1} 이름" id="pitName${t}_${i}" maxlength="20" value="${t?'AI':'나'} ${i===0?'선발투수':'구원투수 '+i}">${setupSelectPosition(t,'pitchers',i)}</div>`).join('')}</div><label>대타·대주자 후보 (선발 9명과 별도 표시)</label><div class="setup-bench">${['PH','PR'].map((p,i)=>`<div class="setup-pos-row"><input id="benchName${t}_${i}" maxlength="20" placeholder="${p} 후보 이름 (선택)" aria-label="${p} 후보 이름"><span class="pos-chip">${p}</span></div>`).join('')}</div><p class="setup-inline-note">PH·PR은 후보 명단 표시용입니다. 실제 경기 중 교체 투입 기능은 현재 버전에 포함되지 않습니다.</p></section>`).join('');
  installNameInputConvenience();
 }
 // On tap/click or keyboard focus, select the entire default name.
@@ -258,7 +323,261 @@ function installNameInputConvenience(){
   });
  }
 }
+
+// v15 - built-in static 2026 club rosters; no external API or remote fetching.
+const KBO_2026_ROSTERS = {"KT":{"name":"KT 위즈","code":"KT","short":"KT","color":"#141414","accent":"#ea252b","pitchers":[{"name":"고영표","number":""},{"name":"스기모토","number":""},{"name":"우규민","number":""},{"name":"배제성","number":""},{"name":"김민수","number":""},{"name":"소형준","number":""},{"name":"이상동","number":""},{"name":"주권","number":""},{"name":"오원석","number":""},{"name":"박영현","number":""},{"name":"김정운","number":""},{"name":"박지훈","number":""}],"batters":[{"name":"장성우","number":""},{"name":"조대현","number":""},{"name":"한승택","number":""},{"name":"강현우","number":""},{"name":"허경민","number":""},{"name":"문상철","number":""},{"name":"힐리어드","number":""},{"name":"오윤석","number":""},{"name":"권동진","number":""},{"name":"장준원","number":""},{"name":"손민석","number":""},{"name":"이강민","number":""},{"name":"김상수","number":""},{"name":"류현인","number":""},{"name":"김현수","number":""},{"name":"안현민","number":""},{"name":"배정대","number":""},{"name":"최원준","number":""},{"name":"이정훈","number":""},{"name":"장진혁","number":""},{"name":"김민혁","number":""},{"name":"유준규","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"SS":{"name":"삼성 라이온즈","code":"SS","short":"삼성","color":"#184ea2","accent":"#c8cdd5","pitchers":[{"name":"이재희","number":""},{"name":"원태인","number":""},{"name":"김태훈","number":""},{"name":"이승민","number":""},{"name":"백정현","number":""},{"name":"임기영","number":""},{"name":"양창섭","number":""},{"name":"배찬승","number":""},{"name":"이승현","number":""},{"name":"페덱","number":""},{"name":"장찬희","number":""},{"name":"김재윤","number":""},{"name":"사토시","number":""},{"name":"후라도","number":""}],"batters":[{"name":"김도환","number":""},{"name":"장승현","number":""},{"name":"강민호","number":""},{"name":"디아즈","number":""},{"name":"류지혁","number":""},{"name":"이해승","number":""},{"name":"김영웅","number":""},{"name":"김상준","number":""},{"name":"전병우","number":""},{"name":"이재현","number":""},{"name":"박계범","number":""},{"name":"윤정빈","number":""},{"name":"김헌곤","number":""},{"name":"최형우","number":""},{"name":"김성윤","number":""},{"name":"김현준","number":""},{"name":"홍현빈","number":""},{"name":"김지찬","number":""},{"name":"박승규","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"HT":{"name":"KIA 타이거즈","code":"HT","short":"KIA","color":"#bc152b","accent":"#171717","pitchers":[{"name":"곽도규","number":""},{"name":"김태형","number":""},{"name":"조상우","number":""},{"name":"김현수","number":""},{"name":"올러","number":""},{"name":"최지민","number":""},{"name":"황동하","number":""},{"name":"이태양","number":""},{"name":"이의리","number":""},{"name":"김범수","number":""},{"name":"전상현","number":""},{"name":"양현종","number":""},{"name":"한재승","number":""},{"name":"정해영","number":""},{"name":"성영탁","number":""},{"name":"홍민규","number":""}],"batters":[{"name":"주효상","number":""},{"name":"한준수","number":""},{"name":"김태군","number":""},{"name":"정현창","number":""},{"name":"김규성","number":""},{"name":"박민","number":""},{"name":"변우혁","number":""},{"name":"김선빈","number":""},{"name":"하주석","number":""},{"name":"황대인","number":""},{"name":"이호연","number":""},{"name":"김도영","number":""},{"name":"박정우","number":""},{"name":"박재현","number":""},{"name":"카스트로","number":""},{"name":"김호령","number":""},{"name":"김민규","number":""},{"name":"나성범","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"LG":{"name":"LG 트윈스","code":"LG","short":"LG","color":"#bf2031","accent":"#222222","pitchers":[{"name":"임찬규","number":""},{"name":"고우석","number":""},{"name":"우강훈","number":""},{"name":"이우찬","number":""},{"name":"손주영","number":""},{"name":"톨허스트","number":""},{"name":"김강률","number":""},{"name":"이상영","number":""},{"name":"김진수","number":""},{"name":"김윤식","number":""},{"name":"장현식","number":""},{"name":"박시원","number":""},{"name":"카라스코","number":""},{"name":"양우진","number":""},{"name":"김영우","number":""},{"name":"케네디","number":""}],"batters":[{"name":"박동원","number":""},{"name":"김민수","number":""},{"name":"이주헌","number":""},{"name":"오지환","number":""},{"name":"손용준","number":""},{"name":"문보경","number":""},{"name":"오스틴","number":""},{"name":"신민재","number":""},{"name":"천성호","number":""},{"name":"문정빈","number":""},{"name":"구본혁","number":""},{"name":"이영빈","number":""},{"name":"박해민","number":""},{"name":"최원영","number":""},{"name":"홍창기","number":""},{"name":"이재원","number":""},{"name":"송찬의","number":""},{"name":"문성주","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"OB":{"name":"두산 베어스","code":"OB","short":"두산","color":"#172750","accent":"#dbb67c","pitchers":[{"name":"박치국","number":""},{"name":"타카다","number":""},{"name":"김정우","number":""},{"name":"김영현","number":""},{"name":"최승용","number":""},{"name":"이병헌","number":""},{"name":"잭로그","number":""},{"name":"이용찬","number":""},{"name":"곽빈","number":""},{"name":"벤자민","number":""},{"name":"이영하","number":""},{"name":"김택연","number":""},{"name":"윤태호","number":""},{"name":"최민석","number":""},{"name":"김한중","number":""}],"batters":[{"name":"김기연","number":""},{"name":"양의지","number":""},{"name":"윤준호","number":""},{"name":"류현준","number":""},{"name":"이유찬","number":""},{"name":"강승호","number":""},{"name":"세베리노","number":""},{"name":"박지훈","number":""},{"name":"양석환","number":""},{"name":"오명진","number":""},{"name":"안재석","number":""},{"name":"박찬호","number":""},{"name":"류승민","number":""},{"name":"김민석","number":""},{"name":"손아섭","number":""},{"name":"정수빈","number":""},{"name":"김대한","number":""},{"name":"김인태","number":""},{"name":"조수행","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"SK":{"name":"SSG 랜더스","code":"SK","short":"SSG","color":"#c9212b","accent":"#f6e7bd","pitchers":[{"name":"김도현","number":""},{"name":"김민준","number":""},{"name":"문승원","number":""},{"name":"박시후","number":""},{"name":"변건우","number":""},{"name":"신상연","number":""},{"name":"아빌라","number":""},{"name":"이건욱","number":""},{"name":"이로운","number":""},{"name":"이준기","number":""},{"name":"전영준","number":""},{"name":"조병현","number":""},{"name":"한두솔","number":""}],"batters":[{"name":"최민준","number":""},{"name":"박성한","number":""},{"name":"최지훈","number":""},{"name":"에레디아","number":""},{"name":"전의산","number":""},{"name":"고명준","number":""},{"name":"조형우","number":""},{"name":"한유섬","number":""},{"name":"안상현","number":""},{"name":"임근우","number":""},{"name":"신범수","number":""},{"name":"이지영","number":""},{"name":"김요셉","number":""},{"name":"문상준","number":""},{"name":"홍대인","number":""},{"name":"안재연","number":""},{"name":"김재환","number":""},{"name":"오태곤","number":""},{"name":"채현우","number":""},{"name":"김정민","number":""}],"snapshot":"2026-10-10","source":"https://minyunpapa.github.io/kbo-dashboard/","verified":true},"LT":{"name":"롯데 자이언츠","code":"LT","short":"롯데","color":"#073e82","accent":"#e12529","pitchers":[{"name":"현도훈","number":""},{"name":"박세웅","number":""},{"name":"구승민","number":""},{"name":"김원중","number":""},{"name":"박정민","number":""},{"name":"이이무라","number":""},{"name":"이영재","number":""},{"name":"박세진","number":""},{"name":"김기준","number":""},{"name":"이준서","number":""},{"name":"최준용","number":""},{"name":"박준우","number":""},{"name":"송재영","number":""}],"batters":[{"name":"유강남","number":""},{"name":"손성빈","number":""},{"name":"박건우","number":""},{"name":"전민재","number":""},{"name":"고승민","number":""},{"name":"한동희","number":""},{"name":"김세민","number":""},{"name":"나승엽","number":""},{"name":"노진혁","number":""},{"name":"박승욱","number":""},{"name":"한태양","number":""},{"name":"박찬형","number":""},{"name":"황성빈","number":""},{"name":"조세진","number":""},{"name":"레이예스","number":""},{"name":"김동혁","number":""},{"name":"장두성","number":""},{"name":"전준우","number":""},{"name":"윤동희","number":""}],"snapshot":"2026-10-12","source":"https://www.koreabaseball.com/Player/RegisterAll.aspx","verified":true},"NC":{"name":"NC 다이노스","code":"NC","short":"NC","color":"#315288","accent":"#c2a57d","pitchers":[{"name":"구창모","number":""},{"name":"신민혁","number":""},{"name":"라일리","number":""},{"name":"토다","number":""},{"name":"테일러","number":""},{"name":"김영규","number":""},{"name":"김재열","number":""},{"name":"류진욱","number":""},{"name":"송명기","number":""},{"name":"김진호","number":""},{"name":"전사민","number":""},{"name":"신영우","number":""},{"name":"임정호","number":""},{"name":"이용준","number":""},{"name":"하준영","number":""},{"name":"김태경","number":""}],"batters":[{"name":"김형준","number":""},{"name":"이희성","number":""},{"name":"안중열","number":""},{"name":"김주원","number":""},{"name":"박민우","number":""},{"name":"데이비슨","number":""},{"name":"김휘집","number":""},{"name":"블레인","number":""},{"name":"최정원","number":""},{"name":"서호철","number":""},{"name":"김한별","number":""},{"name":"신재인","number":""},{"name":"도태훈","number":""},{"name":"오태양","number":""},{"name":"오영수","number":""},{"name":"권희동","number":""},{"name":"박건우","number":""},{"name":"천재환","number":""},{"name":"박시원","number":""},{"name":"이우성","number":""}],"snapshot":"2026 시즌 활동 선수 참고","source":"https://hardhit.ai/teams/dinos/roster?season=2026","verified":false},"HH":{"name":"한화 이글스","code":"HH","short":"한화","color":"#ff6600","accent":"#1a1a1a","pitchers":[{"name":"류현진","number":""},{"name":"왕옌청","number":""},{"name":"황준서","number":""},{"name":"조동욱","number":""},{"name":"짐머맨","number":""},{"name":"화이트","number":""},{"name":"박준영","number":""},{"name":"이상규","number":""},{"name":"이민우","number":""},{"name":"박상원","number":""},{"name":"정우주","number":""},{"name":"장유호","number":""},{"name":"김종수","number":""},{"name":"강재민","number":""},{"name":"김서현","number":""},{"name":"문동주","number":""},{"name":"주현상","number":""}],"batters":[{"name":"최인호","number":""},{"name":"이도윤","number":""},{"name":"문현빈","number":""},{"name":"강백호","number":""},{"name":"노시환","number":""},{"name":"허인서","number":""},{"name":"김태연","number":""},{"name":"유민","number":""},{"name":"박정현","number":""},{"name":"장규현","number":""},{"name":"최유빈","number":""},{"name":"이도훈","number":""},{"name":"채은성","number":""},{"name":"최재훈","number":""},{"name":"페라자","number":""}],"snapshot":"2026 시즌 활동 선수 참고","source":"https://hardhit.ai/teams/eagles/roster?season=2026","verified":false},"WO":{"name":"키움 히어로즈","code":"WO","short":"키움","color":"#761c42","accent":"#e6d19a","pitchers":[{"name":"김성진","number":""},{"name":"정현우","number":""},{"name":"조영건","number":""},{"name":"알칸타라","number":""},{"name":"데이비슨","number":""},{"name":"배동현","number":""},{"name":"김윤하","number":""},{"name":"김성민","number":""},{"name":"하영민","number":""},{"name":"주승우","number":""}],"batters":[{"name":"최주환","number":""},{"name":"이형종","number":""},{"name":"히우라","number":""},{"name":"박성빈","number":""},{"name":"김건희","number":""},{"name":"이주형","number":""},{"name":"임병욱","number":""},{"name":"추재현","number":""},{"name":"김태진","number":""},{"name":"김병휘","number":""},{"name":"이재상","number":""}],"snapshot":"2026 시즌 활동 선수 참고","source":"https://ir.newspim.com/news/view/20260819001191","verified":false}};
+const KBO_2026_PRIMARY_POSITIONS={"SS":{"강민호":"C","김도환":"C","장승현":"C","디아즈":"1B","류지혁":"2B","김상준":"2B","김영웅":"3B","전병우":"3B","이재현":"SS","이해승":"SS","박계범":"SS","최형우":"LF","윤정빈":"LF","김지찬":"CF","김현준":"CF","구자욱":"RF","김성윤":"RF","김헌곤":"RF","박승규":"RF","홍현빈":"RF"},"LG":{"박동원":"C","이주헌":"C","김민수":"C","오스틴":"1B","신민재":"2B","천성호":"2B","문보경":"3B","문정빈":"3B","오지환":"SS","구본혁":"SS","손용준":"SS","이영빈":"SS","문성주":"LF","이재원":"LF","박해민":"CF","최원영":"CF","홍창기":"RF","송찬의":"RF"},"HT":{"김태군":"C","한준수":"C","주효상":"C","변우혁":"1B","황대인":"1B","김선빈":"2B","김규성":"2B","이호연":"2B","김도영":"3B","정현창":"3B","박민":"SS","하주석":"SS","나성범":"LF","김호령":"CF","박정우":"CF","박재현":"CF","김민규":"RF"},"KT":{"장성우":"C","한승택":"C","강현우":"C","조대현":"C","문상철":"1B","오윤석":"2B","류현인":"2B","허경민":"3B","손민석":"3B","김상수":"SS","권동진":"SS","장준원":"SS","김민혁":"LF","배정대":"CF","장진혁":"CF","안현민":"RF","최원준":"RF","이정훈":"RF"},"OB":{"양의지":"C","김기연":"C","윤준호":"C","양석환":"1B","강승호":"2B","오명진":"2B","박지훈":"3B","박찬호":"SS","안재석":"SS","이유찬":"SS","김인태":"LF","김민석":"LF","정수빈":"CF","조수행":"CF","김대한":"RF","류승민":"RF","손아섭":"RF"},"SK":{"이지영":"C","조형우":"C","신범수":"C","고명준":"1B","전의산":"1B","안상현":"2B","최정":"3B","박성한":"SS","에레디아":"LF","김재환":"LF","최지훈":"CF","한유섬":"RF","오태곤":"RF"},"LT":{"유강남":"C","손성빈":"C","나승엽":"1B","고승민":"2B","한태양":"2B","한동희":"3B","김세민":"3B","노진혁":"SS","박승욱":"SS","전민재":"SS","전준우":"LF","황성빈":"LF","장두성":"CF","김동혁":"CF","윤동희":"RF","레이예스":"RF","조세진":"RF","박건우":"RF"},"NC":{"김형준":"C","안중열":"C","이희성":"C","데이비슨":"1B","오영수":"1B","박민우":"2B","최정원":"2B","서호철":"3B","김휘집":"3B","김주원":"SS","김한별":"SS","권희동":"LF","이우성":"LF","천재환":"CF","박시원":"CF","박건우":"RF"},"HH":{"최재훈":"C","허인서":"C","장규현":"C","채은성":"1B","강백호":"1B","문현빈":"2B","이도윤":"2B","노시환":"3B","김태연":"3B","박정현":"SS","최인호":"LF","페라자":"CF","유민":"RF"},"WO":{"김건희":"C","박성빈":"C","최주환":"1B","히우라":"1B","김태진":"2B","김병휘":"SS","이재상":"3B","이형종":"LF","추재현":"LF","이주형":"RF","임병욱":"CF"}};
+const KBO_2026_PITCHING_ROLES={"SS":{"원태인":"SP","후라도":"SP","백정현":"SP","이승현":"SP","페덱":"SP","김재윤":"CP"},"LG":{"임찬규":"SP","손주영":"SP","톨허스트":"SP","김윤식":"SP","카라스코":"SP","고우석":"CP"},"HT":{"양현종":"SP","이의리":"SP","올러":"SP","황동하":"SP","정해영":"CP"},"KT":{"고영표":"SP","소형준":"SP","오원석":"SP","배제성":"SP","박영현":"CP"},"OB":{"곽빈":"SP","최승용":"SP","잭로그":"SP","벤자민":"SP","김택연":"CP"},"SK":{"문승원":"SP","이건욱":"SP","아빌라":"SP","조병현":"CP"},"LT":{"박세웅":"SP","박세진":"SP","김원중":"CP"},"NC":{"구창모":"SP","신민혁":"SP","라일리":"SP","송명기":"SP","이용준":"SP","류진욱":"CP"},"HH":{"류현진":"SP","문동주":"SP","황준서":"SP","화이트":"SP","짐머맨":"SP","김서현":"CP"},"WO":{"하영민":"SP","정현우":"SP","알칸타라":"SP","김윤하":"SP","주승우":"CP"}};
+
+const FIELD_POSITIONS=['C','1B','2B','3B','SS','LF','CF','RF','DH'];
+const PITCH_POSITIONS=['SP','RP','CP'];
+const START_POSITIONS=['CF','SS','RF','1B','3B','LF','2B','C','DH'];
+let batterPositions=[START_POSITIONS.slice(),START_POSITIONS.slice()];
+let pitcherPositions=[Array.from({length:11},(_,i)=>i===0?'SP':'RP'),Array.from({length:11},(_,i)=>i===0?'SP':'RP')];
+let benchPositions=[['PH','PR'],['PH','PR']];
+let benchNames=[['',''],['','']];
+function kboPlayerPosition(tm,role,player){
+ const names=role==='batters'?KBO_2026_PRIMARY_POSITIONS:KBO_2026_PITCHING_ROLES;
+ const resolved=names[tm]?.[player.name];
+ // Not all individual primary positions were verified from an official 2026 snapshot.
+ return resolved || (role==='pitchers'?'P':'미확인');
+}
+function setupSelectPosition(t,role,idx){
+ const id=(role==='batters'?'batPos':'pitPos')+t+'_'+idx;
+ const values=role==='batters'?FIELD_POSITIONS:PITCH_POSITIONS;
+ const init=role==='batters'?START_POSITIONS[idx]:(idx===0?'SP':'RP');
+ return `<select id="${id}" aria-label="${t?'홈':'원정'} ${role==='batters'?idx+1+'번 타자':idx+1+'번째 투수'} 포지션">${values.map(v=>`<option value="${v}"${v===init?' selected':''}>${v}</option>`).join('')}</select>`;
+}
+function posSelection(t,role,idx){return $( (role==='batters'?'batPos':'pitPos')+t+'_'+idx)}
+function alignPositionsOnPick(t,role,idx,suggested){
+ if(role==='pitchers'){
+  const p=posSelection(t,role,idx);p.value=idx===0?'SP':(PITCH_POSITIONS.includes(suggested)&&suggested!=='SP'?suggested:'RP');
+  return;
+ }
+ if(!FIELD_POSITIONS.includes(suggested))return; // Unverified/utility roles retain a valid free field position.
+ const picked=posSelection(t,'batters',idx),old=picked.value;
+ if(old===suggested)return;
+ for(let j=0;j<9;j++)if(j!==idx&&posSelection(t,'batters',j).value===suggested){posSelection(t,'batters',j).value=old;break}
+ picked.value=suggested;
+}
+function onPositionChanged(select){
+ const match=select.id.match(/^batPos([01])_([0-8])$/);
+ if(!match)return;
+ const t=Number(match[1]),idx=Number(match[2]),now=select.value;
+ const previous=batterPositions[t][idx]||START_POSITIONS[idx];
+ if(now===previous)return;
+ const duplicate=[];
+ for(let j=0;j<9;j++)if(j!==idx&&posSelection(t,'batters',j).value===now)duplicate.push(j);
+ if(duplicate.length===1)posSelection(t,'batters',duplicate[0]).value=previous;
+ batterPositions[t]=Array.from({length:9},(_,j)=>posSelection(t,'batters',j).value);
+ updatePositionWarning();
+}
+function updatePositionWarning(){
+ const el=$('positionWarning');if(!el)return;
+ for(let t=0;t<2;t++){
+  const vals=Array.from({length:9},(_,i)=>posSelection(t,'batters',i)?.value);
+  if(new Set(vals).size!==9||FIELD_POSITIONS.some(p=>!vals.includes(p))){el.textContent=`⚠️ ${t?'홈':'원정'}팀: 선발 포지션 C, 1B, 2B, 3B, SS, LF, CF, RF, DH가 하나씩 필요해요.`;return false}
+  if(posSelection(t,'pitchers',0)?.value!=='SP'){el.textContent=`⚠️ ${t?'홈':'원정'}팀 선발투수는 SP여야 합니다.`;return false}
+ }
+ el.textContent='✓ 양 팀 선발 수비 포지션이 겹치지 않아요.';return true;
+}
+function syncPositionsFromInputs(){
+ batterPositions=[0,1].map(t=>Array.from({length:9},(_,i)=>posSelection(t,'batters',i)?.value||START_POSITIONS[i]));
+ pitcherPositions=[0,1].map(t=>Array.from({length:11},(_,i)=>posSelection(t,'pitchers',i)?.value||(i===0?'SP':'RP')));
+ benchNames=[0,1].map(t=>['PH','PR'].map((p,i)=>safeName($(`benchName${t}_${i}`)?.value||'')));
+}
+function applyPositionsToSetup(s){
+ for(let t=0;t<2;t++){
+  for(let i=0;i<9;i++)posSelection(t,'batters',i).value=FIELD_POSITIONS.includes(s?.bat?.[t]?.[i])?s.bat[t][i]:START_POSITIONS[i];
+  for(let i=0;i<11;i++)posSelection(t,'pitchers',i).value=i===0?'SP':PITCH_POSITIONS.includes(s?.pit?.[t]?.[i])?s.pit[t][i]:'RP';
+  for(let i=0;i<2;i++)$(`benchName${t}_${i}`).value=safeName(s?.bench?.[t]?.[i]||'');
+ }
+ syncPositionsFromInputs();updatePositionWarning();
+}
+
+// v18 batting order editor: player name and assigned position move together.
+let draggedBatter=null;
+function battingNameAt(t,i){const field=$(`batName${t}_${i}`);return field.value.trim()===field.defaultValue?'':field.value}
+function moveBattingOrder(t,from,to){
+ if(![0,1].includes(t)||!Number.isInteger(from)||!Number.isInteger(to)||from<0||to<0||from>8||to>8||from===to)return false;
+ const slots=Array.from({length:9},(_,i)=>({name:battingNameAt(t,i),pos:posSelection(t,'batters',i).value}));
+ const [moving]=slots.splice(from,1);slots.splice(to,0,moving);
+ slots.forEach((item,i)=>{
+  const field=$(`batName${t}_${i}`);field.value=item.name||field.defaultValue;
+  posSelection(t,'batters',i).value=item.pos;
+ });
+ syncPositionsFromInputs();updatePositionWarning();
+ const dragged=$(`batName${t}_${to}`);
+ const notice=$('batOrderNotice'+t);
+ if(notice)notice.textContent=`✓ ${to+1}번 타순에 ${dragged.value} 선수를 배치했어요. 포지션도 함께 이동했습니다.`;
+ if(typeof kboSelectedClub!=='undefined'&&kboSelectedClub!==null&&typeof kboRefresh==='function'&&!$('kboPicker').classList.contains('hidden'))kboRefresh();
+ return true;
+}
+function batRowOf(el){return el?.closest?.('.setup-batting-row')}
+function cleanBatDragMarks(){document.querySelectorAll('.setup-batting-row').forEach(x=>x.classList.remove('drag-over','dragging'))}
+$('setupTeams').addEventListener('dragstart',e=>{
+ const handle=e.target.closest?.('.bat-drag');if(!handle)return;
+ const row=batRowOf(handle);draggedBatter={team:Number(row.dataset.team),index:Number(row.dataset.index)};
+ row.classList.add('dragging');
+ if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',`${draggedBatter.team}:${draggedBatter.index}`)}
+});
+$('setupTeams').addEventListener('dragover',e=>{
+ const row=batRowOf(e.target);if(!row||!draggedBatter||Number(row.dataset.team)!==draggedBatter.team)return;
+ e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move';
+ document.querySelectorAll('.setup-batting-row.drag-over').forEach(x=>x.classList.remove('drag-over'));
+ row.classList.add('drag-over');
+});
+$('setupTeams').addEventListener('drop',e=>{
+ const row=batRowOf(e.target);if(!row||!draggedBatter)return;
+ e.preventDefault();
+ const to=Number(row.dataset.index),team=Number(row.dataset.team);
+ if(team===draggedBatter.team)moveBattingOrder(team,draggedBatter.index,to);
+ draggedBatter=null;cleanBatDragMarks();
+});
+$('setupTeams').addEventListener('dragend',()=>{draggedBatter=null;cleanBatDragMarks()});
+$('setupTeams').addEventListener('click',e=>{
+ const b=e.target.closest?.('[data-bat-move]');if(!b)return;
+ const t=Number(b.dataset.team),from=Number(b.dataset.index);
+ moveBattingOrder(t,from,from+Number(b.dataset.batMove));
+});
+// Touch screen: drag handle with finger, drop it on another batting row.
+let touchBatMove=null;
+$('setupTeams').addEventListener('pointerdown',e=>{
+ const handle=e.target.closest?.('.bat-drag');if(!handle||e.pointerType==='mouse')return;
+ const row=batRowOf(handle);touchBatMove={team:Number(row.dataset.team),index:Number(row.dataset.index),pointerId:e.pointerId,target:handle};
+ handle.setPointerCapture?.(e.pointerId);row.classList.add('dragging');
+});
+$('setupTeams').addEventListener('pointermove',e=>{
+ if(!touchBatMove||e.pointerId!==touchBatMove.pointerId)return;
+ const hit=document.elementFromPoint(e.clientX,e.clientY),row=batRowOf(hit);
+ document.querySelectorAll('.setup-batting-row.drag-over').forEach(x=>x.classList.remove('drag-over'));
+ if(row&&Number(row.dataset.team)===touchBatMove.team)row.classList.add('drag-over');
+});
+$('setupTeams').addEventListener('pointerup',e=>{
+ if(!touchBatMove||e.pointerId!==touchBatMove.pointerId)return;
+ const hit=document.elementFromPoint(e.clientX,e.clientY),row=batRowOf(hit);
+ if(row&&Number(row.dataset.team)===touchBatMove.team)moveBattingOrder(touchBatMove.team,touchBatMove.index,Number(row.dataset.index));
+ touchBatMove=null;cleanBatDragMarks();
+});
+$('setupTeams').addEventListener('pointercancel',()=>{touchBatMove=null;cleanBatDragMarks()});
+
+$('setupTeams').addEventListener('change',e=>{
+ if(e.target.id?.startsWith('batPos'))onPositionChanged(e.target);
+ else if(e.target.id?.startsWith('pitPos')){syncPositionsFromInputs();updatePositionWarning()}
+});
+
+
+let kboEditingTeam=0,kboSelectedClub=null,kboRole='batters';
+const kboFilled={0:{batters:new Set(),pitchers:new Set()},1:{batters:new Set(),pitchers:new Set()}};
+function kboSlotId(team,role,idx){return (role==='batters'?'batName':'pitName')+team+'_'+idx}
+function kboRoleSize(role){return role==='batters'?9:11}
+function kboFieldIsDefault(field){return !field||field.value.trim()===''||field.value===field.defaultValue}
+function kboAvailableSlot(team,role){
+ const size=kboRoleSize(role);
+ for(let i=0;i<size;i++){const el=$(kboSlotId(team,role,i));if(kboFieldIsDefault(el))return i}
+ return -1
+}
+function kboBuildSlotSelect(){
+ const select=$('kboSlot'),size=kboRoleSize(kboRole),next=kboAvailableSlot(kboEditingTeam,kboRole);
+ select.replaceChildren();
+ const auto=document.createElement('option');auto.value='auto';auto.textContent='다음 빈 자리 자동 선택';select.appendChild(auto);
+ for(let i=0;i<size;i++){
+  const el=$(kboSlotId(kboEditingTeam,kboRole,i));if(!el)continue;
+  const opt=document.createElement('option');opt.value=String(i);
+  opt.textContent=(kboRole==='batters'?`${i+1}번 타자`:(i===0?'선발투수':`구원투수 ${i}`))+' · '+el.value;
+  select.appendChild(opt);
+ }
+ select.value='auto';
+}
+function kboClubButton(tm){
+ const btn=document.createElement('button');btn.type='button';btn.className='kbo-club'+(kboSelectedClub===tm.code?' selected':'');
+ const badge=document.createElement('span');badge.className='kbo-club-badge';badge.style.background=`linear-gradient(140deg,${tm.color},${tm.accent})`;badge.textContent=tm.short;
+ const label=document.createElement('span');label.className='kbo-club-name';label.textContent=tm.name;btn.append(badge,label);
+ btn.onclick=()=>{
+  kboSelectedClub=tm.code;
+  $('teamName'+kboEditingTeam).value=tm.name;
+  $('kboPickMessage').textContent=`${tm.name}을(를) 선택했어. 이제 선수를 클릭하면 추가되고 다시 클릭하면 선택이 해제돼!`;
+  kboRefresh();
+ };
+ return btn;
+}
+function kboRefresh(){
+ const grid=$('kboClubGrid');grid.replaceChildren();Object.values(KBO_2026_ROSTERS).forEach(t=>grid.appendChild(kboClubButton(t)));
+ const tm=KBO_2026_ROSTERS[kboSelectedClub];
+ $('kboSelectedClub').textContent=tm?`${tm.name} | 투수 ${tm.pitchers.length}명 · 타자 ${tm.batters.length}명`:'10개 구단 중 하나를 먼저 선택해 주세요.';
+ $('kboSource').textContent=tm?`${tm.snapshot} · ${tm.verified?'확인된 등록/엔트리 명단':'2026시즌 출전 선수 참고 목록(특정 날짜의 1군 전체 보증 불가)'} · 출처: ${tm.source} · 구단 배지는 자체 제작한 식별 배지입니다.`:'KBO 2026시즌 자료를 내장해 인터넷 연결 없이도 선택할 수 있습니다. 1군 엔트리는 날짜에 따라 달라집니다.';
+ document.querySelectorAll('[data-kbo-role]').forEach(b=>b.classList.toggle('active',b.dataset.kboRole===kboRole));
+ kboBuildSlotSelect();kboRenderPlayers();
+}
+function kboRenderPlayers(){
+ const host=$('kboPlayerList');host.replaceChildren();const tm=KBO_2026_ROSTERS[kboSelectedClub];if(!tm)return;
+ const term=$('kboSearch').value.trim();const current=Array.from({length:kboRoleSize(kboRole)},(_,i)=>$(kboSlotId(kboEditingTeam,kboRole,i))?.value);if(kboRole==='batters')current.push($(`benchName${kboEditingTeam}_0`).value,$(`benchName${kboEditingTeam}_1`).value);
+ const players=tm[kboRole].filter(p=>!term||p.name.includes(term));
+ for(const p of players){
+  const used=current.includes(p.name);const b=document.createElement('button');b.type='button';b.className='kbo-player'+(used?' used':'');b.innerHTML=`<span class="kbo-pos">${kboPlayerPosition(kboSelectedClub,kboRole,p)}</span>`;b.append(document.createTextNode(p.name+(used?' ✓':'')));
+  b.setAttribute('aria-pressed',used?'true':'false');
+  b.title=used?'클릭하면 이 선수를 라인업에서 선택 해제합니다':'라인업에 추가';
+  b.onclick=()=>kboChoosePlayer(p.name);
+  host.appendChild(b)
+ }
+ if(!players.length){const p=document.createElement('div');p.className='kbo-no-results';p.textContent='일치하는 선수가 없습니다.';host.appendChild(p)}
+}
+function kboChoosePlayer(name){
+ const role=kboRole,team=kboEditingTeam,choice=$('kboSlot').value;
+ if(role==='batters'){
+  for(let i=0;i<2;i++){const bench=$(`benchName${team}_${i}`);if(bench.value.trim()===name){bench.value='';syncPositionsFromInputs();$('kboPickMessage').textContent=`↩ ${name} ${i===0?'PH':'PR'} 후보 선택 해제`;kboRefresh();return}}
+  if(choice==='ph'||choice==='pr'){const idx=choice==='ph'?0:1;$(`benchName${team}_${idx}`).value=name;syncPositionsFromInputs();$('kboPickMessage').textContent=`✅ ${name} ${idx===0?'PH':'PR'} 후보 등록`;kboRefresh();return}
+ }
+ // Toggle: clicking an already selected player clears only that player's slot.
+ // This must run before checking for available slots (a full lineup can still unselect).
+ for(let i=0;i<kboRoleSize(role);i++){
+  const selected=$(kboSlotId(team,role,i));
+  if(selected && selected.value.trim()===name){
+   selected.value=selected.defaultValue;
+   selected.dispatchEvent(new Event('change',{bubbles:true}));
+   const where=role==='batters'?`${i+1}번 타자`:(i===0?'선발투수':`구원투수 ${i}`);
+   $('kboPickMessage').textContent=`↩ ${name} 선택 해제 · ${where} 칸이 기본 이름으로 복원되었습니다.`;
+   kboRefresh();
+   return;
+  }
+ }
+ let slot=choice==='auto'?kboAvailableSlot(team,role):Number(choice);
+ if(!Number.isInteger(slot)||slot<0||slot>=kboRoleSize(role)){
+  $('kboPickMessage').textContent='남은 기본 이름 칸이 없습니다. 위의 입력 위치에서 교체할 선수를 지정하세요.';return;
+ }
+ const field=$(kboSlotId(team,role,slot));
+ if(!field)return;
+ const prior=field.value;
+ field.value=name;field.dispatchEvent(new Event('change',{bubbles:true}));
+ const found=KBO_2026_ROSTERS[kboSelectedClub][role].find(p=>p.name===name);
+ alignPositionsOnPick(team,role,slot,found?kboPlayerPosition(kboSelectedClub,role,found):'');syncPositionsFromInputs();updatePositionWarning();
+ const what=role==='batters'?`${slot+1}번 타자`:(slot===0?'선발투수':`구원투수 ${slot}`);
+ $('kboPickMessage').textContent=`✅ ${KBO_2026_ROSTERS[kboSelectedClub].name} · ${what}: ${name}${prior!==field.defaultValue?' (기존 선수 교체)':''}`;
+ kboRefresh()
+}
+function openKboPicker(t){
+ if(!$('setupTeams'))return;
+ kboEditingTeam=t;kboSelectedClub=null;kboRole='batters';$('kboSearch').value='';
+ $('kboPickMessage').textContent=`${t?'홈':'원정'}팀 선수 명단에 추가할 구단을 선택하세요.`;
+ $('kboPicker').classList.remove('hidden');kboRefresh();
+}
+function closeKboPicker(){$('kboPicker').classList.add('hidden')}
+$('setupTeams').addEventListener('click',e=>{const btn=e.target.closest('[data-kbo-team]');if(btn)openKboPicker(Number(btn.dataset.kboTeam))});
+$('kboClose').onclick=closeKboPicker;
+$('kboDone').onclick=closeKboPicker;
+$('kboSearch').addEventListener('input',kboRenderPlayers);
+document.querySelectorAll('[data-kbo-role]').forEach(b=>b.onclick=()=>{kboRole=b.dataset.kboRole;kboRefresh()});
+$('kboClearChosen').onclick=()=>{
+ if(!confirm('이 팀의 선수 이름을 모두 기본값으로 되돌릴까요?'))return;
+ for(const role of ['batters','pitchers'])for(let i=0;i<kboRoleSize(role);i++){const field=$(kboSlotId(kboEditingTeam,role,i));field.value=field.defaultValue}
+ applyPositionsToSetup({});$('kboPickMessage').textContent='기본 이름과 기본 포지션으로 되돌렸습니다.';kboRefresh();
+};
+$('kboPicker').addEventListener('click',e=>{if(e.target===$('kboPicker'))closeKboPicker()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('kboPicker').classList.contains('hidden'))closeKboPicker()});
+
 function acceptSetup(){
+ if(!updatePositionWarning()){alert('타자 포지션이 중복되었거나 선발투수 포지션이 올바르지 않습니다.');return}
+ syncPositionsFromInputs();
  // Commit defaults to the visible inputs before copying them into game state.
  for(const field of $('setupTeams').querySelectorAll('input')){
   field.value=safeName(field.value)||field.defaultValue;
@@ -274,18 +593,19 @@ const ROSTER_KEY='number-baseball-v12-roster';
 let selectedInnings=9;
 function readMatchInnings(){const x=document.querySelector('input[name="matchInnings"]:checked');return [3,5,7,9].includes(Number(x?.value))?Number(x.value):9}
 function gatherRoster(){
- return {version:1,teamNames:[0,1].map(t=>safeName($('teamName'+t).value)||`TEAM ${t+1}`),
+ syncPositionsFromInputs();return {version:2,batPositions:batterPositions.map(a=>a.slice()),pitchPositions:pitcherPositions.map(a=>a.slice()),benchNames:benchNames.map(a=>a.slice()),teamNames:[0,1].map(t=>safeName($('teamName'+t).value)||`TEAM ${t+1}`),
   playerNames:[0,1].map(t=>Array.from({length:9},(_,i)=>safeName($(`batName${t}_${i}`).value)||$(`batName${t}_${i}`).defaultValue)),
   pitcherNames:[0,1].map(t=>Array.from({length:11},(_,i)=>safeName($(`pitName${t}_${i}`).value)||$(`pitName${t}_${i}`).defaultValue))};
 }
 function applyRoster(r){
- if(!r||r.version!==1||!Array.isArray(r.teamNames)||r.teamNames.length!==2||!Array.isArray(r.playerNames)||!Array.isArray(r.pitcherNames))throw Error('명단 형식 오류');
+ if(!r||![1,2].includes(r.version)||!Array.isArray(r.teamNames)||r.teamNames.length!==2||!Array.isArray(r.playerNames)||!Array.isArray(r.pitcherNames))throw Error('명단 형식 오류');
  for(let t=0;t<2;t++){
   if(!Array.isArray(r.playerNames[t])||r.playerNames[t].length!==9||!Array.isArray(r.pitcherNames[t])||r.pitcherNames[t].length!==11)throw Error('선수 수 불일치');
   $('teamName'+t).value=safeName(r.teamNames[t])||`TEAM ${t+1}`;
   for(let i=0;i<9;i++)$(`batName${t}_${i}`).value=safeName(r.playerNames[t][i])||$(`batName${t}_${i}`).defaultValue;
   for(let i=0;i<11;i++)$(`pitName${t}_${i}`).value=safeName(r.pitcherNames[t][i])||$(`pitName${t}_${i}`).defaultValue;
  }
+ applyPositionsToSetup({bat:r.batPositions,pit:r.pitchPositions,bench:r.benchNames});
 }
 function saveRoster(){try{localStorage.setItem(ROSTER_KEY,JSON.stringify(gatherRoster()));$('rosterSaveStatus').textContent='✅ 라인업 저장 완료! 다음 경기에도 불러올 수 있어요.';return true}catch(e){$('rosterSaveStatus').textContent='저장할 수 없습니다. 브라우저 저장 권한을 확인해 주세요.';return false}}
 function loadRoster(){try{const raw=localStorage.getItem(ROSTER_KEY);if(!raw){$('rosterSaveStatus').textContent='저장된 명단이 없어요. 먼저 한 번 저장해 주세요.';return false}applyRoster(JSON.parse(raw));$('rosterSaveStatus').textContent='✅ 팀명과 타자·투수 이름을 모두 불러왔어요.';return true}catch(e){$('rosterSaveStatus').textContent='명단을 불러올 수 없습니다: '+e.message;return false}}
@@ -418,7 +738,7 @@ function renderRosterPanel(){
       if(team===game.half && ((game.bases[0]&&runnerOwnerAt(0)===idx)||(game.bases[1]&&runnerOwnerAt(1)===idx)||(game.bases[2]&&runnerOwnerAt(2)===idx))) cls.push('runner');
       return `<tr class="${cls.join(' ')}">
         <td>${idx+1}</td>
-        <td class="name">${playerNames[team][idx]||`${idx+1}번 타자`}</td>
+        <td class="name">${playerNames[team][idx]||`${idx+1}번 타자`} <span class="pos-chip">${batterPositions[team]?.[idx]||START_POSITIONS[idx]}</span></td>
         <td>${st.pa}</td><td>${st.ab}</td><td>${st.h}</td><td>${st.r}</td><td>${st.rbi}</td><td>${st.bb}</td><td>${st.k}</td><td>${battingAvg(st)}</td>
         <td>${playerStatus(team,idx)}</td>
       </tr>`;
@@ -428,7 +748,7 @@ function renderRosterPanel(){
       const active = no===activePitcherNo;
       return `<tr class="${active?'current':''}">
         <td>${no}</td>
-        <td class="name">${st.name || ((pitcherNames[team]&&pitcherNames[team][idx])||`투수 ${no}`)}</td>
+        <td class="name">${st.name || ((pitcherNames[team]&&pitcherNames[team][idx])||`투수 ${no}`)} <span class="pos-chip">${pitcherPositions[team]?.[idx]||(idx===0?'SP':'RP')}</span></td>
         <td>${pitcherIpText(st)}</td>
         <td>${st.pitches}</td>
         <td>${st.strikes}</td>
@@ -455,12 +775,13 @@ function renderRosterPanel(){
           <div class="summary-card"><b>${pcount}</b><span>투구 수</span></div>
           <div class="summary-card"><b>${ks}</b><span>탈삼진</span></div>
         </div>
-        <div class="mini-title">타자 현황</div>
+        <div class="mini-title">타자 현황 · C/1B/2B/3B/SS/LF/CF/RF/DH</div>
         <div class="table-wrap"><table class="roster-table">
           <thead><tr><th>순번</th><th>선수</th><th>타석</th><th>타수</th><th>안타</th><th>득점</th><th>타점</th><th>볼넷</th><th>삼진</th><th>타율</th><th>상태</th></tr></thead>
           <tbody>${batterRows}</tbody>
         </table></div>
-        <div class="mini-title" style="margin-top:12px">투수 현황</div>
+        <div class="mini-title" style="margin-top:12px">대타 / 대주자 후보</div><div class="setup-inline-note" style="color:#315d78">PH ${benchNames[team]?.[0]||'미지정'} · PR ${benchNames[team]?.[1]||'미지정'} (현재 후보 표시만 지원)</div>
+        <div class="mini-title" style="margin-top:12px">투수 현황 · SP / RP / CP</div>
         <div class="table-wrap"><table class="roster-table">
           <thead><tr><th>No</th><th>선수</th><th>이닝</th><th>투구수</th><th>S</th><th>B</th><th>K</th><th>ER</th><th>ERA</th><th>상태</th></tr></thead>
           <tbody>${pstats}</tbody>
@@ -475,7 +796,7 @@ function pitcherStat(){let a=game.pitchStats[defense()];return a[a.length-1]}
 function addRuns(n,owners=[],rbi=n){if(!n)return;game.score[game.half]+=n;game.lines[game.half][game.inning-1]=(game.lines[game.half][game.inning-1]||0)+n;for(const owner of owners){if(owner!==null&&owner!==undefined)game.batStats[game.half][owner].r++}batterStat().rbi+=rbi;pitcherStat().er+=n}
 function setRunners(bases,owners){game.bases=bases;game.runnerOwners=owners}
 function updateBoard(){if(!game.lines)return;let html='';for(let team=0;team<2;team++){html+=`<tr><th>${teamNames[team]}</th>`;for(let i=0;i<12;i++){let v=game.lines[team][i];html+=`<td class="${i===game.inning-1?'current-inning':i>=(game.maxInnings||12)?'unused-inning':''}">${v===null?'·':v}</td>`}html+=`<td class="total">${game.score[team]}</td></tr>`}$('inningRows').innerHTML=html;$('boardInning').textContent=`${game.inning}회 ${game.half?'말':'초'}`;for(let i=0;i<3;i++)$('bl'+i).classList.toggle('on',i<game.balls);for(let i=0;i<2;i++){$('sl'+i).classList.toggle('on',i<game.strikes);$('ol'+i).classList.toggle('on',i<game.outs)}['bb1','bb2','bb3'].forEach((id,i)=>$(id).classList.toggle('on',game.bases[i]))}
-function renderFinal(){const fmt=(v)=>Number.isFinite(v)?v.toFixed(3).replace(/^0/,''):'.000';let html='';for(let team=0;team<2;team++){html+=`<h3>${teamNames[team]} 타자 기록</h3><div class="stats-scroll"><table class="stats-table"><tr><th>타자</th><th>타석</th><th>타수</th><th>득점</th><th>타점</th><th>안타</th><th>타율</th><th>삼진</th></tr>`;game.batStats[team].forEach((x,i)=>html+=`<tr><td>${playerNames[team][i]||i+1+'번 타자'}</td><td>${x.pa}</td><td>${x.ab}</td><td>${x.r}</td><td>${x.rbi}</td><td>${x.h}</td><td>${fmt(x.ab?x.h/x.ab:0)}</td><td>${x.k}</td></tr>`);html+='</table></div>';html+=`<h3>${teamNames[team]} 투수 기록</h3><div class="stats-scroll"><table class="stats-table"><tr><th>투수</th><th>투구수</th><th>스트라이크</th><th>볼</th><th>삼진</th><th>투구이닝</th><th>자책점</th><th>ERA</th></tr>`;game.pitchStats[team].forEach(x=>{let ip=`${Math.floor(x.outs/3)}.${x.outs%3}`;let era=x.outs?((x.er*27)/x.outs).toFixed(2):x.er?'—':'0.00';html+=`<tr><td>${x.name}</td><td>${x.pitches}</td><td>${x.strikes}</td><td>${x.balls}</td><td>${x.k}</td><td>${ip}</td><td>${x.er}</td><td>${era}</td></tr>`});html+='</table></div>'}$('statTables').innerHTML=html;$('finalScore').textContent=`${teamNames[0]} ${game.score[0]} : ${game.score[1]} ${teamNames[1]}`;$('finalResultDetail').textContent=game.concession?`🏳️ ${teamNames[game.concession.loser]} 기권패 · ${teamNames[game.concession.winner]} 승리 · ${game.concession.inning}회 ${game.concession.half?'말':'초'} 종료`:'정규 경기 종료';renderHighlights();$('finalstats').classList.remove('hidden')}
+function renderFinal(){const fmt=(v)=>Number.isFinite(v)?v.toFixed(3).replace(/^0/,''):'.000';let html='';for(let team=0;team<2;team++){html+=`<h3>${teamNames[team]} 타자 기록</h3><div class="stats-scroll"><table class="stats-table"><tr><th>타자</th><th>타석</th><th>타수</th><th>득점</th><th>타점</th><th>안타</th><th>타율</th><th>삼진</th></tr>`;game.batStats[team].forEach((x,i)=>html+=`<tr><td>${playerNames[team][i]||i+1+'번 타자'} (${batterPositions[team]?.[i]||START_POSITIONS[i]})</td><td>${x.pa}</td><td>${x.ab}</td><td>${x.r}</td><td>${x.rbi}</td><td>${x.h}</td><td>${fmt(x.ab?x.h/x.ab:0)}</td><td>${x.k}</td></tr>`);html+='</table></div>';html+=`<h3>${teamNames[team]} 투수 기록</h3><div class="stats-scroll"><table class="stats-table"><tr><th>투수</th><th>투구수</th><th>스트라이크</th><th>볼</th><th>삼진</th><th>투구이닝</th><th>자책점</th><th>ERA</th></tr>`;game.pitchStats[team].forEach(x=>{let ip=`${Math.floor(x.outs/3)}.${x.outs%3}`;let era=x.outs?((x.er*27)/x.outs).toFixed(2):x.er?'—':'0.00';html+=`<tr><td>${x.name} (${pitcherPositions[team]?.[game.pitchStats[team].indexOf(x)]||'RP'})</td><td>${x.pitches}</td><td>${x.strikes}</td><td>${x.balls}</td><td>${x.k}</td><td>${ip}</td><td>${x.er}</td><td>${era}</td></tr>`});html+='</table></div>'}$('statTables').innerHTML=html;$('finalScore').textContent=`${teamNames[0]} ${game.score[0]} : ${game.score[1]} ${teamNames[1]}`;$('finalResultDetail').textContent=game.concession?`🏳️ ${teamNames[game.concession.loser]} 기권패 · ${teamNames[game.concession.winner]} 승리 · ${game.concession.inning}회 ${game.concession.half?'말':'초'} 종료`:'정규 경기 종료';renderHighlights();$('finalstats').classList.remove('hidden')}
 $('showStats').onclick=renderFinal;$('closeStats').onclick=()=>$('finalstats').classList.add('hidden');$('restartStats').onclick=()=>{$('finalstats').classList.add('hidden');reset()};
 
 const defense=()=>1-game.half;
@@ -832,7 +1153,7 @@ function validateSave(s){
  return s
 }
 function makeSave(){return {version:7,aiSolo:true,aiCandidates:aiCandidates.slice(),savedAt:new Date().toISOString(),game:JSON.parse(JSON.stringify(game)),mode,
- teamNames:teamNames.slice(),playerNames:playerNames.map(a=>a.slice()),pitcherNames:pitcherNames.map(a=>a.slice()),
+ teamNames:teamNames.slice(),playerNames:playerNames.map(a=>a.slice()),pitcherNames:pitcherNames.map(a=>a.slice()),batPositions:batterPositions.map(a=>a.slice()),pitchPositions:pitcherPositions.map(a=>a.slice()),benchNames:benchNames.map(a=>a.slice()),
  broadcastEntries:broadcastEntries.slice(0,80),guessHistoryEntries:guessHistoryEntries.slice(-1200),captionText:$('caption').textContent,
  guard:{visible:!$('guard').classList.contains('hidden'),phase:guardPhase,reason:guardReason,pendingTeam,managerVisit:pendingManagerVisit},
  postPitchUnlock,cameraMode,lastAnnouncedKey};}
@@ -870,6 +1191,9 @@ function restoreSnapshot(s){
    game.pitchStats[i].forEach((p,j)=>{p.name=pitcherNames[i][j]||`투수 ${j+1}`})
   }
   aiCandidates=Array.isArray(s.aiCandidates)?s.aiCandidates.filter(x=>typeof x==='string'&&/^\d{3}$/.test(x)&&new Set(x).size===3).slice(0,720):ALL_NUMBERS.slice();
+  batterPositions=[0,1].map(t=>Array.from({length:9},(_,i)=>FIELD_POSITIONS.includes(s.batPositions?.[t]?.[i])?s.batPositions[t][i]:START_POSITIONS[i]));
+  pitcherPositions=[0,1].map(t=>Array.from({length:11},(_,i)=>i===0?'SP':PITCH_POSITIONS.includes(s.pitchPositions?.[t]?.[i])?s.pitchPositions[t][i]:'RP'));
+  benchNames=[0,1].map(t=>[0,1].map(i=>safeName(s.benchNames?.[t]?.[i]||'')));
   buildSetup();$('setupOverlay').style.display='none';$('finalstats').classList.add('hidden');
   broadcastEntries=Array.isArray(s.broadcastEntries)?s.broadcastEntries.slice(0,80).map(e=>({text:String(e.text||'').slice(0,700),kind:liveTypes[e.kind]?e.kind:'info',inning:String(e.inning||''),time:String(e.time||'')})):[];
   guessHistoryEntries=Array.isArray(s.guessHistoryEntries)?s.guessHistoryEntries.slice(-1200).filter(e=>e&&/^\d{3}$/.test(String(e.guess||''))&&[e.s,e.b,e.f].every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&e.s+e.b+e.f===3&&[0,1].includes(e.defense)&&Number.isInteger(e.pitcherNumber)&&e.pitcherNumber>=1&&e.pitcherNumber<=11).map(e=>({guess:String(e.guess),s:e.s,b:e.b,f:e.f,action:String(e.action||'swing'),inning:Number(e.inning)||1,half:e.half===1?1:0,batter:String(e.batter||'타자').slice(0,35),pitcher:String(e.pitcher||'투수').slice(0,35),defense:e.defense,pitcherNumber:e.pitcherNumber,at:String(e.at||'').slice(0,30)})):[];
