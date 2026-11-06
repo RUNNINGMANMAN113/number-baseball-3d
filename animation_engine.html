@@ -45,14 +45,6 @@ body.nblab-embedded #specialOverlay{pointer-events:none}
 <script>
 (()=>{'use strict';
 const SCENES=[
-
- {id:'signalBunt',title:'희생번트 지시',sub:'투구 전 작전 사인',tag:'BUNT SIGNAL',duration:2100,desc:'감독의 희생번트 작전 사인.'},
- {id:'signalFly',title:'희생플라이 지시',sub:'투구 전 작전 사인',tag:'FLY SIGNAL',duration:2100,desc:'감독의 희생플라이 작전 사인.'},
- {id:'double',title:'2루타 주루',sub:'1루 → 2루',tag:'DOUBLE',duration:8800,desc:'타자가 2루타를 기록해 2루까지 달린다.'},
- {id:'triple',title:'3루타 주루',sub:'1루 → 2루 → 3루',tag:'TRIPLE',duration:10500,desc:'타자가 3루타를 기록해 3루까지 달린다.'},
- {id:'finalTie',title:'무승부 경기 종료',sub:'최종 무승부',tag:'TIE GAME',duration:2300,desc:'동점으로 경기가 종료되고 승리팀 세리머니는 없다.'},
- {id:'walkoffCelebrate',title:'끝내기 득점 축하',sub:'득점 확정 후 동료들 홈으로',tag:'WALK-OFF!',duration:5200,desc:'끝내기 득점 확정 후 동료들이 홈플레이트로 나와 짧게 축하한다.'},
- {id:'finalCelebrate',title:'경기 종료 축하',sub:'마지막 아웃 후 마운드 축하',tag:'FINAL',duration:4900,desc:'정규 경기 종료 후 승리팀이 마운드에 모여 축하한다.'},
  {id:'walkoff',title:'① 끝내기 승리 세리머니',sub:'끝내기 홈런 → 홈 도착 → 동료들 축하',tag:'WALK-OFF WIN',duration:15900,desc:'끝내기 홈런: 공이 한 번 높게 날아가고 주자와 타자가 홈인한 뒤, 홈플레이트 주변에 동료들이 모여 축하해.'},
  {id:'finalWin',title:'② 일반 경기 종료',sub:'마지막 아웃 → 승리팀 마운드 집결',tag:'FINAL · WIN',duration:7800,desc:'마지막 아웃을 잡은 뒤 승리팀 수비수가 마운드로 모여 하이파이브해. 끝내기 축하와 구분해.'},
  {id:'grandSlam',title:'④ 만루홈런 특별 연출',sub:'3명 주자 + 타자 · 순차적으로 4득점',tag:'GRAND SLAM!',duration:15300,desc:'3S 만루홈런: 높은 단 한 번의 타구, 주자 3명과 타자가 홈에 들어오는 순서대로 점수가 1점씩 증가. 기존 HOME RUN 글씨 효과 유지.'},
@@ -161,13 +153,13 @@ function select(id){
  if(['groundout','firstBaseCatch'].includes(id)&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
  if(['buntSuccess','buntFoul','buntStrikeout','strategyBunt'].includes(id)&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
  if(['grandSlam','walkoff'].includes(id)){document.getElementById('baseSituation').value='7';baseMask=7;}
- if(['threeUp','finalWin','replay','homerDugout','foulReset','fielderReturn'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
+ if(['threeUp','finalWin','replay','homerDugout','fielderReturn'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
  if(['sacFlySuccess','strategyFly','slideFirst'].includes(id)&&!(baseMask&4)){document.getElementById('baseSituation').value='4';baseMask=4;}
  if(id==='homeSafeCall'&&!(baseMask&4)){document.getElementById('baseSituation').value='4';baseMask=4;}
  if(id==='escapeK'){document.getElementById('baseSituation').value='6';baseMask=6;}
  if(id==='rbiCelebrate'){document.getElementById('baseSituation').value='2';baseMask=2;}
  if(['bullpenEnter','batterExit'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
- firstBaseCall=['groundout','firstBaseCatch'].includes(id)&&Math.random()<.20;
+ firstBaseCall=id==='firstBaseCatch'||(id==='groundout'&&Math.random()<.20);
  // One random draw per play. Ordinary hits may receive a SAFE call; no outcome changes.
  firstSafeSelected=['single','rbiCelebrate'].includes(id)&&Math.random()<.20;
  // Only 3B runner scoring plays may receive a home slide. The dedicated button forces it for inspection.
@@ -1069,8 +1061,8 @@ function dramaMotion(t,kind){
   afterGame(t,false);
   displaySpecial(t,'FINAL · WIN','승리팀 마운드 하이파이브',t>.82);
  }else if(kind==='threeUp'){
-  if(t<=.44){const moment=t/.44*.94;throwMotion(moment);swingMotion(moment,false);umpireStrike(moment)}
-  const q=phase(t,.46,.61)*(1-phase(t,.85,.98));
+  if(nbEmbeddedToken===null&&t<=.44){const moment=t/.44*.94;throwMotion(moment);swingMotion(moment,false);umpireStrike(moment)}
+  const q=phase(t,.24,.45)*(1-phase(t,.87,.98));
   pitcher.armL.rotation.z=-2.5*q;pitcher.armR.rotation.z=2.2*q;
   pitcher.root.position.y=.12*Math.sin(q*Math.PI);
   displaySpecial(t,'THREE UP, THREE DOWN','삼자범퇴 · SIDE RETIRED',t>.62&&t<.95);
@@ -1158,8 +1150,8 @@ function homeSafeMotion(t){
 }
 
 function escapeMotion(t){
- throwMotion(t); swingMotion(t,false); umpireStrike(t);
- baseRunners[1].root.visible=true; baseRunners[2].root.visible=true;
+ if(nbEmbeddedToken===null){throwMotion(t); swingMotion(t,false); umpireStrike(t);}
+ if(nbEmbeddedToken===null){baseRunners[1].root.visible=true; baseRunners[2].root.visible=true;}
  if(t>.62){
    const q=phase(t,.62,.86);
    pitcher.armL.rotation.z=-2.2*q; pitcher.armR.rotation.z=2.0*q;
@@ -1168,9 +1160,10 @@ function escapeMotion(t){
  }
 }
 function batterExitMotion(t){
- throwMotion(Math.min(t,.66)); swingMotion(Math.min(t,.66),false); umpireStrike(Math.min(t,.72));
- if(t>.60){
-   const q=phase(t,.60,.98);
+ if(nbEmbeddedToken===null){throwMotion(Math.min(t,.66)); swingMotion(Math.min(t,.66),false); umpireStrike(Math.min(t,.72));}
+ else {ball.visible=false;bat.visible=false;}
+ if(t>(nbEmbeddedToken!==null?.12:.60)){
+   const q=phase(t,nbEmbeddedToken!==null?.12:.60,.98);
    batter.root.rotation.y=Math.PI+q*Math.PI*.72;
    batter.root.position.x=lerp(-2.6,-11,q);
    batter.root.position.z=lerp(1.7,9,q);
@@ -1386,7 +1379,7 @@ function pose(){
   caption.firstChild.nodeValue=t<.45?'3루 주자가 홈을 향해 질주합니다':t<.66?'송구가 홈으로 향합니다 · 포수 태그 준비':t<.88?'접전 · 주자가 홈플레이트로 향합니다':'SAFE!';
  }else if(selection.id==='escapeK'){
   escapeMotion(t);
-  document.getElementById('scoreTag').innerHTML='AWAY <b>3</b> · HOME <b>2</b><br>8회 말 · B 0 S 2 O '+(t>.78?3:2);
+  if(nbEmbeddedToken===null)document.getElementById('scoreTag').innerHTML='AWAY <b>3</b> · HOME <b>2</b><br>8회 말 · B 0 S 2 O '+(t>.78?3:2);
   caption.firstChild.nodeValue=t<CONTACT?'2·3루 위기 상황 · 투구가 들어갑니다':t<.62?'헛스윙! · 포수가 포구합니다':t<.82?'삼진으로 이닝 종료!':'투수의 위기 탈출 세리머니';
  }else if(selection.id==='nextBatter'){
   nextBatterEntry(t);
@@ -1396,7 +1389,7 @@ function pose(){
   caption.firstChild.nodeValue=t<.60?'득점을 마친 주자가 홈플레이트를 떠납니다':'득점 주자가 더그아웃으로 복귀합니다';
  }else if(selection.id==='batterExit'){
   batterExitMotion(t);
-  caption.firstChild.nodeValue=t<CONTACT?'투구 진행 중':t<.60?'삼진 · 타자가 잠시 아쉬워합니다':t<.90?'아웃된 타자가 더그아웃으로 돌아갑니다':'다음 타자 준비';
+  caption.firstChild.nodeValue=nbEmbeddedToken!==null?'아웃된 타자가 더그아웃으로 복귀합니다':(t<CONTACT?'투구 진행 중':t<.60?'삼진 · 타자가 잠시 아쉬워합니다':t<.90?'아웃된 타자가 더그아웃으로 돌아갑니다':'다음 타자 준비');
  }else if(['buntSuccess','buntFoul','buntStrikeout'].includes(selection.id)){
   const good=selection.id==='buntSuccess';sacBunt(t,good,selection.id==='buntStrikeout');
   caption.firstChild.nodeValue=t<CONTACT?'투구 · 타자가 배트를 번트 자세로 댑니다':good?(t<.73?'번트 땅볼 · 수비수 포구':t<.85?'1루 송구! · 주자는 다음 베이스로 진루':'타자 1루에서 아웃 · 주자 진루 성공'):t<.81?'번트 파울 · 주자 움직임 없음':selection.id==='buntStrikeout'?'번트 파울 삼진 · 타자만 아웃':'번트 파울 · 스트라이크 +1, 아직 아웃 없음';
@@ -1428,7 +1421,7 @@ function pose(){
    substitution(t,true);ball.visible=false;caption.firstChild.nodeValue=t<.45?'PINCH RUNNER · '+(pinchBaseIndex+1)+'루 기존 주자 퇴장':t<.89?'새 대주자가 '+(pinchBaseIndex+1)+'루로 입장':'새 대주자가 '+(pinchBaseIndex+1)+'루를 인계받았습니다';
  }else if(selection.id==='inning'){
    if(integration.active)baseRunners.forEach(p=>p.root.visible=false);
-   inningChange(t);ball.visible=false;caption.firstChild.nodeValue=t<.54?'3아웃 · 노란 수비팀과 파란 타자 퇴장': '1회 말 · 파란 수비팀(투수·포수 포함)과 노란 타자 입장';
+   inningChange(t);ball.visible=false;caption.firstChild.nodeValue=nbEmbeddedSameTeams?(t<.54?'공격 이닝 종료 · 수비진과 타자 재정비':'다음 이닝 · 같은 공격팀과 수비팀 준비 완료'):(t<.54?'3아웃 · 양 팀 더그아웃으로 이동':'공수교대 · 새 수비진과 타자 입장');
  }else if(selection.id==='manager'){
   manager.root.visible=true;manager.root.position.set(lerp(-15,0,phase(t,.04,.76)),Math.abs(Math.sin(t*48))*.085,lerp(5,-18,phase(t,.04,.76)));
   manager.root.rotation.y=-.45;manager.legL.rotation.x=Math.sin(t*40)*.5*(1-phase(t,.7,.78));manager.legR.rotation.x=-manager.legL.rotation.x;
@@ -1525,7 +1518,7 @@ function setCamera(){const v=document.getElementById('cameraMode').value;if(v===
 makeStadium();updateHands();setCamera();select('pitch');
 
 // Embedded-game interface: this lab is VISUAL ONLY. It never writes to the game's score/outs/bases.
-let nbEmbeddedToken=null,nbEmbeddedComplete=false,nbEmbeddedLastProgress=-1;
+let nbEmbeddedToken=null,nbEmbeddedComplete=false,nbEmbeddedLastProgress=-1,nbEmbeddedSameTeams=false;
 function nbSetTeamColors(half){
  const offense=half===0?0x4087c6:0xe6b765;
  const defense=half===0?0xe6b765:0x4087c6;
@@ -1541,6 +1534,8 @@ function nbPlayEmbedded(d){
  document.getElementById('scoreSituation').value=d.defenseLead?'narrow':'normal';
  document.getElementById('fieldLocation').value=d.fieldLocation||'random';
  select(d.scene);integration.active=false;integration.auto=false;updateIntegrationControls();
+ nbEmbeddedSameTeams=d.sameTeams===true;
+ if(['batterExit','escapeK','foulReset'].includes(d.scene)){choose.value=String(Number(d.baseMask)&7);baseMask=Number(d.baseMask)&7;}
  if(d.scene==='walk'){
    // The v27 game records BB; show NO cosmetic HBP/IBB without an actual corresponding game result.
    walkType='BB'; document.getElementById('walkOutcome').textContent='이번 판정: 볼넷';
@@ -1551,8 +1546,9 @@ function nbPlayEmbedded(d){
  }
  nbSetTeamColors(Number(d.half)===1?1:0);
  if(d.scene==='inning'){
-   const defenseTeamColor=Number(d.half)===0?0x4087c6:0xe6b765;
-   const battingTeamColor=Number(d.half)===0?0xe6b765:0x4087c6;
+   const sameTeams=d.sameTeams===true;
+   const defenseTeamColor=Number(d.half)===0?(sameTeams?0xe6b765:0x4087c6):(sameTeams?0x4087c6:0xe6b765);
+   const battingTeamColor=Number(d.half)===0?(sameTeams?0x4087c6:0xe6b765):(sameTeams?0xe6b765:0x4087c6);
    [...incomingPlayers,incomingPitcher,incomingCatcher].forEach(p=>p.shirtMat?.color.setHex(defenseTeamColor));
    incomingBatter.shirtMat?.color.setHex(battingTeamColor);
  }

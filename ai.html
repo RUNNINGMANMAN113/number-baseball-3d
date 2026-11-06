@@ -405,7 +405,23 @@ button:hover{filter:brightness(1.06)}
 .nb-director-controls span{color:#fff;background:#061728cc;border-radius:5px;padding:5px 8px;text-shadow:0 2px 6px #000;font-size:12px}
 @media(max-width:540px){.nb-director-controls{bottom:65px}.nb-director-controls span{max-width:44%;font-size:10px}.nb-director-controls select{max-width:100px}.nb-director-controls button{font-size:11px}}
 </style>
-</head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다.</p><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div id="positionWarning" role="status" aria-live="polite"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><div id="kboPicker" class="kbo-picker-overlay hidden" role="dialog" aria-modal="true" aria-label="2026 KBO 선수 선택기">
+<style id="v35-mode-navigation">
+.nb-mode-links{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 16px}
+.nb-mode-links a{display:inline-block;text-decoration:none;padding:10px 14px;border:1px solid #8cbad0;border-radius:12px;background:#e9f7fd;color:#174e6b;font-weight:850;font-size:13px}
+.nb-mode-links a.nb-current{background:#216f97;color:white}
+.nb-crash-help{font-size:12px;line-height:1.65;background:#fff4d7;border:1px solid #eac078;padding:10px 13px;border-radius:10px;color:#755013;margin-top:11px}
+.nb-crash-help button{border-radius:8px;border:1px solid #b78942;padding:7px 10px;margin:5px 0 0;background:white;color:#684609;font-weight:800;cursor:pointer}
+.nb-attack-tip{background:#ecf8f2;color:#206a50;border-radius:10px;padding:11px 13px;font-weight:700;font-size:13px;line-height:1.7;margin:6px 0 16px}
+body.nb-attack .setup-team:first-child .roster:not(.batting-setup-roster){display:none}
+body.nb-attack .setup-team:nth-child(2) .batting-setup-roster,
+body.nb-attack .setup-team:nth-child(2) .setup-bench,
+body.nb-attack .setup-team:nth-child(2) .setup-batting-row,
+body.nb-attack .setup-team:nth-child(2) #batOrderNotice1 {display:none}
+body.nb-attack #change,body.nb-attack #surrender,body.nb-attack #surrenderAdvice{display:none!important}
+body.nb-attack .inning-options{pointer-events:none}
+body.nb-attack .inning-options label:has(input:not([value="9"])){display:none}
+.nb-crash-strip{margin:5px 0 10px;padding:10px 13px;background:#fff3d7;border:1px solid #f2cb7f;color:#75511f;border-radius:11px;font-size:12px;line-height:1.5;font-weight:600}
+.nb-crash-strip b{font-weight:900}</style></head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다.</p><nav class="nb-mode-links" aria-label="게임 모드"><a href="index.html">2인용 대전</a><a class="nb-current" href="ai.html">AI 대전</a><a href="attack.html">🎯 공격모드 · 1인용</a></nav><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div id="positionWarning" role="status" aria-live="polite"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><div id="kboPicker" class="kbo-picker-overlay hidden" role="dialog" aria-modal="true" aria-label="2026 KBO 선수 선택기">
  <div class="kbo-picker-panel">
   <div class="kbo-picker-head"><div><h2>⚾ 2026 KBO 선수 선택하기</h2><p>구단 → 투수·타자(기본 포지션 표시) → 선수 클릭. 선수 클릭 순서대로 선발 9명 다음 후보 5명까지 자동 입력됩니다. 같은 선수를 다시 누르면 해제됩니다. 후보 역할은 PH/PR을 직접 선택하세요. 2026 정규시즌 3경기 이상 출전 선수 명단을 추가 대조한 검증 진행판입니다. 외국인 대체 선수 및 시즌 중 이적 선수를 포함하며 전체 전수검증은 완료되지 않았습니다.</p></div><button id="kboClose" class="kbo-dismiss" type="button" aria-label="닫기">×</button></div>
   <div id="kboClubGrid" class="kbo-club-grid"></div>
@@ -416,7 +432,7 @@ button:hover{filter:brightness(1.06)}
   <div class="kbo-source" id="kboSource">기준일이 다른 출처가 포함되어 있습니다. 참고 선수 목록은 특정 날짜의 1군 엔트리 전체를 보증하지 않습니다. 구단 배지는 공식 로고의 복제가 아닌 자체 제작 식별 배지입니다.</div>
   <div class="kbo-picker-actions"><button type="button" id="kboClearChosen">이 팀의 자동 선택 기록 초기화</button><button type="button" id="kboDone">선택 완료</button></div>
  </div>
-</div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout" data-mobile-tab="play"><div class="broadcast-column"><section class="view"><div class="stage" id="stage"><iframe id="nbDirectorFrame" title="실제 경기 3D 애니메이션" allow="fullscreen"></iframe><div id="nbDirectorDisplay"><div class="nb-director-score" id="nbDirectorScore">AWAY <strong>0</strong> · HOME <strong>0</strong></div><div class="nb-director-score" id="nbDirectorInning">1회 초 · B 0 S 0 O 0</div></div><div id="nbDirectorNotice" role="status" aria-live="polite"><p id="nbDirectorNoticeText">3D 애니메이션을 준비하고 있습니다.</p><small>화면이 표시되지 않으면 인터넷 연결을 확인해 주세요.</small></div><div class="nb-director-controls" id="nbDirectorControls"><span id="nbDirectorSceneName">경기 애니메이션</span></div><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section><nav class="mobile-game-tabs" role="tablist" aria-label="모바일 경기 메뉴"><button type="button" role="tab" aria-selected="true" data-mobile-tab="play"><span class="tab-icon" aria-hidden="true">⚾</span>타격</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="guess"><span class="tab-icon" aria-hidden="true">🧩</span>추리</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="roster"><span class="tab-icon" aria-hidden="true">👥</span>선수·교체</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="live"><span class="tab-icon" aria-hidden="true">📡</span>중계</button></nav>
+</div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout" data-mobile-tab="play"><div class="broadcast-column"><section class="view"><div class="stage" id="stage"><iframe id="nbDirectorFrame" title="실제 경기 3D 애니메이션" allow="fullscreen"></iframe><div id="nbDirectorDisplay"><div class="nb-director-score" id="nbDirectorScore">AWAY <strong>0</strong> · HOME <strong>0</strong></div><div class="nb-director-score" id="nbDirectorInning">1회 초 · B 0 S 0 O 0</div></div><div id="nbDirectorNotice" role="status" aria-live="polite"><p id="nbDirectorNoticeText">3D 애니메이션을 준비하고 있습니다.</p><small>화면이 표시되지 않으면 인터넷 연결을 확인해 주세요.</small></div><div class="nb-director-controls" id="nbDirectorControls"><span id="nbDirectorSceneName">경기 애니메이션</span></div><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section><div class="nb-crash-strip">📺 중계 화면에 <b>:( 또는 흰 화면</b>이 나타나면 <b>‘지금 저장’ → 새로고침 → ‘저장한 경기 이어하기’</b>를 이용하세요. 원래 고화질 그래픽은 유지됩니다.</div><nav class="mobile-game-tabs" role="tablist" aria-label="모바일 경기 메뉴"><button type="button" role="tab" aria-selected="true" data-mobile-tab="play"><span class="tab-icon" aria-hidden="true">⚾</span>타격</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="guess"><span class="tab-icon" aria-hidden="true">🧩</span>추리</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="roster"><span class="tab-icon" aria-hidden="true">👥</span>선수·교체</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="live"><span class="tab-icon" aria-hidden="true">📡</span>중계</button></nav>
 <section class="panel roster-panel" aria-label="선수 현황 및 라인업">
   <div class="roster-head">
     <h2>📋 선수 현황 / 라인업</h2>
@@ -432,7 +448,7 @@ button:hover{filter:brightness(1.06)}
 <div class="guess-controls"><button id="guessCurrent" class="selected" type="button">현재 투수 상대 기록</button><button id="guessAll" type="button">전체 추리 기록</button></div>
 <div class="guess-scroll" id="guessHistory" aria-live="polite"><div class="guess-empty">첫 번째 숫자를 입력하면 여기에 쌓입니다.</div></div>
 <div class="guess-note">S = 숫자·자리 일치 · B = 숫자만 일치 · F = 없는 숫자<br>투수가 교체되면 새로운 구간으로 기록되며 이전 추리도 '전체 추리 기록'에서 확인할 수 있습니다.</div>
-</section><section class="panel save-panel"><div class="save-titleline"><h2>💾 경기 저장</h2><span id="saveBadge" class="save-pill">저장 대기</span></div><p class="save-note" id="saveStatus">경기 중 진행 상황을 자동으로 저장합니다.</p><div class="save-actions"><button class="primary" id="saveNow">💾 지금 저장</button><button id="loadSaved">↩ 이어하기</button><button id="exportSave">↓ 백업 파일</button><button id="importSave">↑ 백업 불러오기</button></div><input id="importFile" type="file" accept="application/json,.json" style="display:none"><p class="save-note">자동 저장은 <b>현재 브라우저의 같은 웹주소</b>에서 이어 할 때 사용됩니다. 백업 파일에는 수비팀의 비밀 숫자가 포함되므로 상대에게 공유하지 마세요.</p></section></aside></main><div id="careerOverlay" class="career-modal hidden" role="dialog" aria-modal="true" aria-label="통산 전적 및 선수 기록"><div class="career-shell"><div class="career-toolbar"><h2>🏆 NUMBER BASEBALL 통산 기록</h2><div class="career-tools"><button id="careerExport">↓ 통산 기록 백업 JSON</button><button id="clearCareer">🗑 전체 기록 삭제</button><button id="closeCareer">✕ 닫기</button></div></div><p class="career-note" id="careerSummary">기록을 준비하는 중입니다.</p><p class="career-note">경기가 끝나면 한 번만 기록됩니다. 기록은 같은 브라우저와 웹주소에만 저장되며, 다른 기기와 자동 공유되지 않습니다. 선수 동명이인은 같은 팀·같은 이름이면 합산됩니다.</p><h3>구단별 통산 전적</h3><div id="careerTeams"></div><h3>선수별 타격 통산 기록</h3><div id="careerBatters"></div><h3>투수별 통산 기록</h3><div id="careerPitchers"></div><h3>최근 경기 기록</h3><div id="careerGames"></div></div></div><div id="surrenderOverlay" class="surrender-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="surrenderTitle">
+</section><section class="panel save-panel"><div class="save-titleline"><h2>💾 경기 저장</h2><span id="saveBadge" class="save-pill">저장 대기</span></div><p class="save-note" id="saveStatus">경기 중 진행 상황을 자동으로 저장합니다.</p><div class="save-actions"><button class="primary" id="saveNow">💾 지금 저장</button><button id="loadSaved">↩ 이어하기</button><button id="exportSave">↓ 백업 파일</button><button id="importSave">↑ 백업 불러오기</button></div><input id="importFile" type="file" accept="application/json,.json" style="display:none"><div class="nb-crash-help">📺 <b>3D 중계가 하얗게 변하거나 :( 화면이 보이나요?</b> 그래픽 화질을 낮추지 않았습니다. <b>‘지금 저장’</b>을 누른 다음 브라우저를 <b>새로고침</b>하고, 시작 화면의 <b>‘저장한 경기 이어하기’</b>를 선택하세요. 저장 확인 없이 새로고침하면 최근 플레이가 사라질 수 있습니다.</div><p class="save-note">자동 저장은 <b>현재 브라우저의 같은 웹주소</b>에서 이어 할 때 사용됩니다. 백업 파일에는 수비팀의 비밀 숫자가 포함되므로 상대에게 공유하지 마세요.</p></section></aside></main><div id="careerOverlay" class="career-modal hidden" role="dialog" aria-modal="true" aria-label="통산 전적 및 선수 기록"><div class="career-shell"><div class="career-toolbar"><h2>🏆 NUMBER BASEBALL 통산 기록</h2><div class="career-tools"><button id="careerExport">↓ 통산 기록 백업 JSON</button><button id="clearCareer">🗑 전체 기록 삭제</button><button id="closeCareer">✕ 닫기</button></div></div><p class="career-note" id="careerSummary">기록을 준비하는 중입니다.</p><p class="career-note">경기가 끝나면 한 번만 기록됩니다. 기록은 같은 브라우저와 웹주소에만 저장되며, 다른 기기와 자동 공유되지 않습니다. 선수 동명이인은 같은 팀·같은 이름이면 합산됩니다.</p><h3>구단별 통산 전적</h3><div id="careerTeams"></div><h3>선수별 타격 통산 기록</h3><div id="careerBatters"></div><h3>투수별 통산 기록</h3><div id="careerPitchers"></div><h3>최근 경기 기록</h3><div id="careerGames"></div></div></div><div id="surrenderOverlay" class="surrender-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="surrenderTitle">
   <div class="surrender-card">
     <h2 id="surrenderTitle">🏳️ 경기 기권</h2>
     <p>기권을 선택하면 현재 점수를 보존하고 즉시 경기가 종료됩니다. <b>기권 팀은 패배, 상대 팀은 승리</b>로 처리합니다. 원래 경기 점수는 바꾸지 않습니다.</p>
@@ -448,46 +464,64 @@ button:hover{filter:brightness(1.06)}
 // Game state is finalised once, exclusively by the existing v27 rules engine.
 // Scene events are read-only projections; they NEVER award outs/runs or move logical runners.
 const NBSceneMap={
+ // V36: visual-only storyboard. Outs, runs and bases are always resolved by the game engine.
  build({before,after,effect,action,feedbackF=-1}){
    const frame={scene:'pitch',baseMask:before.mask,half:before.half};
+   const strikeout=after.k>before.k;
    const chooseOut=()=>{
-     const candidates=before.mask?['fielding','lineout']:['groundout','fielding','lineout'];
+     // A 1B umpire call needs the dedicated camera angle; flyout+return is one scene,
+     // never two separate replays of the same batted ball.
+     const candidates=before.mask?['fielding','lineout']:['firstBaseCatch','fielding','lineout','fielderReturn'];
      return candidates[Math.floor(Math.random()*candidates.length)];
    };
-   // Resolve priority mirrors v27: 3S homer, 3F immediate out, then sacrifices/count.
-   // A failed sacrifice that becomes an ordinary 4B hit or strikeout must use the ACTUAL result.
+   const runDelta=Math.max(0,after.score[before.half]-before.score[before.half]);
    if(effect==='homer')frame.scene=before.mask===7?'grandSlam':(before.mask===0?'homerDugout':'homerun');
    else if(effect==='hit'){
      const newBase=after.owners.findIndex((v,i)=>i>0&&v===before.hitter);
-     frame.scene=newBase===1?'double':newBase===2?'triple':
-       ((before.mask&2)&&after.score[before.half]>before.score[before.half]&&!(before.mask&4)?'rbiCelebrate':'single');
+     if(newBase===1)frame.scene='double';
+     else if(newBase===2)frame.scene='triple';
+     else if((before.mask&2)&&runDelta>0&&!(before.mask&4))frame.scene='rbiCelebrate';
+     else frame.scene=runDelta===0&&Math.random()<.22?'firstBaseSafe':'single';
    }else if(effect==='walk')frame.scene='walk';
+   else if(strikeout)frame.scene=action==='bunt'?'buntStrikeout':(Math.random()<.5?'looking':'whiff');
    else if(effect==='out'&&feedbackF===3)frame.scene=chooseOut();
-   else if(after.k>before.k)frame.scene=action==='bunt'?'buntStrikeout':(Math.random()<.5?'looking':'whiff');
-   else if(action==='bunt')frame.scene=effect==='bunt'?'buntSuccess':'buntFoul';
-   else if(action==='fly')frame.scene=effect==='fly'?'sacFlySuccess':effect==='out'?'sacFlyOut':'pitch';
+   else if(action==='bunt')frame.scene=effect==='bunt'?'buntSuccess':effect==='out'?'buntStrikeout':'buntFoul';
+   else if(action==='fly')frame.scene=effect==='fly'?'sacFlySuccess':effect==='out'?'sacFlyOut':'sacFlyCount';
    else if(effect==='out')frame.scene=chooseOut();
+   else if(effect==='pitch'&&feedbackF>0&&feedbackF<3)frame.scene='foulReset';
 
-   const runDelta=Math.max(0,after.score[before.half]-before.score[before.half]);
-   // The manager's instruction occurs before either a successful OR failed sacrifice.
    const primaryIndex=(action==='bunt'||action==='fly')?1:0;
    const parts=primaryIndex?[{scene:action==='bunt'?'signalBunt':'signalFly',baseMask:before.mask,half:before.half},frame]:[frame];
    const oldDiff=before.score[before.half]-before.score[1-before.half];
    const newDiff=after.score[before.half]-after.score[1-before.half];
-   const isTying=runDelta>0&&oldDiff<0&&newDiff===0;
-   const isGoingAhead=runDelta>0&&oldDiff<=0&&newDiff>0;
-   const important=effect==='homer'||isTying||isGoingAhead;
-   if(important){
-     const replay={...frame,replay:true,camera:'side'};
-     parts.push(replay);
+   if(effect==='homer'||(runDelta>0&&((oldDiff<0&&newDiff===0)||(oldDiff<=0&&newDiff>0)))){
+     parts.push({...frame,replay:true,camera:'side'});
+   }
+   // Scoring at home is a CLOSE-UP replay, not an additional run or a separate official at-bat.
+   if(runDelta>0&&(before.mask&4)&&['hit','fly'].includes(effect)&&Math.random()<.25){
+     parts.push({scene:'homeSafeCall',baseMask:before.mask,half:before.half,replay:true});
+   }
+   const isOut=strikeout||['out','bunt','fly'].includes(effect);
+   const batterDone=after.batterIndex!==before.batterIndex;
+   const sideRetired=after.half!==before.half||after.inning!==before.inning;
+   const thirdOut=isOut&&before.outs===2&&(sideRetired||after.over);
+   if(isOut&&batterDone){
+     // Outed batter leaves the box. Embedded rendering omits the pitch/K replay here.
+     parts.push({scene:'batterExit',baseMask:before.mask,half:before.half});
+   }
+   if(thirdOut){
+     const threeUp=Number(before.halfPa)===2&&before.mask===0&&before.inningRuns===0;
+     if(threeUp)parts.push({scene:'threeUp',baseMask:0,half:before.half});
+     else if(strikeout&&(before.mask&6)!==0)parts.push({scene:'escapeK',baseMask:before.mask,half:before.half});
    }
    if(after.over){
      const walkoff=before.half===1&&runDelta>0&&after.score[1]>after.score[0];
      const ending=walkoff?'walkoffCelebrate':after.score[0]===after.score[1]?'finalTie':'finalCelebrate';
      parts.push({scene:ending,baseMask:0,half:before.half});
-   }else if(after.half!==before.half||after.inning!==before.inning){
-     parts.push({scene:'inning',baseMask:0,half:before.half});
-   }else if(after.batterIndex!==before.batterIndex){
+   }else if(sideRetired){
+     // Attack mode advances innings without changing the offensive/defensive teams.
+     parts.push({scene:'inning',baseMask:0,half:before.half,sameTeams:after.half===before.half});
+   }else if(batterDone){
      if(runDelta>0&&frame.scene!=='homerDugout')parts.push({scene:'scoredReturn',baseMask:0,half:before.half});
      parts.push({scene:'nextBatter',baseMask:0,half:before.half});
    }
@@ -498,7 +532,7 @@ let nbDirectorResolving=false,nbDirectorPendingGuard=null,nbDirectorPendingFinal
 function nbDirectorCapture(){
  return {inning:game.inning,half:game.half,mask:game.bases.reduce((n,b,i)=>n|(b?(1<<i):0),0),
   score:game.score.slice(),outs:game.outs,balls:game.balls,strikes:game.strikes,
-  batterIndex:game.batterIndex[game.half],hitter:game.batterIndex[game.half],owners:game.runnerOwners.slice(),inningRuns:Number(game.lines?.[game.half]?.[game.inning-1]||0),over:!!game.over,
+  batterIndex:game.batterIndex[game.half],hitter:game.batterIndex[game.half],owners:game.runnerOwners.slice(),inningRuns:Number(game.lines?.[game.half]?.[game.inning-1]||0),halfPa:Number(game.halfPa||0),over:!!game.over,
   k:game.pitchStats.reduce((sum,a)=>sum+a.reduce((z,p)=>z+(p.k||0),0),0)};
 }
 const NBDirector={
@@ -570,11 +604,11 @@ const NBDirector={
    if(!this.ready){this.notice(true,'3D 화면 로딩 중입니다. 최초 실행은 시간이 걸릴 수 있습니다.');clearTimeout(this.timeout);this.timeout=setTimeout(()=>{if(!this.ready&&this.active)this.fail('3D 엔진 로딩에 실패했습니다. 인터넷 연결과 브라우저 설정을 확인하세요.')},16000);return}
    clearTimeout(this.timeout);clearTimeout(this.safeTimeout);
    this.serial++;
-   this.frame.contentWindow.postMessage({source:'NBGame',type:'PLAY',scene:part.scene,baseMask:part.baseMask,half:part.half,token:this.serial,speed:1,forceWalkType:'BB',selectedBase:part.selectedBase,camera:part.camera,forceHomeSlide:part.forceHomeSlide,forceSafe:part.forceSafe,forceCoach:part.forceCoach},'*');
+   this.frame.contentWindow.postMessage({source:'NBGame',type:'PLAY',scene:part.scene,baseMask:part.baseMask,half:part.half,token:this.serial,speed:1,forceWalkType:'BB',selectedBase:part.selectedBase,camera:part.camera,sameTeams:part.sameTeams===true,forceHomeSlide:part.forceHomeSlide,forceSafe:part.forceSafe,forceCoach:part.forceCoach},'*');
    // PLAY ACK watchdog: never silently jump to the next scene.
    this.safeTimeout=setTimeout(()=>this.fail('3D 장면 시작 응답이 없습니다. 애니메이션 파일과 인터넷 연결을 확인하세요.'),8000);
  },
- sceneLabel(id){const names={pitch:'투구',single:'안타',rbiCelebrate:'적시타',homerun:'홈런',grandSlam:'만루홈런',homerDugout:'홈런 축하',whiff:'헛스윙 삼진',looking:'루킹 삼진',fielding:'뜬공 아웃',lineout:'직선타 아웃',groundout:'땅볼 아웃',walk:'볼넷',buntSuccess:'희생번트 성공',buntFoul:'번트 파울',buntStrikeout:'번트 삼진',sacFlySuccess:'희생플라이',sacFlyOut:'플라이 아웃',inning:'공수교대',nextBatter:'다음 타자',scoredReturn:'득점 주자 복귀',finalCelebrate:'경기 종료',walkoffCelebrate:'끝내기',pinchHit:'대타',pinchRun:'대주자',bullpenEnter:'투수 교체',double:'2루타',triple:'3루타',finalTie:'무승부'};return names[id]||id},
+ sceneLabel(id){const names={pitch:'투구',single:'안타',rbiCelebrate:'적시타',homerun:'홈런',grandSlam:'만루홈런',homerDugout:'홈런 축하',whiff:'헛스윙 삼진',looking:'루킹 삼진',fielding:'뜬공 아웃',lineout:'직선타 아웃',groundout:'땅볼 아웃',walk:'볼넷',buntSuccess:'희생번트 성공',buntFoul:'번트 파울',buntStrikeout:'번트 삼진',sacFlySuccess:'희생플라이',sacFlyOut:'플라이 아웃',inning:'이닝 교대',threeUp:'3자범퇴 투수 환호',escapeK:'득점권 위기 탈출',batterExit:'아웃 타자 퇴장',foulReset:'파울 후 재정비',firstBaseCatch:'1루 송구·심판 아웃콜',firstBaseSafe:'1루 접전 세이프',fielderReturn:'뜬공 포구·수비 복귀',homeSafeCall:'홈 접전 세이프',nextBatter:'다음 타자',scoredReturn:'득점 주자 복귀',finalCelebrate:'경기 종료',walkoffCelebrate:'끝내기',pinchHit:'대타',pinchRun:'대주자',bullpenEnter:'투수 교체',double:'2루타',triple:'3루타',finalTie:'무승부'};return names[id]||id},
  renderScore(){
    if(!this.active||!this.plan)return;
    const {pre,post,runDelta}=this.plan;
@@ -630,7 +664,7 @@ NBDirector.init();
 
 const $=id=>document.getElementById(id);const randSecret=()=>{let a=[0,1,2,3,4,5,6,7,8,9];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,3).join('')};
 let guardPhase='setup',pendingTeam=1,guardReason='start',guardCancelable=false,decisionPending=false;let game,scene,camera,renderer,ball,bat,batPivot,pitcher,batter,runnerMeshes=[],cameraMode=0,mode='brain',busy=false,animation=null,fieldGroup;
-const fresh=()=>({inning:1,half:0,outs:0,strikes:0,balls:0,bases:[false,false,false],score:[0,0],batterIndex:[0,0],teams:[{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false},{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false}],over:false,atBatStart:true});
+const fresh=()=>({inning:1,half:0,outs:0,strikes:0,balls:0,bases:[false,false,false],score:[0,0],batterIndex:[0,0],teams:[{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false},{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false}],over:false,atBatStart:true,halfPa:0});
 const teamNames=['PLAYER','AI ALLSTARS'];
 let playerNames=[[],[]],pitcherNames=[[],[]],managerAnimation=null,pendingManagerVisit=false;
 function safeName(x){return String(x).replace(/[<>&"'`]/g,'').trim().slice(0,22)}
@@ -1640,10 +1674,10 @@ function update(){
  $('secretNote').textContent='비밀 숫자는 수비팀만 설정 · 교체 시에만 변경';updateRunners();updateBoard();updateLiveScore();updateSurrenderAdvice()
 }
 function canChange(){if(!game||game.over)return false;let t=staff();return t.pitcherNumber<11&&(t.changeRight||t.pitchCount>=25||(t.pitchCount>=15&&t.consecutiveWalks>=1))}
-function nextBatter(){game.strikes=0;game.balls=0;game.atBatStart=true;game.batterIndex[game.half]=(game.batterIndex[game.half]+1)%9;if(game.outs<3&&!game.over)announceBatter()}
+function nextBatter(){game.halfPa=(Number(game.halfPa)||0)+1;game.strikes=0;game.balls=0;game.atBatStart=true;game.batterIndex[game.half]=(game.batterIndex[game.half]+1)%9;if(game.outs<3&&!game.over)announceBatter()}
 function endInning(){
  decisionPending=false;staff().consecutiveWalks=0;
- game.bases=[false,false,false];game.runnerOwners=[null,null,null];game.outs=0;game.strikes=0;game.balls=0;game.atBatStart=true;
+ game.bases=[false,false,false];game.runnerOwners=[null,null,null];game.outs=0;game.strikes=0;game.balls=0;game.atBatStart=true;game.halfPa=0;
  if(game.half===0){if(game.inning>=(game.targetInnings||9)&&game.score[1]>game.score[0])return finish();game.half=1}
  else{if(game.inning>=(game.targetInnings||9)&&game.score[0]!==game.score[1])return finish();game.half=0;game.inning++;if(game.inning>(game.maxInnings||12))return finish()}
  game.lines[game.half][game.inning-1]=0;
