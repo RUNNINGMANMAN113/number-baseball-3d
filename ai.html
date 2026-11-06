@@ -111,6 +111,10 @@
 .career-shell h3{margin:16px 0 8px;color:#176083}.career-empty{color:#52798e;padding:15px;font-size:13px}
 .stats-actions #downloadResultPNG{background:#145b8d;color:white}.stats-actions #openCareerResults{background:#2c7793;color:white}
 @media(max-width:540px){.career-shell{padding:12px}.career-toolbar{display:block}.career-tools{margin-top:9px}.stats-actions{display:grid;grid-template-columns:1fr 1fr}.stats-actions button{min-width:0}}
+
+/* v40: persistent baseball stadium behind the WebGL canvas, even after GPU errors. */
+#stage .nb-stadium-backup{position:absolute;inset:0;z-index:0;pointer-events:none;background-color:#183548;background-image:radial-gradient(ellipse at 50% 80%,#c99166 0 6%,#4fbc71 6% 31%,#2878a3 31% 36%,#7fc4eb 36% 52%,#a9dff8 52%);background-position:center;background-size:cover}
+#stage>canvas{position:relative;z-index:0}
 </style><style id="casual-theme">
 :root{color:#203b51;background:#eaf8ff}
 body{background:linear-gradient(145deg,#bfeeff 0%,#effbff 40%,#d9f5e4 100%);color:#24445a}
@@ -421,7 +425,12 @@ body.nb-attack #change,body.nb-attack #surrender,body.nb-attack #surrenderAdvice
 body.nb-attack .inning-options{pointer-events:none}
 body.nb-attack .inning-options label:has(input:not([value="9"])){display:none}
 .nb-crash-strip{margin:5px 0 10px;padding:10px 13px;background:#fff3d7;border:1px solid #f2cb7f;color:#75511f;border-radius:11px;font-size:12px;line-height:1.5;font-weight:600}
-.nb-crash-strip b{font-weight:900}</style></head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다.</p><nav class="nb-mode-links" aria-label="게임 모드"><a href="index.html">2인용 대전</a><a class="nb-current" href="ai.html">AI 대전</a><a href="attack.html">🎯 공격모드 · 1인용</a></nav><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div id="positionWarning" role="status" aria-live="polite"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><div id="kboPicker" class="kbo-picker-overlay hidden" role="dialog" aria-modal="true" aria-label="2026 KBO 선수 선택기">
+.nb-crash-strip b{font-weight:900}</style><style id="nb37-stability-css">
+.nb-crash-strip{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.nb-crash-strip small{flex-basis:100%;font-size:11px;font-weight:500}
+#nbReconnect{background:#163957;border:1px solid #6084a3;border-radius:7px;color:#fff;padding:7px 10px;cursor:pointer;font-size:12px;font-weight:800}
+#nbReconnect:focus-visible{outline:3px solid #f6c56c;outline-offset:2px}
+</style></head><body><div id="setupOverlay" class="setup-overlay"><div class="setup-card"><div class="tag">NUMBER BASEBALL · SOLO VS AI</div><h2>⚾ 경기 시작 전 선수 명단</h2><p class="hint">원정팀은 플레이어, 홈팀은 AI입니다. 이름을 정하고 혼자서 경기를 즐겨 보세요. AI는 숫자 추리 결과를 바탕으로 공격합니다. <strong>v41:</strong> 선발투수는 교체 가능 상황에서 최대 5회 숫자만 변경할 수 있고, 불펜 10명은 각각 숫자 1개씩 사용합니다.</p><nav class="nb-mode-links" aria-label="게임 모드"><a href="index.html">2인용 대전</a><a class="nb-current" href="ai.html">AI 대전</a><a href="attack.html">🎯 공격모드 · 1인용</a></nav><div id="resumeBox" class="resume-box" style="display:none"><strong>🎮 이어 할 경기가 있어요!</strong><p id="savedPreview">저장된 경기를 불러올 수 있습니다.</p><div class="resume-actions"><button class="primary" id="continueGame">▶ 저장한 경기 이어하기</button><button id="setupNewGame">새 경기 준비하기</button></div></div><div class="start-options"><h3>⚙️ 경기 설정 &amp; 라인업 보관함</h3><div class="setup-split"><label>경기 길이</label><div class="inning-options"><label><input type="radio" name="matchInnings" value="3">3이닝</label><label><input type="radio" name="matchInnings" value="5">5이닝</label><label><input type="radio" name="matchInnings" value="7">7이닝</label><label><input type="radio" name="matchInnings" value="9" checked>9이닝</label></div></div><div class="setup-split roster-buttons"><button id="saveRoster" type="button">💾 현재 선수명단 저장</button><button id="loadRoster" type="button">📂 저장한 명단 불러오기</button></div><div id="rosterSaveStatus">이름을 한 번만 입력하고 다음 경기에도 사용할 수 있어요.</div></div><div class="setup-grid" id="setupTeams"></div><div id="positionWarning" role="status" aria-live="polite"></div><div class="setup-actions"><button class="primary" id="startMatch">라인업 확정 · 경기 시작</button></div></div></div><div id="kboPicker" class="kbo-picker-overlay hidden" role="dialog" aria-modal="true" aria-label="2026 KBO 선수 선택기">
  <div class="kbo-picker-panel">
   <div class="kbo-picker-head"><div><h2>⚾ 2026 KBO 선수 선택하기</h2><p>구단 → 투수·타자(기본 포지션 표시) → 선수 클릭. 선수 클릭 순서대로 선발 9명 다음 후보 5명까지 자동 입력됩니다. 같은 선수를 다시 누르면 해제됩니다. 후보 역할은 PH/PR을 직접 선택하세요. 2026 정규시즌 3경기 이상 출전 선수 명단을 추가 대조한 검증 진행판입니다. 외국인 대체 선수 및 시즌 중 이적 선수를 포함하며 전체 전수검증은 완료되지 않았습니다.</p></div><button id="kboClose" class="kbo-dismiss" type="button" aria-label="닫기">×</button></div>
   <div id="kboClubGrid" class="kbo-club-grid"></div>
@@ -432,7 +441,7 @@ body.nb-attack .inning-options label:has(input:not([value="9"])){display:none}
   <div class="kbo-source" id="kboSource">기준일이 다른 출처가 포함되어 있습니다. 참고 선수 목록은 특정 날짜의 1군 엔트리 전체를 보증하지 않습니다. 구단 배지는 공식 로고의 복제가 아닌 자체 제작 식별 배지입니다.</div>
   <div class="kbo-picker-actions"><button type="button" id="kboClearChosen">이 팀의 자동 선택 기록 초기화</button><button type="button" id="kboDone">선택 완료</button></div>
  </div>
-</div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout" data-mobile-tab="play"><div class="broadcast-column"><section class="view"><div class="stage" id="stage"><iframe id="nbDirectorFrame" title="실제 경기 3D 애니메이션" allow="fullscreen"></iframe><div id="nbDirectorDisplay"><div class="nb-director-score" id="nbDirectorScore">AWAY <strong>0</strong> · HOME <strong>0</strong></div><div class="nb-director-score" id="nbDirectorInning">1회 초 · B 0 S 0 O 0</div></div><div id="nbDirectorNotice" role="status" aria-live="polite"><p id="nbDirectorNoticeText">3D 애니메이션을 준비하고 있습니다.</p><small>화면이 표시되지 않으면 인터넷 연결을 확인해 주세요.</small></div><div class="nb-director-controls" id="nbDirectorControls"><span id="nbDirectorSceneName">경기 애니메이션</span></div><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section><div class="nb-crash-strip">📺 중계 화면에 <b>:( 또는 흰 화면</b>이 나타나면 <b>‘지금 저장’ → 새로고침 → ‘저장한 경기 이어하기’</b>를 이용하세요. 원래 고화질 그래픽은 유지됩니다.</div><nav class="mobile-game-tabs" role="tablist" aria-label="모바일 경기 메뉴"><button type="button" role="tab" aria-selected="true" data-mobile-tab="play"><span class="tab-icon" aria-hidden="true">⚾</span>타격</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="guess"><span class="tab-icon" aria-hidden="true">🧩</span>추리</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="roster"><span class="tab-icon" aria-hidden="true">👥</span>선수·교체</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="live"><span class="tab-icon" aria-hidden="true">📡</span>중계</button></nav>
+</div><header><div><div class="tag">3D CASUAL · SINGLE PLAYER VS AI</div><h1>⚾ NUMBER BASEBALL</h1><small>혼자 즐기는 AI 대전 · 생생한 LIVE 중계 · 저장하기</small></div><div class="mode"><button id="brain" class="active">두뇌전</button><button id="pro">프로야구</button></div></header><section class="broadcast" aria-label="실시간 야구 전광판"><div class="broadcast-head">⚾ NUMBER BASEBALL · LIVE SCORE</div><div class="broadcast-body"><div class="innings"><table class="inning-table"><thead><tr><th>TEAM</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>R</th></tr></thead><tbody id="inningRows"></tbody></table></div><div class="broadcast-side"><strong id="boardInning">1회 초</strong><div class="lights"> <span class="letter">B</span><span class="lamp b" id="bl0"></span><span class="lamp b" id="bl1"></span><span class="lamp b" id="bl2"></span></div><div class="lights"><span class="letter">S</span><span class="lamp s" id="sl0"></span><span class="lamp s" id="sl1"></span></div><div class="lights"><span class="letter">O</span><span class="lamp o" id="ol0"></span><span class="lamp o" id="ol1"></span></div><div class="broadcast-diamond"><div class="base second" id="bb2"></div><div class="base first" id="bb1"></div><div class="base third" id="bb3"></div></div></div></div></section><main class="layout" data-mobile-tab="play"><div class="broadcast-column"><section class="view"><div class="stage" id="stage"><iframe id="nbDirectorFrame" title="실제 경기 3D 애니메이션" allow="fullscreen"></iframe><div id="nbDirectorDisplay"><div class="nb-director-score" id="nbDirectorScore">AWAY <strong>0</strong> · HOME <strong>0</strong></div><div class="nb-director-score" id="nbDirectorInning">1회 초 · B 0 S 0 O 0</div></div><div id="nbDirectorNotice" role="status" aria-live="polite"><p id="nbDirectorNoticeText">3D 애니메이션을 준비하고 있습니다.</p><small>화면이 표시되지 않으면 인터넷 연결을 확인해 주세요.</small></div><div class="nb-director-controls" id="nbDirectorControls"><span id="nbDirectorSceneName">경기 애니메이션</span></div><div class="celebration" id="celebration"><strong>HOME RUN!</strong><small id="homerText">NUMBER BASEBALL</small></div><div class="manager-caption" id="managerCaption">감독 마운드 방문 · 투수 교체</div><div class="error" id="error">3D 엔진을 불러올 수 없습니다.<br>인터넷 연결을 확인한 후 다시 열어 주세요.</div><div class="hud"><div><div>AWAY <b id="away">0</b></div><div>HOME <b id="home">0</b></div></div><div><b id="inning">1회 초</b><div id="count">B 0 · S 0 · O 0</div></div><div class="right"><div>● LIVE</div><div id="pitchno">PITCH 0</div></div></div><div class="ticker"><span id="caption">PLAY BALL! 세 자리 숫자를 입력하세요.</span><strong id="batter">1번 타자</strong></div></div></section><div class="nb-crash-strip" role="status" aria-live="polite"><span id="nbRecoveryText">📺 고화질 3D 중계 · 화면 오류가 나면 자동 재연결을 시도합니다.</span> <button id="nbReconnect" type="button" title="경기 기록은 유지하고 중계 엔진만 다시 연결">↻ 3D 중계 재연결</button> <small>복구되지 않아도 경기는 계속 진행할 수 있습니다. 전체 탭이 종료되면 저장한 경기 이어하기를 이용하세요.</small></div><nav class="mobile-game-tabs" role="tablist" aria-label="모바일 경기 메뉴"><button type="button" role="tab" aria-selected="true" data-mobile-tab="play"><span class="tab-icon" aria-hidden="true">⚾</span>타격</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="guess"><span class="tab-icon" aria-hidden="true">🧩</span>추리</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="roster"><span class="tab-icon" aria-hidden="true">👥</span>선수·교체</button><button type="button" role="tab" aria-selected="false" data-mobile-tab="live"><span class="tab-icon" aria-hidden="true">📡</span>중계</button></nav>
 <section class="panel roster-panel" aria-label="선수 현황 및 라인업">
   <div class="roster-head">
     <h2>📋 선수 현황 / 라인업</h2>
@@ -442,13 +451,13 @@ body.nb-attack .inning-options label:has(input:not([value="9"])){display:none}
     <div class="team-card"><div class="team-card-head"><h3>로딩 중…</h3></div><div class="team-block">선수 현황을 준비하고 있습니다.</div></div>
   </div>
 </section>
-</div><aside class="side"><section class="panel"><h2>타석 조작</h2><div class="hint">서로 다른 숫자 3개를 입력하세요. 0으로 시작해도 됩니다. 같은 추측을 반복할 수도 있습니다.</div><div class="digitrow"><input aria-label="첫째 숫자" id="d0" type="text" inputmode="numeric" maxlength="1" placeholder="·"><input aria-label="둘째 숫자" id="d1" type="text" inputmode="numeric" maxlength="1" placeholder="·"><input aria-label="셋째 숫자" id="d2" type="text" inputmode="numeric" maxlength="1" placeholder="·"></div><div class="keypad" id="numberKeypad" aria-label="숫자 입력 키패드"><div class="keypad-header"><span>🔢 숫자 키패드</span><span>한 번 누르면 입력 · 중복 방지</span></div><div class="keypad-grid" id="keypadDigits"></div><div class="keypad-actions"><button id="keypadBackspace" type="button">⌫ 한 자리 지우기</button><button id="keypadClear" type="button">↻ 전체 지우기</button></div></div><div class="sound-control"><span>🔊 경기장 소리 · 홈런·삼진·응원</span><button id="soundToggle" type="button">🔇 소리 켜기</button></div><div class="btnrow"><button class="primary" id="swing">⚾ 투구 · 스윙</button><button id="bunt">희생번트</button><button id="fly">희생플라이</button><button id="mobileSubButton" type="button" class="mobile-sub-button">👥 대타·대주자 교체</button><button id="change">투수 교체</button><button id="camera">📷 카메라 전환</button><button id="showStats">📊 경기 기록</button><button id="careerButton">🏆 통산 전적</button><button id="reset">↻ 새 경기</button><button id="surrender" class="surrender-btn">🏳️ 기권</button></div><p class="surrender-tip" id="surrenderAdvice" aria-live="polite"></p><p class="hint" id="eligibility">희생작전은 타석 시작 시에만 선택할 수 있습니다.</p></section><section class="panel"><h2>경기 현황</h2><div class="scoreline"><span id="awayTeamLabel">원정팀</span><strong id="sAway">0</strong></div><div class="scoreline"><span id="homeTeamLabel">홈팀</span><strong id="sHome">0</strong></div><div class="basegrid"><div><p id="status">1회 초 · 0아웃</p><div class="hint" id="pitcher">투수 1 · 0구</div><div class="hint" id="secretNote">비밀 숫자는 투수 교체 때 변경</div></div><div class="diamond"><div id="base2" class="base b2"></div><div id="base1" class="base b1"></div><div id="base3" class="base b3"></div></div></div></section><section class="panel live-panel"><div class="live-header"><div class="live-brand"><span class="live-dot">LIVE</span> NUMBER BASEBALL 중계센터</div><span id="liveContext" class="live-context">1회 초 · 경기 준비</span></div><div class="live-feature"><div class="live-feature-label">✦ 지금 이 순간 · TODAY'S PLAY</div><div class="live-feature-title" id="liveHeadline">플레이볼을 준비하고 있습니다!</div><div class="live-score-mini" id="liveMiniScore"><span>경기 준비</span></div></div><div class="live-feed-top"><span>📡 실시간 문자 중계</span><span id="liveEventCount">0 EVENTS</span></div><div id="log" class="log live-feed" aria-live="polite" aria-relevant="additions text"></div><div class="live-bottom">⚾ 3S 홈런 · 3F 즉시 아웃 · 누적 3S 삼진 · 4B 출루(조건부 1루타 기록)</div></section><section class="panel guess-panel" aria-label="숫자 추리 기록">
+</div><aside class="side"><section class="panel"><h2>타석 조작</h2><div class="hint">서로 다른 숫자 3개를 입력하세요. 0으로 시작해도 됩니다. 같은 타자와 같은 투수의 대결에서 동일한 숫자는 최대 2번만 사용할 수 있습니다.</div><div class="digitrow"><input aria-label="첫째 숫자" id="d0" type="text" inputmode="numeric" maxlength="1" placeholder="·"><input aria-label="둘째 숫자" id="d1" type="text" inputmode="numeric" maxlength="1" placeholder="·"><input aria-label="셋째 숫자" id="d2" type="text" inputmode="numeric" maxlength="1" placeholder="·"></div><p class="hint" id="repeatGuessHint" aria-live="polite">동일한 숫자는 타자당·투수당 최대 2번 (3번째 시도 차단)</p><div class="keypad" id="numberKeypad" aria-label="숫자 입력 키패드"><div class="keypad-header"><span>🔢 숫자 키패드</span><span>한 번 누르면 입력 · 중복 방지</span></div><div class="keypad-grid" id="keypadDigits"></div><div class="keypad-actions"><button id="keypadBackspace" type="button">⌫ 한 자리 지우기</button><button id="keypadClear" type="button">↻ 전체 지우기</button></div></div><div class="sound-control"><span>🔊 경기장 소리 · 타격·포구·파울·응원</span><button id="soundToggle" type="button">🔇 소리 켜기</button></div><div class="btnrow"><button class="primary" id="swing">⚾ 투구 · 스윙</button><button id="bunt">희생번트</button><button id="fly">희생플라이</button><button id="mobileSubButton" type="button" class="mobile-sub-button">👥 대타·대주자 교체</button><button id="change">투수 교체</button><button id="camera">📷 카메라 전환</button><button id="showStats">📊 경기 기록</button><button id="careerButton">🏆 통산 전적</button><button id="reset">↻ 새 경기</button><button id="surrender" class="surrender-btn">🏳️ 기권</button></div><p class="surrender-tip" id="surrenderAdvice" aria-live="polite"></p><p class="hint" id="eligibility">희생작전은 타석 시작 시에만 선택할 수 있습니다.</p></section><section class="panel"><h2>경기 현황</h2><div class="scoreline"><span id="awayTeamLabel">원정팀</span><strong id="sAway">0</strong></div><div class="scoreline"><span id="homeTeamLabel">홈팀</span><strong id="sHome">0</strong></div><div class="basegrid"><div><p id="status">1회 초 · 0아웃</p><div class="hint" id="pitcher">투수 1 · 0구</div><div class="hint" id="secretNote">비밀 숫자는 투수 교체 때 변경</div></div><div class="diamond"><div id="base2" class="base b2"></div><div id="base1" class="base b1"></div><div id="base3" class="base b3"></div></div></div></section><section class="panel live-panel"><div class="live-header"><div class="live-brand"><span class="live-dot">LIVE</span> NUMBER BASEBALL 중계센터</div><span id="liveContext" class="live-context">1회 초 · 경기 준비</span></div><div class="live-feature"><div class="live-feature-label">✦ 지금 이 순간 · TODAY'S PLAY</div><div class="live-feature-title" id="liveHeadline">플레이볼을 준비하고 있습니다!</div><div class="live-score-mini" id="liveMiniScore"><span>경기 준비</span></div></div><div class="live-feed-top"><span>📡 실시간 문자 중계</span><span id="liveEventCount">0 EVENTS</span></div><div id="log" class="log live-feed" aria-live="polite" aria-relevant="additions text"></div><div class="live-bottom">⚾ 3S 홈런 · 3F 즉시 아웃 · 누적 3S 삼진 · 4B 출루(조건부 1루타 기록)</div></section><section class="panel guess-panel" aria-label="숫자 추리 기록">
 <div class="guess-head"><h2>🧩 숫자 추리 기록</h2><span class="guess-count" id="guessCounter">0회 추리</span></div>
 <div class="guess-sub">입력한 숫자와 S·B·F 판정을 중계와 따로 확인하세요.</div>
-<div class="guess-controls"><button id="guessCurrent" class="selected" type="button">현재 투수 상대 기록</button><button id="guessAll" type="button">전체 추리 기록</button></div>
+<div class="guess-controls"><button id="guessCurrent" class="selected" type="button">현재 숫자 상대 기록</button><button id="guessAll" type="button">전체 추리 기록</button></div>
 <div class="guess-scroll" id="guessHistory" aria-live="polite"><div class="guess-empty">첫 번째 숫자를 입력하면 여기에 쌓입니다.</div></div>
-<div class="guess-note">S = 숫자·자리 일치 · B = 숫자만 일치 · F = 없는 숫자<br>투수가 교체되면 새로운 구간으로 기록되며 이전 추리도 '전체 추리 기록'에서 확인할 수 있습니다.</div>
-</section><section class="panel save-panel"><div class="save-titleline"><h2>💾 경기 저장</h2><span id="saveBadge" class="save-pill">저장 대기</span></div><p class="save-note" id="saveStatus">경기 중 진행 상황을 자동으로 저장합니다.</p><div class="save-actions"><button class="primary" id="saveNow">💾 지금 저장</button><button id="loadSaved">↩ 이어하기</button><button id="exportSave">↓ 백업 파일</button><button id="importSave">↑ 백업 불러오기</button></div><input id="importFile" type="file" accept="application/json,.json" style="display:none"><div class="nb-crash-help">📺 <b>3D 중계가 하얗게 변하거나 :( 화면이 보이나요?</b> 그래픽 화질을 낮추지 않았습니다. <b>‘지금 저장’</b>을 누른 다음 브라우저를 <b>새로고침</b>하고, 시작 화면의 <b>‘저장한 경기 이어하기’</b>를 선택하세요. 저장 확인 없이 새로고침하면 최근 플레이가 사라질 수 있습니다.</div><p class="save-note">자동 저장은 <b>현재 브라우저의 같은 웹주소</b>에서 이어 할 때 사용됩니다. 백업 파일에는 수비팀의 비밀 숫자가 포함되므로 상대에게 공유하지 마세요.</p></section></aside></main><div id="careerOverlay" class="career-modal hidden" role="dialog" aria-modal="true" aria-label="통산 전적 및 선수 기록"><div class="career-shell"><div class="career-toolbar"><h2>🏆 NUMBER BASEBALL 통산 기록</h2><div class="career-tools"><button id="careerExport">↓ 통산 기록 백업 JSON</button><button id="clearCareer">🗑 전체 기록 삭제</button><button id="closeCareer">✕ 닫기</button></div></div><p class="career-note" id="careerSummary">기록을 준비하는 중입니다.</p><p class="career-note">경기가 끝나면 한 번만 기록됩니다. 기록은 같은 브라우저와 웹주소에만 저장되며, 다른 기기와 자동 공유되지 않습니다. 선수 동명이인은 같은 팀·같은 이름이면 합산됩니다.</p><h3>구단별 통산 전적</h3><div id="careerTeams"></div><h3>선수별 타격 통산 기록</h3><div id="careerBatters"></div><h3>투수별 통산 기록</h3><div id="careerPitchers"></div><h3>최근 경기 기록</h3><div id="careerGames"></div></div></div><div id="surrenderOverlay" class="surrender-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="surrenderTitle">
+<div class="guess-note">S = 숫자·자리 일치 · B = 숫자만 일치 · F = 없는 숫자<br>투수가 교체되거나 선발의 숫자가 바뀌면 새 구간으로 기록되며 이전 추리도 '전체 추리 기록'에서 확인할 수 있습니다.</div>
+</section><section class="panel save-panel"><div class="save-titleline"><h2>💾 경기 저장</h2><span id="saveBadge" class="save-pill">저장 대기</span></div><p class="save-note" id="saveStatus">경기 중 진행 상황을 자동으로 저장합니다.</p><div class="save-actions"><button class="primary" id="saveNow">💾 지금 저장</button><button id="loadSaved">↩ 이어하기</button><button id="exportSave">↓ 백업 파일</button><button id="importSave">↑ 백업 불러오기</button></div><input id="importFile" type="file" accept="application/json,.json" style="display:none"><div class="nb-crash-help">📺 <b>3D 중계 오류 시 먼저 자동 복구를 시도합니다.</b> 실패하면 <b>‘3D 중계 재연결’</b> 버튼을 누르세요. 탭 전체가 종료되면 저장한 경기를 이어하세요. 저장 확인 없이 새로고침하면 최근 플레이가 사라질 수 있습니다.</div><p class="save-note">자동 저장은 <b>현재 브라우저의 같은 웹주소</b>에서 이어 할 때 사용됩니다. 백업 파일에는 수비팀의 비밀 숫자가 포함되므로 상대에게 공유하지 마세요.</p></section></aside></main><div id="careerOverlay" class="career-modal hidden" role="dialog" aria-modal="true" aria-label="통산 전적 및 선수 기록"><div class="career-shell"><div class="career-toolbar"><h2>🏆 NUMBER BASEBALL 통산 기록</h2><div class="career-tools"><button id="careerExport">↓ 통산 기록 백업 JSON</button><button id="clearCareer">🗑 전체 기록 삭제</button><button id="closeCareer">✕ 닫기</button></div></div><p class="career-note" id="careerSummary">기록을 준비하는 중입니다.</p><p class="career-note">경기가 끝나면 한 번만 기록됩니다. 기록은 같은 브라우저와 웹주소에만 저장되며, 다른 기기와 자동 공유되지 않습니다. 선수 동명이인은 같은 팀·같은 이름이면 합산됩니다.</p><h3>구단별 통산 전적</h3><div id="careerTeams"></div><h3>선수별 타격 통산 기록</h3><div id="careerBatters"></div><h3>투수별 통산 기록</h3><div id="careerPitchers"></div><h3>최근 경기 기록</h3><div id="careerGames"></div></div></div><div id="surrenderOverlay" class="surrender-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="surrenderTitle">
   <div class="surrender-card">
     <h2 id="surrenderTitle">🏳️ 경기 기권</h2>
     <p>기권을 선택하면 현재 점수를 보존하고 즉시 경기가 종료됩니다. <b>기권 팀은 패배, 상대 팀은 승리</b>로 처리합니다. 원래 경기 점수는 바꾸지 않습니다.</p>
@@ -457,15 +466,16 @@ body.nb-attack .inning-options label:has(input:not([value="9"])){display:none}
     <button type="button" class="confirm" id="confirmSurrender" disabled>선택한 팀 기권 확정</button>
     <button type="button" class="cancel" id="cancelSurrender">경기 계속하기</button>
   </div>
-</div><div class="sub-veil hidden" id="subOverlay" role="dialog" aria-modal="true" aria-labelledby="subTitle"><div class="sub-box"><h2 id="subTitle">⚾ 선수교체</h2><p id="subHelp">후보 5명 중 교체할 선수를 선택해 주세요.</p><label for="subBench">투입할 후보</label><select id="subBench"></select><label for="subTarget">교체 대상</label><select id="subTarget"></select><p id="subHint"></p><button type="button" class="primary" id="subConfirm">선수교체 확정</button><button type="button" id="subCancel">취소</button></div></div><div id="finalstats" class="finalstats hidden"><div class="stats-panel"><h2>⚾ 경기 종료 · 공식 기록</h2><h3 id="finalScore"></h3><p id="finalResultDetail"></p><section class="highlight-block" id="highlightBlock" aria-label="오늘의 하이라이트"><h3>🏆 경기 하이라이트</h3><div id="highlightMvp" class="highlight-hero">오늘의 MVP를 분석합니다.</div><div id="highlightList" class="highlight-list"></div></section><div id="statTables"></div><div class="stats-actions"><button id="downloadResultPNG">🖼️ 결과 이미지 저장</button><button id="openCareerResults">🏆 통산 기록</button><button id="closeStats">경기 화면으로</button><button id="restartStats" class="primary">새 경기 시작</button></div><p class="hint">타율은 안타/타수, ERA는 자책점×9/투구 이닝으로 계산합니다. 볼넷·희생타는 타수에서 제외됩니다. 두뇌전 4B가 1루타로 기록되는 경우에는 타수와 안타가 증가합니다. 이 게임의 기록은 구현된 판정 기준을 따릅니다.</p></div></div><div id="guard" class="guard"><div class="guard-card"><div class="tag">DEFENSE ONLY · PRIVATE SCREEN</div><h2 id="guardTitle">수비팀 준비</h2><div class="role-tag" id="guardRole">수비팀 전용</div><p id="guardHelp">수비팀이 비밀 숫자를 설정합니다. 공격팀이 보지 않도록 해 주세요.</p><div id="decisionEntry" style="display:none"><button id="keepPitcher" class="primary">기존 투수 유지</button><button id="replacePitcher">🔢 새 투수 · 새 숫자 설정</button><button id="replacePitcherSame">🎭 새 투수 · 기존 숫자 유지</button><p class="guard-private-note">이 선택은 수비팀에게만 보입니다. 공격팀에는 투수 교체 사실만 공개됩니다.</p></div><div id="secretEntry"><input id="defSecret" inputmode="numeric" type="password" maxlength="3" placeholder="서로 다른 3자리" autocomplete="off"><button id="saveSecret" class="primary">비밀 숫자 확정 · 화면 숨기기</button></div><div id="passEntry" style="display:none"><button id="resume" class="primary">공격팀에게 기기 전달 완료 · 경기 시작</button></div><button id="cancelGuard" style="display:none">취소</button></div></div><div class="save-toast" id="saveToast" role="status" aria-live="polite"></div><div class="footer">브라우저에서 실행되는 3D 프로토타입입니다. Three.js 엔진을 인터넷에서 불러옵니다. Animation Lab v24 경기 애니메이션 통합·재생 안정화판입니다. 시각화는 판정·기록을 변경하지 않습니다.</div><script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script><script>
+</div><div class="sub-veil hidden" id="subOverlay" role="dialog" aria-modal="true" aria-labelledby="subTitle"><div class="sub-box"><h2 id="subTitle">⚾ 선수교체</h2><p id="subHelp">후보 5명 중 교체할 선수를 선택해 주세요.</p><label for="subBench">투입할 후보</label><select id="subBench"></select><label for="subTarget">교체 대상</label><select id="subTarget"></select><p id="subHint"></p><button type="button" class="primary" id="subConfirm">선수교체 확정</button><button type="button" id="subCancel">취소</button></div></div><div id="finalstats" class="finalstats hidden"><div class="stats-panel"><h2>⚾ 경기 종료 · 공식 기록</h2><h3 id="finalScore"></h3><p id="finalResultDetail"></p><section class="highlight-block" id="highlightBlock" aria-label="오늘의 하이라이트"><h3>🏆 경기 하이라이트</h3><div id="highlightMvp" class="highlight-hero">오늘의 MVP를 분석합니다.</div><div id="highlightList" class="highlight-list"></div></section><div id="statTables"></div><div class="stats-actions"><button id="downloadResultPNG">🖼️ 결과 이미지 저장</button><button id="openCareerResults">🏆 통산 기록</button><button id="closeStats">경기 화면으로</button><button id="restartStats" class="primary">새 경기 시작</button></div><p class="hint">타율은 안타/타수, ERA는 자책점×9/투구 이닝으로 계산합니다. 볼넷·희생타는 타수에서 제외됩니다. 두뇌전 4B가 1루타로 기록되는 경우에는 타수와 안타가 증가합니다. 이 게임의 기록은 구현된 판정 기준을 따릅니다.</p></div></div><div id="guard" class="guard"><div class="guard-card"><div class="tag">DEFENSE ONLY · PRIVATE SCREEN</div><h2 id="guardTitle">수비팀 준비</h2><div class="role-tag" id="guardRole">수비팀 전용</div><p id="guardHelp">수비팀이 비밀 숫자를 설정합니다. 공격팀이 보지 않도록 해 주세요.</p><div id="decisionEntry" style="display:none"><button id="keepPitcher" class="primary">기존 투수 유지</button><button id="changeStarterNumber" type="button" style="display:none">🎯 선발 유지 · 비밀 숫자 변경 (최대 5회)</button><button id="replacePitcher">🔢 새 투수 · 새 숫자 설정</button><button id="replacePitcherSame">🎭 새 투수 · 기존 숫자 유지</button><p class="guard-private-note">이 선택은 수비팀에게만 보입니다. 선발의 숫자 변경은 투수 교체가 아니며, 숫자 값은 공격팀에 공개되지 않습니다.</p></div><div id="secretEntry"><input id="defSecret" inputmode="numeric" type="password" maxlength="3" placeholder="서로 다른 3자리" autocomplete="off"><button id="saveSecret" class="primary">비밀 숫자 확정 · 화면 숨기기</button></div><div id="passEntry" style="display:none"><button id="resume" class="primary">공격팀에게 기기 전달 완료 · 경기 시작</button></div><button id="cancelGuard" style="display:none">취소</button></div></div><div class="save-toast" id="saveToast" role="status" aria-live="polite"></div><div class="footer">브라우저에서 실행되는 3D 프로토타입입니다. Three.js 엔진을 인터넷에서 불러옵니다. v40 중계 수정: 삼자범퇴 연출 순서·중복 송출·교체 투수 유니폼·3B 노스윙을 개선했습니다. 동일 숫자 3회 이상 입력은 같은 타석·투수에서 차단됩니다. 소리는 버튼으로 켜주세요. 시각화는 S·B·F 판정과 기록을 변경하지 않습니다.</div><script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script><script>
 (()=>{'use strict';
 
 // NUMBER BASEBALL v28 | VISUAL DIRECTOR
 // Game state is finalised once, exclusively by the existing v27 rules engine.
 // Scene events are read-only projections; they NEVER award outs/runs or move logical runners.
+let nbLastCountVisual=null; // v38: presentation only, not part of official game rules
 const NBSceneMap={
  // V36: visual-only storyboard. Outs, runs and bases are always resolved by the game engine.
- build({before,after,effect,action,feedbackF=-1}){
+ build({before,after,effect,action,feedbackF=-1,feedbackB=-1}){
    const frame={scene:'pitch',baseMask:before.mask,half:before.half};
    const strikeout=after.k>before.k;
    const chooseOut=()=>{
@@ -488,15 +498,38 @@ const NBSceneMap={
    else if(action==='bunt')frame.scene=effect==='bunt'?'buntSuccess':effect==='out'?'buntStrikeout':'buntFoul';
    else if(action==='fly')frame.scene=effect==='fly'?'sacFlySuccess':effect==='out'?'sacFlyOut':'sacFlyCount';
    else if(effect==='out')frame.scene=chooseOut();
-   else if(effect==='pitch'&&feedbackF>0&&feedbackF<3)frame.scene='foulReset';
+   // V38: COUNT-ONLY visual variety. Number-ball S/B/F rules and saved counts stay untouched.
+   // A strike may be shown as a harmless whiff or watched pitch; a foul is sent
+   // into five distinct foul territories instead of always falling beside home.
+   else if(effect==='pitch'){
+     const foulScenes=['foulLeft','foulRight','foulBack','foulHighLeft','foulHighRight'];
+     const roll=Math.random();
+     if(feedbackB===3){
+       // 0S · 3B · 0F is a taken pitch, irrespective of earlier at-bat counts.
+       frame.scene='countTake';
+     }else if(feedbackF>0){
+       if(roll<.55)frame.scene=foulScenes[Math.floor(Math.random()*foulScenes.length)];
+       else if(before.strikes+Math.max(0,after.strikes-before.strikes)>0&&roll<.78)frame.scene='countWhiff';
+       else frame.scene='countTake';
+     }else if(after.strikes>before.strikes){
+       frame.scene=roll<.55?'countWhiff':'countTake';
+     }else frame.scene='countTake';
+     // Prevent a visually identical count-only scene on consecutive pitches.
+     // Never invent a swing strike when the actual S count is still zero.
+     if(frame.scene===nbLastCountVisual){
+       if(foulScenes.includes(frame.scene)){
+         const different=foulScenes.filter(id=>id!==frame.scene);
+         frame.scene=different[Math.floor(Math.random()*different.length)];
+       }else if(frame.scene==='countWhiff')frame.scene='countTake';
+       else if(feedbackB!==3&&after.strikes>0)frame.scene='countWhiff';
+     }
+     nbLastCountVisual=frame.scene;
+   }
 
    const primaryIndex=(action==='bunt'||action==='fly')?1:0;
    const parts=primaryIndex?[{scene:action==='bunt'?'signalBunt':'signalFly',baseMask:before.mask,half:before.half},frame]:[frame];
-   const oldDiff=before.score[before.half]-before.score[1-before.half];
-   const newDiff=after.score[before.half]-after.score[1-before.half];
-   if(effect==='homer'||(runDelta>0&&((oldDiff<0&&newDiff===0)||(oldDiff<=0&&newDiff>0)))){
-     parts.push({...frame,replay:true,camera:'side'});
-   }
+   // v40: ONE official pitch animation per number input. No automatic duplicate replay.
+   // Post-play celebrations and transitions never reproduce a second thrown ball.
    // Scoring at home is a CLOSE-UP replay, not an additional run or a separate official at-bat.
    if(runDelta>0&&(before.mask&4)&&['hit','fly'].includes(effect)&&Math.random()<.25){
      parts.push({scene:'homeSafeCall',baseMask:before.mask,half:before.half,replay:true});
@@ -505,14 +538,16 @@ const NBSceneMap={
    const batterDone=after.batterIndex!==before.batterIndex;
    const sideRetired=after.half!==before.half||after.inning!==before.inning;
    const thirdOut=isOut&&before.outs===2&&(sideRetired||after.over);
-   if(isOut&&batterDone){
-     // Outed batter leaves the box. Embedded rendering omits the pitch/K replay here.
-     parts.push({scene:'batterExit',baseMask:before.mask,half:before.half});
+   const threeUp=thirdOut&&Number(before.halfPa)===2&&before.mask===0&&before.inningRuns===0;
+   if(threeUp){
+     // Third out is already shown by the primary scene. Cheer first, THEN the batter exits.
+     parts.push({scene:'threeUp',baseMask:0,half:before.half});
+   }else if(thirdOut&&strikeout&&(before.mask&6)!==0){
+     parts.push({scene:'escapeK',baseMask:before.mask,half:before.half});
    }
-   if(thirdOut){
-     const threeUp=Number(before.halfPa)===2&&before.mask===0&&before.inningRuns===0;
-     if(threeUp)parts.push({scene:'threeUp',baseMask:0,half:before.half});
-     else if(strikeout&&(before.mask&6)!==0)parts.push({scene:'escapeK',baseMask:before.mask,half:before.half});
+   if(isOut&&batterDone){
+     // Embedded batterExit has no extra pitch or strikeout call.
+     parts.push({scene:'batterExit',baseMask:before.mask,half:before.half});
    }
    if(after.over){
      const walkoff=before.half===1&&runDelta>0&&after.score[1]>after.score[0];
@@ -536,43 +571,106 @@ function nbDirectorCapture(){
   k:game.pitchStats.reduce((sum,a)=>sum+a.reduce((z,p)=>z+(p.k||0),0),0)};
 }
 const NBDirector={
- frame:null,ready:false,active:false,queue:[],index:0,serial:0,onFinished:null,plan:null,
- loaded:false,timeout:null,safeTimeout:null,doneHold:null,progress:0,
+ frame:null,ready:false,active:false,disabled:false,queue:[],index:0,serial:0,onFinished:null,plan:null,
+ loaded:false,timeout:null,safeTimeout:null,doneHold:null,recoverTimer:null,watchdog:null,progress:0,
+ retries:0,recovering:false,reloadCount:0,lastSignal:0,errors:[],
+ sentSceneIndex:-1,sceneSent:false,
  init(){
    this.frame=document.getElementById('nbDirectorFrame');
-
-   // Preload the engine before the first pitch so a live scene does not flash a blank iframe.
-   if(!this.loaded){this.loaded=true;this.frame.src='animation_engine.html?embedded=1'}
+   document.getElementById('nbReconnect')?.addEventListener('click',()=>this.reconnect());
    window.addEventListener('message',e=>{
      if(e.source!==this.frame?.contentWindow||e.data?.source!=='NBLab')return;
-     if(e.data.type==='READY'){this.ready=true;clearTimeout(this.timeout);this.timeout=null;if(this.active)this.sendCurrent()}
+     this.lastSignal=Date.now();
+     if(e.data.type==='READY'){
+       this.ready=true;this.recovering=false;clearTimeout(this.recoverTimer);this.recoverTimer=null;
+       if(this.active)this.sendCurrent();
+       else this.report('✅ 3D 중계 연결 완료 · 고화질 유지');
+       return;
+     }
+     if(e.data.type==='HEARTBEAT')return;
      if(!this.active||e.data.token!==this.serial)return;
+     // V39: accept only sound cues from the active animation + current iframe/token.
+     if(e.data.type==='SFX'){
+       if(['batCrack','mittCatch','crowdFoul','crowdFoulHigh'].includes(e.data.kind)){
+         playFieldSfx(e.data.kind,Number(e.data.pan)||0);
+       }
+       return;
+     }
      if(e.data.type==='START'){
        clearTimeout(this.safeTimeout);
-       // Duration supplied by child is SECONDS; convert to milliseconds before scheduling fallback.
-       const ms=Number(e.data.duration)*1000;
+       // Animation engine reports MILLISECONDS (v36 incorrectly multiplied by 1000).
+       const ms=Number(e.data.durationMs??e.data.duration);
        this.notice(false);
-       this.safeTimeout=setTimeout(()=>this.fail('애니메이션 완료 신호가 지연됐습니다. 페이지를 새로고침한 후 다시 시도해 주세요.'),Math.max(9000,Number.isFinite(ms)?ms+6000:20000));
+       const monitor=()=>{
+         if(!this.active)return;
+         if(document.hidden){this.safeTimeout=setTimeout(monitor,5000);return}
+         this.fail('중계 완료 응답이 지연되었습니다.');
+       };
+       this.safeTimeout=setTimeout(monitor,Math.max(9000,Number.isFinite(ms)?ms+6000:20000));
      }
      if(e.data.type==='PROGRESS'){this.progress=Math.max(0,Math.min(1,Number(e.data.progress)||0));this.renderScore()}
-     if(e.data.type==='ERROR')this.fail(e.data.message||'3D 장면을 불러오지 못했습니다.');
+     if(e.data.type==='ERROR')this.fail(e.data.message||'3D 장면 렌더링 오류');
      if(e.data.type==='DONE'){clearTimeout(this.doneHold);this.doneHold=setTimeout(()=>this.advance(),650)}
    });
-   this.frame.addEventListener('error',()=>{if(this.active)this.fail('3D 애니메이션 파일을 열 수 없습니다. 세 파일이 같은 폴더에 있는지 확인하세요.')});
+   this.frame.addEventListener('error',()=>{if(this.active)this.fail('3D 중계 화면 로딩 오류')});
+   window.addEventListener('visibilitychange',()=>{this.lastSignal=Date.now()});
+   this.watchdog=setInterval(()=>{
+     if(this.active&&this.ready&&!this.recovering&&!document.hidden&&this.lastSignal&&Date.now()-this.lastSignal>18000){
+       this.fail('중계 엔진 응답이 끊겼습니다.');
+     }
+   },3500);
+   this.loaded=true;this.frame.src='animation_engine.html?embedded=1';this.lastSignal=Date.now();
  },
+ report(message){const el=document.getElementById('nbRecoveryText');if(el)el.textContent=message},
  notice(show,message){const el=document.getElementById('nbDirectorNotice');if(message)document.getElementById('nbDirectorNoticeText').textContent=message;el?.classList.toggle('show',!!show)},
- fail(message){if(!this.active)return;clearTimeout(this.timeout);clearTimeout(this.safeTimeout);this.timeout=this.safeTimeout=null;this.notice(true,message)},
+ clearTimers(){
+   clearTimeout(this.timeout);clearTimeout(this.safeTimeout);clearTimeout(this.doneHold);clearTimeout(this.recoverTimer);
+   this.timeout=this.safeTimeout=this.doneHold=this.recoverTimer=null;
+ },
+ fail(message){
+   if(!this.active)return;
+   this.clearTimers();
+   this.errors.push({at:Date.now(),scene:this.queue[this.index]?.scene||'',message:String(message).slice(0,150)});
+   this.errors=this.errors.slice(-20);
+   if(this.retries<1){
+     this.retries++;
+     this.ready=false;this.recovering=true;this.lastSignal=Date.now();
+     this.sceneSent=false;this.sentSceneIndex=-1;
+     this.report('🔄 중계 오류 감지 · 화면만 자동 재연결 중 (경기 기록 유지)');
+     this.notice(true,'3D 중계를 다시 연결하고 있습니다. 경기 데이터는 보존됩니다.');
+     // A fresh browsing context releases all GPU resources held by the failed renderer.
+     try{this.frame.src='animation_engine.html?embedded=1&reconnect='+ ++this.reloadCount}
+     catch(e){this.fail('중계 재연결을 시작하지 못했습니다.');return}
+     this.recoverTimer=setTimeout(()=>this.fail('중계 재연결 응답 없음'),14000);
+     return;
+   }
+   // Never leave the batting input locked if graphics cannot complete.
+   this.disabled=true;this.ready=false;this.recovering=false;
+   this.report('⚠️ 중계 일시중단 · 경기 계속 가능 · 우측 재연결 버튼으로 복구');
+   this.finish();
+ },
+ reconnect(){
+   if(this.active){this.retries=0;this.fail('사용자 요청: 중계 다시 연결');return}
+   this.cancel();this.disabled=false;this.ready=false;this.loaded=true;this.recovering=false;
+   this.lastSignal=Date.now();this.report('🔄 3D 엔진을 다시 연결합니다. 기록과 화질은 유지됩니다.');
+   try{this.frame.src='animation_engine.html?embedded=1&manual='+ ++this.reloadCount}
+   catch(e){this.disabled=true;this.report('⚠️ 재연결 실패 · 경기 진행 가능')}
+ },
  cancel(){
-   clearTimeout(this.timeout);clearTimeout(this.safeTimeout);clearTimeout(this.doneHold);this.doneHold=null;this.notice(false);
-   this.timeout=this.safeTimeout=null;
-   this.active=false;this.ready=this.ready&&!!this.frame?.contentWindow;
+   this.clearTimers();this.notice(false);
+   this.active=false;this.recovering=false;
    this.queue=[];this.onFinished=null;this.plan=null;this.serial++;
+   this.sceneSent=false;this.sentSceneIndex=-1;
    document.getElementById('stage')?.classList.remove('nb-director-active');
-   this.frame?.contentWindow?.postMessage({source:'NBGame',type:'CANCEL'},'*');
+   try{this.frame?.contentWindow?.postMessage({source:'NBGame',type:'CANCEL'},'*')}catch(e){}
  },
  start(plan,done){
-   this.cancel();this.plan=plan;this.queue=plan.parts;this.index=0;this.onFinished=done;this.active=true;
-   // Cosmetic probabilities are rolled ONCE per play, shared by its replay.
+   this.cancel();
+   if(this.disabled){
+     this.report('⚠️ 3D 중계가 중단되어 영상만 건너뜁니다. 점수와 경기 진행은 정상입니다.');
+     queueMicrotask(()=>{if(typeof done==='function')done()});return;
+   }
+   this.plan=plan;this.queue=plan.parts;this.index=0;this.onFinished=done;this.active=true;this.retries=0;
    const primary=plan.parts[plan.primaryIndex||0];
    if(primary){
      const slide=!!((primary.baseMask&4)&&plan.runDelta>0&&Math.random()<.50);
@@ -581,19 +679,15 @@ const NBDirector={
      for(const part of plan.parts){if(part===primary||part.replay){part.forceHomeSlide=slide;part.forceSafe=safe;part.forceCoach=coach}}
    }
    document.getElementById('stage').classList.add('nb-director-active');
-   this.notice(!this.ready,'3D 중계 화면을 준비하고 있습니다…');
-   if(!this.loaded){
-     this.loaded=true;
-     this.frame.src='animation_engine.html?embedded=1';
-   }
+   this.notice(!this.ready,'3D 중계를 준비하고 있습니다…');
    this.sendCurrent();
  },
  playAux(scene,baseMask=0,selectedBase=null){
    if(!game||game.over||busy)return false;
-   const snap=nbDirectorCapture();
-   busy=true;update();
-   this.start({pre:snap,post:snap,runDelta:0,parts:[{scene,baseMask,half:snap.half,selectedBase}]},()=>{busy=false;update();saveSnapshot();if(typeof scheduleAi==='function')scheduleAi()});
-   return true;
+   const snap=nbDirectorCapture();busy=true;update();
+   this.start({pre:snap,post:snap,runDelta:0,parts:[{scene,baseMask,half:snap.half,selectedBase}]},()=>{
+     busy=false;update();saveSnapshot();if(typeof scheduleAi==='function')scheduleAi();
+   });return true;
  },
  sendCurrent(){
    if(!this.active)return;
@@ -601,14 +695,25 @@ const NBDirector={
    this.progress=0;
    document.getElementById('nbDirectorSceneName').textContent=`${this.index+1}/${this.queue.length} · ${part.replay?'REPLAY · ':''}${this.sceneLabel(part.scene)}`;
    this.renderScore();
-   if(!this.ready){this.notice(true,'3D 화면 로딩 중입니다. 최초 실행은 시간이 걸릴 수 있습니다.');clearTimeout(this.timeout);this.timeout=setTimeout(()=>{if(!this.ready&&this.active)this.fail('3D 엔진 로딩에 실패했습니다. 인터넷 연결과 브라우저 설정을 확인하세요.')},16000);return}
-   clearTimeout(this.timeout);clearTimeout(this.safeTimeout);
-   this.serial++;
-   this.frame.contentWindow.postMessage({source:'NBGame',type:'PLAY',scene:part.scene,baseMask:part.baseMask,half:part.half,token:this.serial,speed:1,forceWalkType:'BB',selectedBase:part.selectedBase,camera:part.camera,sameTeams:part.sameTeams===true,forceHomeSlide:part.forceHomeSlide,forceSafe:part.forceSafe,forceCoach:part.forceCoach},'*');
-   // PLAY ACK watchdog: never silently jump to the next scene.
-   this.safeTimeout=setTimeout(()=>this.fail('3D 장면 시작 응답이 없습니다. 애니메이션 파일과 인터넷 연결을 확인하세요.'),8000);
+   if(!this.ready){
+     if(!this.recovering){
+       this.notice(true,'3D 중계 로딩 중입니다.');clearTimeout(this.timeout);
+       this.timeout=setTimeout(()=>{if(!this.ready&&this.active)this.fail('3D 엔진 로딩 응답 없음')},16000);
+     }
+     return;
+   }
+   if(this.sceneSent&&this.sentSceneIndex===this.index)return; // READY can fire again, but PLAY must not.
+   this.clearTimers();this.lastSignal=Date.now();this.serial++;
+   this.sceneSent=true;this.sentSceneIndex=this.index;
+   try{
+     this.frame.contentWindow.postMessage({source:'NBGame',type:'PLAY',scene:part.scene,baseMask:part.baseMask,half:part.half,token:this.serial,speed:1,forceWalkType:'BB',selectedBase:part.selectedBase,camera:part.camera,sameTeams:part.sameTeams===true,forceHomeSlide:part.forceHomeSlide,forceSafe:part.forceSafe,forceCoach:part.forceCoach},'*');
+     this.safeTimeout=setTimeout(()=>{
+       if(document.hidden){this.safeTimeout=setTimeout(()=>{if(!document.hidden)this.fail('3D 중계 장면 시작 응답 없음')},10000)}
+       else this.fail('3D 중계 장면 시작 응답 없음');
+     },8000);
+   }catch(e){this.fail('3D 중계 요청 실패: '+String(e.message||e))}
  },
- sceneLabel(id){const names={pitch:'투구',single:'안타',rbiCelebrate:'적시타',homerun:'홈런',grandSlam:'만루홈런',homerDugout:'홈런 축하',whiff:'헛스윙 삼진',looking:'루킹 삼진',fielding:'뜬공 아웃',lineout:'직선타 아웃',groundout:'땅볼 아웃',walk:'볼넷',buntSuccess:'희생번트 성공',buntFoul:'번트 파울',buntStrikeout:'번트 삼진',sacFlySuccess:'희생플라이',sacFlyOut:'플라이 아웃',inning:'이닝 교대',threeUp:'3자범퇴 투수 환호',escapeK:'득점권 위기 탈출',batterExit:'아웃 타자 퇴장',foulReset:'파울 후 재정비',firstBaseCatch:'1루 송구·심판 아웃콜',firstBaseSafe:'1루 접전 세이프',fielderReturn:'뜬공 포구·수비 복귀',homeSafeCall:'홈 접전 세이프',nextBatter:'다음 타자',scoredReturn:'득점 주자 복귀',finalCelebrate:'경기 종료',walkoffCelebrate:'끝내기',pinchHit:'대타',pinchRun:'대주자',bullpenEnter:'투수 교체',double:'2루타',triple:'3루타',finalTie:'무승부'};return names[id]||id},
+ sceneLabel(id){const names={pitch:'투구',single:'안타',rbiCelebrate:'적시타',homerun:'홈런',grandSlam:'만루홈런',homerDugout:'홈런 축하',whiff:'헛스윙 삼진',looking:'루킹 삼진',fielding:'뜬공 아웃',lineout:'직선타 아웃',groundout:'땅볼 아웃',walk:'볼넷',buntSuccess:'희생번트 성공',buntFoul:'번트 파울',buntStrikeout:'번트 삼진',sacFlySuccess:'희생플라이',sacFlyOut:'플라이 아웃',inning:'이닝 교대',threeUp:'3자범퇴 투수 환호',escapeK:'득점권 위기 탈출',batterExit:'아웃 타자 퇴장',foulReset:'파울 후 재정비',foulLeft:'3루선 파울',foulRight:'1루선 파울',foulBack:'포수 뒤 파울',foulHighLeft:'좌측 높이 뜬파울',foulHighRight:'우측 높이 뜬파울',countWhiff:'헛스윙 · 카운트 진행',countTake:'타자가 지켜본 투구',firstBaseCatch:'1루 송구·심판 아웃콜',firstBaseSafe:'1루 접전 세이프',fielderReturn:'뜬공 포구·수비 복귀',homeSafeCall:'홈 접전 세이프',nextBatter:'다음 타자',scoredReturn:'득점 주자 복귀',finalCelebrate:'경기 종료',walkoffCelebrate:'끝내기',pinchHit:'대타',pinchRun:'대주자',bullpenEnter:'투수 교체',double:'2루타',triple:'3루타',finalTie:'무승부'};return names[id]||id},
  renderScore(){
    if(!this.active||!this.plan)return;
    const {pre,post,runDelta}=this.plan;
@@ -650,7 +755,7 @@ const NBDirector={
    if(!this.active)return;
    clearTimeout(this.timeout);clearTimeout(this.safeTimeout);
    this.timeout=this.safeTimeout=null;clearTimeout(this.doneHold);this.doneHold=null;
-   if(this.index<this.queue.length-1){this.index++;this.sendCurrent();return}
+   if(this.index<this.queue.length-1){this.index++;this.retries=0;this.sceneSent=false;this.sentSceneIndex=-1;this.sendCurrent();return}
    this.finish();
  },
  finish(){
@@ -663,8 +768,63 @@ window.NBDirector=NBDirector;
 NBDirector.init();
 
 const $=id=>document.getElementById(id);const randSecret=()=>{let a=[0,1,2,3,4,5,6,7,8,9];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,3).join('')};
-let guardPhase='setup',pendingTeam=1,guardReason='start',guardCancelable=false,decisionPending=false;let game,scene,camera,renderer,ball,bat,batPivot,pitcher,batter,runnerMeshes=[],cameraMode=0,mode='brain',busy=false,animation=null,fieldGroup;
-const fresh=()=>({inning:1,half:0,outs:0,strikes:0,balls:0,bases:[false,false,false],score:[0,0],batterIndex:[0,0],teams:[{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false},{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false}],over:false,atBatStart:true,halfPa:0});
+let secretEntryAction='first';let guardPhase='setup',pendingTeam=1,guardReason='start',guardCancelable=false,decisionPending=false;let game,scene,camera,renderer,ball,bat,batPivot,pitcher,batter,runnerMeshes=[],cameraMode=0,mode='brain',busy=false,animation=null,fieldGroup;
+let mainContextLost=false;
+let nbStadiumBackup=null,nbStadiumCaptured=false,nbStadiumCaptureAttempts=0;
+function nbEnsureStadiumBackup(){
+ if(nbStadiumBackup)return nbStadiumBackup;
+ const stage=document.getElementById('stage');if(!stage)return null;
+ const el=document.createElement('div');el.className='nb-stadium-backup';el.setAttribute('aria-hidden','true');stage.prepend(el);
+ nbStadiumBackup=el;return el;
+}
+function nbRecordStadiumFrame(){
+ if(nbStadiumCaptured||mainContextLost||NBDirector.active||!renderer?.domElement)return;
+ if(++nbStadiumCaptureAttempts<12)return;
+ try{
+   const snapshot=renderer.domElement.toDataURL('image/jpeg',.78);
+   if(snapshot.length>2500){nbEnsureStadiumBackup().style.backgroundImage='url("'+snapshot+'")';}
+   nbStadiumCaptured=true; // Only one GPU screenshot readback; no repeated stalls.
+ }catch(e){nbStadiumCaptured=true;}
+}
+function nbStadiumContextLost(message){
+ mainContextLost=true;nbEnsureStadiumBackup();
+ if(renderer?.domElement)renderer.domElement.style.visibility='hidden';
+ NBDirector.report(message||'⚠️ 기본 경기장 화면의 WebGL이 중단됐습니다. 저장된 경기장 이미지를 표시합니다.');
+}
+
+const fresh=()=>({inning:1,half:0,outs:0,strikes:0,balls:0,bases:[false,false,false],score:[0,0],batterIndex:[0,0],teams:[{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false,starterChanges:0,starterSecrets:[]},{pitchCount:0,pitcherNumber:1,secret:null,consecutiveWalks:0,changeRight:false,starterChanges:0,starterSecrets:[]}],over:false,atBatStart:true,halfPa:0});
+
+// v41: starter has 1 opening secret + 5 eligible number changes.
+// Relief pitchers (10) are each limited to their single assigned secret.
+const NB_MAX_STARTER_CHANGES=5, NB_MAX_PITCHERS=11, NB_MAX_NUMBERS_PER_TEAM=16;
+function nbStarterChanges(t){return Number.isInteger(t?.starterChanges)?t.starterChanges:0}
+function nbNumberSlot(t){return (t?.pitcherNumber||1)+nbStarterChanges(t)}
+function nbNumbersUsed(t){return t?.secret?nbNumberSlot(t):0}
+function nbCanRefreshStarter(t){return !!t?.secret&&t.pitcherNumber===1&&nbStarterChanges(t)<NB_MAX_STARTER_CHANGES}
+function nbHasChangeRight(t){return !!t&&(t.changeRight||t.pitchCount>=25||(t.pitchCount>=15&&t.consecutiveWalks>=1))}
+function nbFreshStarterNumber(t){
+ const seen=new Set(Array.isArray(t.starterSecrets)?t.starterSecrets:[]);
+ if(t.secret)seen.add(t.secret);
+ for(let attempt=0;attempt<40;attempt++){
+  const value=randSecret();if(!seen.has(value))return value;
+ }
+ for(let i=0;i<10;i++)for(let j=0;j<10;j++)for(let k=0;k<10;k++){
+  if(i!==j&&i!==k&&j!==k){const value=''+i+j+k;if(!seen.has(value))return value}
+ }
+ throw new Error('비밀 숫자를 생성할 수 없습니다.');
+}
+function nbRefreshStarter(t,newSecret){
+ if(!nbCanRefreshStarter(t)||!/^\d{3}$/.test(newSecret)||new Set(newSecret).size!==3)return false;
+ const history=Array.isArray(t.starterSecrets)?t.starterSecrets.slice():[];
+ if(!history.includes(t.secret))history.push(t.secret);
+ if(history.includes(newSecret))return false;
+ t.starterChanges=nbStarterChanges(t)+1;
+ t.starterSecrets=[...history,newSecret];t.secret=newSecret;
+ // Reset only the number/segment's eligibility counters, NOT cumulative pitcher stats.
+ t.pitchCount=0;t.changeRight=false;t.consecutiveWalks=0;
+ return true;
+}
+
 const teamNames=['PLAYER','AI ALLSTARS'];
 let playerNames=[[],[]],pitcherNames=[[],[]],managerAnimation=null,pendingManagerVisit=false;
 function safeName(x){return String(x).replace(/[<>&"'`]/g,'').trim().slice(0,22)}
@@ -1027,6 +1187,49 @@ function playSound(type){
     noise.connect(filter);filter.connect(gain);gain.connect(audioContext.destination);noise.start(now);noise.stop(now+duration)
   }
   for(const [freq,dur,vol] of notes){const o=audioContext.createOscillator(),g=audioContext.createGain();o.type=type==='homer'||type==='walkoff'?'triangle':'sine';o.frequency.setValueAtTime(freq,now+offset);g.gain.setValueAtTime(.001,now+offset);g.gain.exponentialRampToValueAtTime(Math.max(.005,vol),now+offset+.012);g.gain.exponentialRampToValueAtTime(.001,now+offset+dur);o.connect(g);g.connect(audioContext.destination);o.start(now+offset);o.stop(now+offset+dur+.02);offset+=dur*.8}
+ }catch(e){}
+}
+// V39: short original Web Audio SFX synchronized with 3D frames.
+// External audio files aren't needed. Disconnected nodes are released after each cue.
+function playFieldSfx(kind,pan=0){
+ if(!soundEnabled||!['batCrack','mittCatch','crowdFoul','crowdFoulHigh'].includes(kind))return;
+ try{
+  const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;
+  if(!audioContext)audioContext=new Audio();
+  if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+  const ctx=audioContext,now=ctx.currentTime;
+  const isBat=kind==='batCrack',isMitt=kind==='mittCatch',high=kind==='crowdFoulHigh';
+  const duration=isBat?.14:isMitt?.16:high?1.05:.72;
+  const total=Math.max(1,Math.floor(ctx.sampleRate*duration));
+  const buffer=ctx.createBuffer(1,total,ctx.sampleRate),data=buffer.getChannelData(0);
+  // Dense, filtered impulse for wood/mitt; gentler layered crowd texture for foul territory.
+  for(let i=0;i<data.length;i++){
+   const k=i/data.length,env=isBat?Math.exp(-k*12):isMitt?Math.exp(-k*7):Math.sin(Math.PI*k)*(.7+.3*Math.sin(k*24)**2);
+   data[i]=(Math.random()*2-1)*env;
+  }
+  const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();
+  source.buffer=buffer;
+  filter.type=isMitt?'lowpass':'bandpass';
+  filter.frequency.value=isBat?1650:isMitt?790:high?920:690;
+  filter.Q.value=isBat?.52:isMitt?.65:.38;
+  gain.gain.value=isBat?.22:isMitt?.16:high?.085:.06;
+  const stereo=typeof ctx.createStereoPanner==='function'?ctx.createStereoPanner():null;
+  if(stereo)stereo.pan.value=Math.max(-.9,Math.min(.9,pan));
+  source.connect(filter);filter.connect(gain);gain.connect(stereo||ctx.destination);
+  if(stereo)stereo.connect(ctx.destination);
+  source.onended=()=>{try{source.disconnect();filter.disconnect();gain.disconnect();stereo?.disconnect()}catch(e){}};
+  source.start(now);source.stop(now+duration);
+  if(isBat||isMitt){
+   const osc=ctx.createOscillator(),body=ctx.createGain();
+   osc.type=isBat?'triangle':'sine';
+   osc.frequency.setValueAtTime(isBat?330:140,now);
+   osc.frequency.exponentialRampToValueAtTime(isBat?105:75,now+(isBat?.075:.10));
+   body.gain.setValueAtTime(isBat?.09:.045,now);
+   body.gain.exponentialRampToValueAtTime(.001,now+(isBat?.10:.12));
+   osc.connect(body);body.connect(ctx.destination);
+   osc.onended=()=>{try{osc.disconnect();body.disconnect()}catch(e){}};
+   osc.start(now);osc.stop(now+(isBat?.11:.13));
+  }
  }catch(e){}
 }
 $('soundToggle').onclick=()=>{soundEnabled=!soundEnabled;const b=$('soundToggle');b.classList.toggle('on',soundEnabled);b.textContent=soundEnabled?'🔊 소리 끄기':'🔇 소리 켜기';if(soundEnabled)playSound('inning')};
@@ -1449,21 +1652,25 @@ const ALL_NUMBERS=allNumbers();
 function feedback(guess,secret){let st=0,ba=0;for(let i=0;i<3;i++){if(guess[i]===secret[i])st++;else if(secret.includes(guess[i]))ba++}return st+','+ba}
 function aiGuess(){
  if(!aiCandidates.length)aiCandidates=ALL_NUMBERS.slice();
- if(aiCandidates.length===1)return aiCandidates[0];
- if(aiCandidates.length>280){const pool=aiCandidates.slice(0,Math.min(70,aiCandidates.length));return pool[Math.floor(Math.random()*pool.length)]}
- let best=aiCandidates[0],bestCost=Infinity;
- for(let j=0;j<Math.min(55,aiCandidates.length);j++){
-  const candidate=aiCandidates[j],groups={};for(const x of aiCandidates){const k=feedback(candidate,x);groups[k]=(groups[k]||0)+1}
+ // Prefer possible secrets, but use a legal probing guess if all candidates reached their limit.
+ let choices=aiCandidates.filter(x=>nbGuessUseCount(x)<NB_GUESS_REPEAT_LIMIT);
+ if(!choices.length)choices=ALL_NUMBERS.filter(x=>nbGuessUseCount(x)<NB_GUESS_REPEAT_LIMIT);
+ if(!choices.length)return null;
+ if(choices.length===1)return choices[0];
+ if(choices.length>280){const pool=choices.slice(0,Math.min(70,choices.length));return pool[Math.floor(Math.random()*pool.length)]}
+ let best=choices[0],bestCost=Infinity;
+ for(let j=0;j<Math.min(55,choices.length);j++){
+  const candidate=choices[j],groups={};for(const x of aiCandidates){const k=feedback(candidate,x);groups[k]=(groups[k]||0)+1}
   const cost=Object.values(groups).reduce((a,n)=>a+n*n,0);
   if(cost<bestCost){bestCost=cost;best=candidate}
- }return best
+ }return best;
 }
 function scheduleAi(){
  if(aiTimer)clearTimeout(aiTimer);
  if(!game||game.over||game.half!==1||busy||!staff().secret||!$('guard').classList.contains('hidden'))return;
  aiTimer=setTimeout(()=>{
   if(game.over||game.half!==1||busy)return;
-  const guess=aiGuess();for(let i=0;i<3;i++)$('d'+i).value=guess[i];
+  const guess=aiGuess();if(!guess){showToast('사용할 수 있는 숫자가 없어 AI 타격을 진행할 수 없습니다.');return;}for(let i=0;i<3;i++)$('d'+i).value=guess[i];
   const result=feedback(guess,staff().secret);
   aiCandidates=aiCandidates.filter(x=>feedback(guess,x)===result);
   aiPlaying=true;play('swing');aiPlaying=false;
@@ -1475,21 +1682,30 @@ function startGuard(reason='inning'){
  if(nbDirectorResolving){nbDirectorPendingGuard=reason;return;}
 
  if(game.over)return;
- if(defense()===1){
-  const t=staff();
-  if(!t.secret){t.secret=randSecret()}
-  else if((reason==='earned'||reason==='manual'||reason==='inning')&&canChange()&&t.pitcherNumber<11){
-   const old=currentPitcherName();t.pitcherNumber++;t.pitchCount=0;t.consecutiveWalks=0;t.changeRight=false;t.secret=randSecret();
-   game.pitchStats[1].push(newPitcher(t.pitcherNumber,1));pendingManagerVisit=true;
-   caption(`🔄 ${teamNames[1]}의 ${old} 투수가 ${currentPitcherName()} 투수로 교체되었습니다.`,'pitcher');
+   if(defense()===1){
+   const t=staff();
+   if(!t.secret){t.secret=randSecret();t.starterChanges=0;t.starterSecrets=[t.secret]}
+   else if((reason==='earned'||reason==='manual'||reason==='inning')&&(reason==='inning'||nbHasChangeRight(t))&&(nbCanRefreshStarter(t)||t.pitcherNumber<NB_MAX_PITCHERS)){
+    // Prefer changing the starter's secret to burning through relief pitchers.
+    if(nbCanRefreshStarter(t)&&Math.random()<.85){
+     const next=nbFreshStarterNumber(t);
+     if(nbRefreshStarter(t,next))caption(`🎯 ${teamNames[1]} 선발투수가 그대로 던지며 비밀 숫자를 바꿨습니다. (${1+t.starterChanges}/6)`,'moment');
+    }else if(t.pitcherNumber<NB_MAX_PITCHERS){
+     const old=currentPitcherName(),oldSecret=t.secret;
+     t.pitcherNumber++;t.pitchCount=0;t.consecutiveWalks=0;t.changeRight=false;
+     let next=randSecret();for(let attempt=0;attempt<20&&next===oldSecret;attempt++)next=randSecret();
+     t.secret=next===oldSecret?oldSecret.split('').reverse().join(''):next;
+     game.pitchStats[1].push(newPitcher(t.pitcherNumber,1));pendingManagerVisit=true;
+     caption(`🔄 ${teamNames[1]}의 ${old} 투수가 ${currentPitcherName()} 투수로 교체되었습니다.`,'pitcher');
+    }
+   }
+   $('guard').classList.add('hidden');busy=false;update();
+   if(pendingManagerVisit){pendingManagerVisit=false;startManagerMotion()}
+   if(reason==='start'||reason==='inning')announceBatter();
+   saveSnapshot();scheduleAi();return;
   }
-  $('guard').classList.add('hidden');busy=false;update();
-  if(pendingManagerVisit){pendingManagerVisit=false;startManagerMotion()}
-  if(reason==='start'||reason==='inning')announceBatter();
-  saveSnapshot();scheduleAi();return;
- }
 
- guardReason=reason;pendingTeam=defense();guardPhase='handoff';busy=true;
+guardReason=reason;pendingTeam=defense();guardPhase='handoff';busy=true;
  guardCancelable=reason==='manual';
  $('guard').classList.remove('hidden');
  $('secretEntry').style.display='none';$('decisionEntry').style.display='none';$('passEntry').style.display='none';
@@ -1504,36 +1720,41 @@ function startGuard(reason='inning'){
 function showDefenseChoices(){
  guardPhase='decision';
  $('passEntry').style.display='none';$('decisionEntry').style.display='block';
- $('guardTitle').textContent='수비팀 투수 운영';
- let t=staff(),allowed=canChange()||guardReason==='inning'||guardReason==='start';
- $('replacePitcher').disabled=!allowed;$('replacePitcherSame').disabled=!allowed||!t.secret;
+ $('guardTitle').textContent='수비팀 투수·숫자 운영';
+ const t=staff(),allowed=nbHasChangeRight(t)||guardReason==='inning'||guardReason==='start';
+ $('replacePitcher').disabled=!allowed||!t.secret&&guardReason!=='start'||(!!t.secret&&t.pitcherNumber>=11);
+ $('replacePitcherSame').disabled=!allowed||!t.secret||t.pitcherNumber>=11;
+ const starterButton=$('changeStarterNumber');
+ starterButton.style.display=t.pitcherNumber===1&&!!t.secret?'block':'none';
+ starterButton.disabled=!allowed||!nbCanRefreshStarter(t);
+ starterButton.textContent=`🎯 선발 유지 · 새 숫자 설정 (남은 ${5-nbStarterChanges(t)}회)`;
  $('keepPitcher').disabled=!t.secret;
- $('guardHelp').textContent=`${teamNames[pendingTeam]} · ${currentPitcherName()} · ${t.pitchCount}구. ${t.secret?'현재 비밀 숫자는 유지됩니다.':'선발투수의 첫 비밀 숫자를 설정해야 합니다.'} ${allowed?'교체할 수 있습니다.':'아직 교체 조건을 충족하지 않았습니다.'}`;saveSnapshot();
+ $('guardHelp').textContent=`${teamNames[pendingTeam]} · ${currentPitcherName()} · 현 숫자 ${t.pitchCount}구. ${t.secret?'현재 비밀 숫자는 유지됩니다.':'선발 첫 비밀 숫자를 설정하세요.'} · 선발 숫자 ${1+nbStarterChanges(t)}/6 · 사용 숫자 ${nbNumbersUsed(t)}/16. ${allowed?'교체 가능 상황입니다.':'교체 조건을 충족하지 않았습니다.'}`;
+ saveSnapshot();
 }
-function openSecretEntry(){
+function openSecretEntry(action='replace'){
+ secretEntryAction=!staff().secret?'first':action;
  guardPhase='setup';$('decisionEntry').style.display='none';$('secretEntry').style.display='block';
- $('guardTitle').textContent=staff().secret?'새 투수 비밀 숫자 설정':'선발투수 비밀 숫자 설정';
- $('guardHelp').textContent='서로 다른 숫자 세 자리를 입력하세요. 공격팀이 보지 않도록 주의하세요.';
+ $('guardTitle').textContent=secretEntryAction==='starter'?'선발 유지 · 새로운 비밀 숫자 설정':secretEntryAction==='first'?'선발투수 비밀 숫자 설정':'새 투수 비밀 숫자 설정';
+ $('guardHelp').textContent=secretEntryAction==='starter'?'현재 선발투수는 그대로 등판합니다. 기존에 이 선발이 사용한 숫자와 다른 3자리 숫자를 설정하세요.':'서로 다른 숫자 세 자리를 입력하세요. 공격팀이 보지 않도록 주의하세요.';
  $('defSecret').value='';$('cancelGuard').style.display='none';saveSnapshot();
 }
 function replacePitcherKeepingNumber(){
  if(!game||game.over)return;
- const t=staff();
- const allowed=canChange()||guardReason==='inning'||guardReason==='start';
- if(!allowed||!t.secret||t.pitcherNumber>=11){showToast('투수 교체가 가능한 상황에서만 선택할 수 있습니다.');return}
+ const t=staff(),allowed=nbHasChangeRight(t)||guardReason==='inning'||guardReason==='start';
+ if(!allowed||!t.secret||t.pitcherNumber>=11){showToast('새 투수를 투입할 수 있는 상황이 아닙니다.');return}
  const oldName=currentPitcherName();
  t.pitcherNumber++;t.pitchCount=0;t.changeRight=false;t.consecutiveWalks=0;
  game.pitchStats[pendingTeam].push(newPitcher(t.pitcherNumber,pendingTeam));
  const nextName=currentPitcherName();
  game.pitcherChangeAnnouncement={team:pendingTeam,old:oldName,next:nextName};
- // 유효한 비밀 숫자는 그대로 보관하되, 공격 측 UI와 중계에는 변경 여부를 공개하지 않습니다.
  if(typeof aiCandidates!=='undefined'&&pendingTeam===0)aiCandidates=ALL_NUMBERS.slice();
  pendingManagerVisit=true;
  showReturnScreen();
 }
 function finishDefenseChoice(keep){
  if(keep){$('decisionEntry').style.display='none';showReturnScreen();return}
- openSecretEntry();
+ openSecretEntry(staff().secret?'replace':'first');
 }
 function showReturnScreen(){
  guardPhase='return';$('secretEntry').style.display='none';$('decisionEntry').style.display='none';$('passEntry').style.display='block';
@@ -1544,25 +1765,40 @@ function showReturnScreen(){
  clearGuess();saveSnapshot();
 }
 function saveGuard(){
+ if(guardPhase!=='setup')return;
  const v=$('defSecret').value.trim();
- if(!/^[0-9]{3}$/.test(v)||new Set(v).size!==3){$('guardHelp').textContent='오류: 중복되지 않는 숫자 3개를 입력하세요. 0으로 시작해도 됩니다.';return}
- let t=staff();
- if(t.secret){game.pitcherChangeAnnouncement={team:pendingTeam,old:pitcherNames[pendingTeam]?.[t.pitcherNumber-1]||`투수 ${t.pitcherNumber}`,next:pitcherNames[pendingTeam]?.[t.pitcherNumber]||`투수 ${t.pitcherNumber+1}`};t.pitcherNumber++;t.pitchCount=0;t.changeRight=false;t.consecutiveWalks=0;game.pitchStats[pendingTeam].push(newPitcher(t.pitcherNumber,pendingTeam))}
- t.secret=v;if(pendingTeam===0)aiCandidates=ALL_NUMBERS.slice();$('defSecret').value='';pendingManagerVisit=t.pitcherNumber>1;
- // 교체 중계는 공격팀이 기기를 돌려받은 뒤 표시합니다.
- showReturnScreen();
+ if(!/^\d{3}$/.test(v)||new Set(v).size!==3){$('guardHelp').textContent='오류: 서로 다른 숫자 3개를 입력하세요.';return}
+ const t=staff(),allowed=nbHasChangeRight(t)||guardReason==='inning'||guardReason==='start';
+ if(secretEntryAction==='starter'){
+  if(!allowed||!nbRefreshStarter(t,v)){$('guardHelp').textContent='선발 숫자 교체는 교체 조건을 충족할 때 최대 5회 가능하며, 이전 숫자를 재사용할 수 없습니다.';return}
+  game.starterChangeAnnouncement={team:pendingTeam,pitcher:currentPitcherName(),count:t.starterChanges};
+  pendingManagerVisit=false;
+  if(typeof aiCandidates!=='undefined'&&pendingTeam===0)aiCandidates=ALL_NUMBERS.slice();
+ }else if(t.secret){
+  if(secretEntryAction!=='replace'||!allowed||t.pitcherNumber>=11){$('guardHelp').textContent='더 이상 불펜투수를 투입할 수 없습니다.';return}
+  const old=currentPitcherName();t.pitcherNumber++;t.pitchCount=0;t.changeRight=false;t.consecutiveWalks=0;
+  game.pitchStats[pendingTeam].push(newPitcher(t.pitcherNumber,pendingTeam));
+  game.pitcherChangeAnnouncement={team:pendingTeam,old,next:currentPitcherName()};
+  t.secret=v;pendingManagerVisit=true;
+  if(typeof aiCandidates!=='undefined'&&pendingTeam===0)aiCandidates=ALL_NUMBERS.slice();
+ }else{
+  t.secret=v;t.starterChanges=0;t.starterSecrets=[v];pendingManagerVisit=false;
+ }
+ $('defSecret').value='';showReturnScreen();
 }
 function resumeGuard(){
  if(guardPhase==='handoff'){showDefenseChoices();return}
  if(guardPhase!=='return')return;
  $('guard').classList.add('hidden');busy=false;clearGuess();update();
  if(game.pitcherChangeAnnouncement){const c=game.pitcherChangeAnnouncement;caption(`🔄 감독의 선택! ${teamNames[c.team]}의 ${c.old} 투수가 마운드를 내려가고, ${c.next} 투수가 올라옵니다.`,'pitcher');game.pitcherChangeAnnouncement=null}
+ if(game.starterChangeAnnouncement){const c=game.starterChangeAnnouncement;caption(`🎯 ${teamNames[c.team]}의 ${c.pitcher} 선발투수가 마운드를 지키며 비밀 숫자를 변경했습니다. (${c.count}/5회)`,'moment');game.starterChangeAnnouncement=null}
  if(!game.over)announceBatter();
  if(pendingManagerVisit){pendingManagerVisit=false;startManagerMotion()}
  saveSnapshot();scheduleAi();
 }
 $('saveSecret').onclick=saveGuard;$('resume').onclick=resumeGuard;
 $('keepPitcher').onclick=()=>finishDefenseChoice(true);
+$('changeStarterNumber').onclick=()=>{const t=staff();if((nbHasChangeRight(t)||guardReason==='inning'||guardReason==='start')&&nbCanRefreshStarter(t))openSecretEntry('starter');};
 $('replacePitcher').onclick=()=>finishDefenseChoice(false);$('replacePitcherSame').onclick=replacePitcherKeepingNumber;
 $('cancelGuard').onclick=()=>{$('guard').classList.add('hidden');busy=false;update();saveSnapshot()};
 function currentBatterName(){return playerNames[game.half]?.[game.batterIndex[game.half]]||`${game.batterIndex[game.half]+1}번 타자`}
@@ -1583,7 +1819,7 @@ function saveGuessRecord(guess,s,b,f,action){
   guess:String(guess),s,b,f,action,
   inning:game.inning,half:game.half,
   batter:currentBatterName(),pitcher:currentPitcherName(),
-  defense:defense(),pitcherNumber:staff().pitcherNumber,
+  defense:defense(),pitcherNumber:staff().pitcherNumber,numberSlot:nbNumberSlot(staff()),
   at:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
  });
  if(guessHistoryEntries.length>1200)guessHistoryEntries.shift();
@@ -1591,7 +1827,7 @@ function saveGuessRecord(guess,s,b,f,action){
 }
 function renderGuessHistory(){
  const host=$('guessHistory');if(!host||!game)return;
- const filtered=guessHistoryEntries.filter(x=>guessView==='all'||(x.defense===defense()&&x.pitcherNumber===staff().pitcherNumber));
+ const filtered=guessHistoryEntries.filter(x=>guessView==='all'||(x.defense===defense()&&(x.numberSlot||x.pitcherNumber)===nbNumberSlot(staff())));
  $('guessCounter').textContent=`${filtered.length}회 추리`;
  $('guessCurrent').classList.toggle('selected',guessView==='current');
  $('guessAll').classList.toggle('selected',guessView==='all');
@@ -1599,8 +1835,8 @@ function renderGuessHistory(){
  if(!filtered.length){const e=document.createElement('div');e.className='guess-empty';e.textContent=guessView==='current'?'현재 투수를 상대한 추리 기록이 아직 없습니다.':'아직 입력한 숫자가 없습니다.';host.append(e);return}
  let groupKey='';
  for(let idx=filtered.length-1;idx>=Math.max(0,filtered.length-240);idx--){
-  const e=filtered[idx],key=`${e.defense}/${e.pitcherNumber}`;
-  if(key!==groupKey){const title=document.createElement('div');title.className='guess-pitcher';title.textContent=`⚾ ${teamNames[e.defense]} · ${e.pitcher} 상대 기록`;host.append(title);groupKey=key}
+  const e=filtered[idx],key=`${e.defense}/${e.numberSlot||e.pitcherNumber}`;
+  if(key!==groupKey){const title=document.createElement('div');title.className='guess-pitcher';title.textContent=`⚾ ${teamNames[e.defense]} · ${e.pitcher} · ${e.numberSlot||e.pitcherNumber}번째 숫자 상대 기록`;host.append(title);groupKey=key}
   const row=document.createElement('div');row.className='guess-row';
   const left=document.createElement('div'),middle=document.createElement('div'),right=document.createElement('div');
   const n=document.createElement('div');n.className='guess-no';n.textContent=`#${idx+1} · ${e.inning}회 ${e.half?'말':'초'}`;
@@ -1661,7 +1897,7 @@ function announceBatter(){
  else if(game.inning>=8&&Math.abs(game.score[0]-game.score[1])<=2)log(`승부는 아직 모릅니다. 후반부 한 번의 숫자 선택이 경기 흐름을 바꿀 수 있습니다.`,'moment');
  else if(game.outs===2&&game.bases.some(Boolean))log(`2아웃, 주자는 남아 있습니다. 이번 타석이 이닝의 마지막 기회가 될 수 있습니다.`,'moment')
 }
-function update(){
+function update(){nbUpdateRepeatHint();
  let g=game,t=staff();renderGuessHistory();renderRosterPanel();$('awayTeamLabel').textContent=`원정 · ${teamNames[0]}`;$('homeTeamLabel').textContent=`홈 · ${teamNames[1]}`;$('away').textContent=$('sAway').textContent=g.score[0];$('home').textContent=$('sHome').textContent=g.score[1];
  $('inning').textContent=`${g.inning}회 ${g.half?'말':'초'}`;$('count').textContent=`B ${g.balls} · S ${g.strikes} · O ${g.outs}`;
  $('status').textContent=`${g.inning}회 ${g.half?'말':'초'} · ${g.outs}아웃 · 수비 ${teamNames[defense()]}`;
@@ -1670,10 +1906,10 @@ function update(){
  ['base1','base2','base3'].forEach((id,i)=>$(id).classList.toggle('on',g.bases[i]));
  $('change').disabled=g.half===0||busy||g.over||!canChange();$('bunt').disabled=g.half===1||busy||g.over||!g.atBatStart||g.outs>=2||!(g.bases[0]||g.bases[1]);
  $('fly').disabled=g.half===1||busy||g.over||!g.atBatStart||g.outs>=2||!g.bases[2];$('swing').disabled=busy||g.over||g.half===1;
- $('eligibility').textContent=g.over?'경기 종료':g.half===1?'🤖 AI 공격 중 · AI가 이전 판정 결과를 바탕으로 숫자를 추리합니다.':`공격 ${teamNames[g.half]} / 수비 ${teamNames[defense()]} · 교체 ${canChange()?'가능':'불가'} · ${mode==='brain'?'두뇌전':'프로야구'}`;
+ $('eligibility').textContent=g.over?'경기 종료':g.half===1?'🤖 AI 공격 중 · AI가 이전 판정 결과를 바탕으로 숫자를 추리합니다.':`공격 ${teamNames[g.half]} / 수비 ${teamNames[defense()]} · 교체 ${canChange()?'가능':'불가'} · 숫자 ${nbNumbersUsed(t)}/16 · ${mode==='brain'?'두뇌전':'프로야구'}`;
  $('secretNote').textContent='비밀 숫자는 수비팀만 설정 · 교체 시에만 변경';updateRunners();updateBoard();updateLiveScore();updateSurrenderAdvice()
 }
-function canChange(){if(!game||game.over)return false;let t=staff();return t.pitcherNumber<11&&(t.changeRight||t.pitchCount>=25||(t.pitchCount>=15&&t.consecutiveWalks>=1))}
+function canChange(){if(!game||game.over)return false;const t=staff();return (t.pitcherNumber<NB_MAX_PITCHERS||nbCanRefreshStarter(t))&&nbHasChangeRight(t)}
 function nextBatter(){game.halfPa=(Number(game.halfPa)||0)+1;game.strikes=0;game.balls=0;game.atBatStart=true;game.batterIndex[game.half]=(game.batterIndex[game.half]+1)%9;if(game.outs<3&&!game.over)announceBatter()}
 function endInning(){
  decisionPending=false;staff().consecutiveWalks=0;
@@ -1797,10 +2033,50 @@ function advanceHit(type){
 function resolve(guess,action){let g=game;let s=0,b=0;for(let i=0;i<3;i++){if(guess[i]===staff().secret[i])s++;else if(staff().secret.includes(guess[i]))b++}let f=3-s-b;saveGuessRecord(guess,s,b,f,action);staff().pitchCount++;pitcherStat().pitches++;pitcherStat().strikes+=s;pitcherStat().balls+=b;g.atBatStart=false;let prefix=`${guess} → ${s}S ${b}B ${f}F · `;let effect='pitch';if(s===3){effect='homer';homer()}else if(f===3){effect='out';out(prefix+'3F 즉시 아웃')}else if(action==='bunt'){if(s>=1){let old=g.bases,owners=g.runnerOwners;setRunners([false,old[0],old[1]||old[2]],[null,owners[0],old[1]?owners[1]:owners[2]]);effect='bunt';out(prefix+'희생번트 성공!','out',true)}else{g.strikes++;if(g.strikes>=3){effect='out';out(prefix+'번트 파울 삼진','k')}else caption(prefix+'번트 파울','bunt')}}else if(action==='fly'){if(s>=2){if(g.bases[2]){addRuns(1,[g.runnerOwners[2]]);g.bases[2]=false;g.runnerOwners[2]=null}effect='fly';out(prefix+'희생플라이! 1점','out',true)}else if(s===1){effect='out';out(prefix+'플라이아웃')}else{effect=normalCount(prefix,s,b,f)||effect}}else{if(mode==='pro'&&s>0&&s<3){let chance=Math.max(5,Math.min(90,35+0.2*(70-50)+.15*((30*s+10*b)-50)-.15*(65-50)-.1*(60-50)));if(Math.random()*100<chance){let r=Math.random();effect='hit';advanceHit(r<.72?1:r<.94?2:3)}else effect=normalCount(prefix,s,b,f)||effect}else effect=normalCount(prefix,s,b,f)||effect}return effect}
 function normalCount(prefix,s,b,f){let g=game,prevStrikes=g.strikes,prevBalls=g.balls;g.strikes+=s;if(g.strikes>=3){out(prefix+'삼진!','k');return}g.strikes=Math.min(2,g.strikes+f);g.balls+=b;if(g.balls>=4){return walk()}caption(prefix+`카운트 ${g.balls}B ${g.strikes}S`,'count');if(g.strikes===2&&prevStrikes<2)log(`투 스트라이크! ${currentBatterName()} 타자가 이제 신중하게 숫자를 골라야 합니다.`,'moment');else if(g.balls===3&&prevBalls<3)log(`쓰리 볼! 공 하나만 더 볼 판정이 나오면 출루합니다.`,'moment')}
 function reset(){NBDirector.cancel();nbDirectorPendingGuard=null;nbDirectorPendingFinal=false;aiCandidates=ALL_NUMBERS.slice();if(aiTimer)clearTimeout(aiTimer);matchGeneration++;lastAnnouncedKey=null;postPitchUnlock=false;pendingManagerVisit=false;game=fresh();game.targetInnings=selectedInnings;game.maxInnings=Math.min(12,selectedInnings+3);game.highlights=[];setupStats();guessHistoryEntries=[];guessView='current';decisionPending=false;busy=false;animation=null;$('log').innerHTML='';broadcastEntries=[];caption('🎙️ PLAY BALL! 새 경기가 열립니다. 수비팀의 선발투수 비밀 숫자를 설정해 주세요.','start');update();setCamera();startGuard('start')}
+// v42: per-batter / per-pitcher exact-number repetition limit.
+// The pitcher identity stays the same when the starter changes only their secret.
+const NB_GUESS_REPEAT_LIMIT=2;
+function nbRepeatMatchKey(){
+ // Count by real batter identity (lineup slot + current player) and actual pitcher.
+ // Counts survive additional plate appearances and a starter's secret-number refresh.
+ return JSON.stringify([game.half,game.batterIndex[game.half],currentBatterName(),defense(),staff().pitcherNumber]);
+}
+function nbRepeatState(){
+ if(!game.repeatGuessUsage||typeof game.repeatGuessUsage!=='object'||Array.isArray(game.repeatGuessUsage))game.repeatGuessUsage={};
+ const key=nbRepeatMatchKey();
+ if(!Object.prototype.hasOwnProperty.call(game.repeatGuessUsage,key)||!game.repeatGuessUsage[key]||typeof game.repeatGuessUsage[key]!=='object'||Array.isArray(game.repeatGuessUsage[key])){
+  const counts={};
+  // v41 compatibility: rebuild cumulative current batter/pitcher usage from older history.
+  if(Array.isArray(guessHistoryEntries)){
+   for(const entry of guessHistoryEntries){
+    if(entry.half!==game.half||entry.defense!==defense()||entry.pitcherNumber!==staff().pitcherNumber||entry.batter!==currentBatterName())continue;
+    if(/^\d{3}$/.test(entry.guess))counts[entry.guess]=(counts[entry.guess]||0)+1;
+   }
+  }
+  game.repeatGuessUsage[key]=counts;
+ }
+ return {counts:game.repeatGuessUsage[key]};
+}
+function nbGuessUseCount(guess){return Number(nbRepeatState().counts[guess])||0}
+function nbCommitRepeatGuess(guess){
+ const state=nbRepeatState(),used=Number(state.counts[guess])||0;
+ if(used>=NB_GUESS_REPEAT_LIMIT)return false;
+ state.counts[guess]=used+1;
+ return true;
+}
+function nbUpdateRepeatHint(){
+ const note=$('repeatGuessHint');if(!note||!game)return;
+ const vals=keypadValues(),valid=vals.every(x=>/^\d$/.test(x))&&new Set(vals).size===3;
+ if(!valid){note.textContent='같은 타자 vs 같은 투수 누적 최대 2회 · 세 번째 입력은 판정 없이 차단';return}
+ const guess=vals.join(''),used=nbGuessUseCount(guess);
+ note.textContent=`${guess} · 이 타자·투수 대결에서 누적 ${used}/2회 사용${used>=2?' · 다른 숫자를 입력하세요':''}`;
+}
+
 function inputGuess(){let vals=[0,1,2].map(i=>$('d'+i).value.trim());if(vals.some(v=>!/^[0-9]$/.test(v))||new Set(vals).size!==3){caption('서로 다른 숫자 3개를 입력하세요.');return null}return vals.join('')}
-function play(action){if((game.half===1&&!aiPlaying)||busy||game.over||!staff().secret)return;let guess=inputGuess();if(!guess)return;if(action==='bunt'&&(!game.atBatStart||game.outs>=2||!(game.bases[0]||game.bases[1])))return;if(action==='fly'&&(!game.atBatStart||game.outs>=2||!game.bases[2]))return;busy=true;let beforeTeam=defense(),wasEligible=canChange(),beforeRight=staff().changeRight;
+function play(action){if((game.half===1&&!aiPlaying)||busy||game.over||!staff().secret)return;let guess=inputGuess();if(!guess)return;if(action==='bunt'&&(!game.atBatStart||game.outs>=2||!(game.bases[0]||game.bases[1])))return;if(action==='fly'&&(!game.atBatStart||game.outs>=2||!game.bases[2]))return;if(!nbCommitRepeatGuess(guess)){showToast(`⚠️ ${guess}은(는) 현재 타자가 이 투수를 상대로 이미 2번 사용했습니다. 다른 숫자를 선택하세요.`);nbUpdateRepeatHint();return;}nbUpdateRepeatHint();busy=true;let beforeTeam=defense(),wasEligible=canChange(),beforeRight=staff().changeRight;
 const nbBefore=nbDirectorCapture();
  const nbF=[...guess].filter(d=>!staff().secret.includes(d)).length;
+ const nbB=[...guess].filter((d,i)=>staff().secret.includes(d)&&staff().secret[i]!==d).length;
  nbDirectorResolving=true;nbDirectorPendingGuard=null;nbDirectorPendingFinal=false;
  let generation=matchGeneration,effect;
  try{effect=resolve(guess,action)}finally{nbDirectorResolving=false}
@@ -1808,7 +2084,7 @@ if(shouldAiSurrender()){NBDirector.cancel();surrenderMatch(1,true);return}
 const nbAfter=nbDirectorCapture();
  const justUnlocked=beforeTeam===defense()&&!game.over&&canChange()&&(!wasEligible||(!beforeRight&&staff().changeRight));
  update();animation=null;postPitchUnlock=justUnlocked;saveSnapshot();
- const plan=NBSceneMap.build({before:nbBefore,after:nbAfter,effect,action,feedbackF:nbF});
+ const plan=NBSceneMap.build({before:nbBefore,after:nbAfter,effect,action,feedbackF:nbF,feedbackB:nbB});
  NBDirector.start(plan,()=>{
    if(generation!==matchGeneration)return;
    animation=null;
@@ -1825,6 +2101,7 @@ const nbAfter=nbDirectorCapture();
 
 // SAVE SYSTEM V7: this browser's origin, plus optional explicit JSON backups.
 const SAVE_KEY='number-baseball-3d-v7-ai-match';
+const SAVE_BACKUP_KEY=SAVE_KEY+'-previous-valid';
 let restoringSave=false,toastTimer=null;
 function saveClock(stamp){try{return new Date(stamp).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return '시간 미상'}}
 function showToast(message){const t=$('saveToast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500)}
@@ -1836,7 +2113,8 @@ function validateSave(s){
  !Number.isInteger(g.inning)||g.inning<1||g.inning>13||![0,1].includes(g.half)||!Number.isInteger(g.outs)||g.outs<0||g.outs>3||
  !Number.isInteger(g.strikes)||g.strikes<0||g.strikes>2||!Number.isInteger(g.balls)||g.balls<0||g.balls>3||
  !Array.isArray(g.teams)||g.teams.length!==2||!g.teams.every(t=>t&&Number.isInteger(t.pitcherNumber)&&t.pitcherNumber>=1&&t.pitcherNumber<=11&&validSecret(t.secret))||
- !Array.isArray(g.bases)||g.bases.length!==3||!g.bases.every(x=>typeof x==='boolean')||
+ g.teams.some(t=>(t.starterChanges!==undefined&&(!Number.isInteger(t.starterChanges)||t.starterChanges<0||t.starterChanges>5))||(t.starterSecrets!==undefined&&(!Array.isArray(t.starterSecrets)||t.starterSecrets.length>6||t.starterSecrets.some(v=>!validSecret(v)||v===null)))||(t.pitcherNumber+nbStarterChanges(t)>16))||
+  !Array.isArray(g.bases)||g.bases.length!==3||!g.bases.every(x=>typeof x==='boolean')||
  !Array.isArray(g.batterIndex)||g.batterIndex.length!==2||!g.batterIndex.every(x=>Number.isInteger(x)&&x>=0&&x<9)||
  !Array.isArray(g.lines)||g.lines.length!==2||g.lines.some(a=>!Array.isArray(a)||a.length!==12||a.some(x=>x!==null&&(!Number.isInteger(x)||x<0)))||
  !Array.isArray(g.batStats)||g.batStats.length!==2||g.batStats.some(a=>!Array.isArray(a)||a.length!==9)||
@@ -1844,8 +2122,8 @@ function validateSave(s){
  g.batStats.some(a=>a.some(b=>!b||['pa','ab','r','rbi','h','k','bb'].some(k=>!Number.isInteger(b[k])||b[k]<0||b[k]>1000000)))||
  g.pitchStats.some(a=>a.some(b=>!b||['pitches','strikes','balls','k','outs','er','walks'].some(k=>!Number.isInteger(b[k])||b[k]<0||b[k]>1000000)))||
  g.teams.some(t=>!Number.isInteger(t.pitchCount)||t.pitchCount<0||t.pitchCount>1000000||!Number.isInteger(t.consecutiveWalks)||t.consecutiveWalks<0||typeof t.changeRight!=='boolean')||
- g.runnerOwners.some(v=>v!==null&&(!Number.isInteger(v)||v<0||v>8))||
  !Array.isArray(g.runnerOwners)||g.runnerOwners.length!==3||
+ g.runnerOwners.some(v=>v!==null&&(!Number.isInteger(v)||v<0||v>8))||
  !Array.isArray(s.teamNames)||s.teamNames.length!==2||!Array.isArray(s.playerNames)||s.playerNames.length!==2||s.playerNames.some(a=>!Array.isArray(a)||a.length!==9)||
  !Array.isArray(s.pitcherNames)||s.pitcherNames.length!==2||s.pitcherNames.some(a=>!Array.isArray(a)||a.length!==11)||!['brain','pro'].includes(s.mode))
  throw new Error('이 버전의 게임에서 읽을 수 없는 저장 파일입니다.');
@@ -1854,13 +2132,35 @@ function validateSave(s){
 function makeSave(){return {version:7,aiSolo:true,aiCandidates:aiCandidates.slice(),savedAt:new Date().toISOString(),game:JSON.parse(JSON.stringify(game)),mode,
  teamNames:teamNames.slice(),playerNames:playerNames.map(a=>a.slice()),pitcherNames:pitcherNames.map(a=>a.slice()),batPositions:batterPositions.map(a=>a.slice()),pitchPositions:pitcherPositions.map(a=>a.slice()),benchNames:benchNames.map(a=>a.slice()),benchPositions:benchPositions.map(a=>a.slice()),
  broadcastEntries:broadcastEntries.slice(0,80),guessHistoryEntries:guessHistoryEntries.slice(-1200),captionText:$('caption').textContent,
- guard:{visible:!$('guard').classList.contains('hidden'),phase:guardPhase,reason:guardReason,pendingTeam,managerVisit:pendingManagerVisit},
+ guard:{visible:!$('guard').classList.contains('hidden'),phase:guardPhase,reason:guardReason,pendingTeam,managerVisit:pendingManagerVisit,entryAction:secretEntryAction},
  postPitchUnlock,cameraMode,lastAnnouncedKey};}
-function readSave(){try{let raw=localStorage.getItem(SAVE_KEY);return raw?validateSave(JSON.parse(raw)):null}catch(e){return null}}
-function displaySaveStatus(s){const badge=$('saveBadge');if(s){badge.textContent='✓ 자동 저장';badge.classList.remove('failed');$('saveStatus').textContent=`최근 저장: ${saveClock(s.savedAt)} · ${s.game.inning}회 ${s.game.half?'말':'초'} · ${s.game.score[0]} : ${s.game.score[1]}`}else{badge.textContent='저장되지 않음';badge.classList.add('failed');$('saveStatus').textContent='저장 파일이 없거나 브라우저 저장소를 사용할 수 없습니다.'}}
+function readSave(){
+ for(const [key,isBackup] of [[SAVE_KEY,false],[SAVE_BACKUP_KEY,true]]){
+   try{
+     const raw=localStorage.getItem(key);
+     if(!raw)continue;
+     const snap=validateSave(JSON.parse(raw));
+     if(isBackup)Object.defineProperty(snap,'_fromBackup',{value:true,enumerable:false});
+     return snap;
+   }catch(e){}
+ }
+ return null;
+}
+function displaySaveStatus(s){const badge=$('saveBadge');if(s){badge.textContent=s._fromBackup?'↩ 이전 저장 복구 가능':'✓ 자동 저장';badge.classList.remove('failed');$('saveStatus').textContent=`${s._fromBackup?'최신 저장 손상 · 이전 정상 저장: ':'최근 저장: '}${saveClock(s.savedAt)} · ${s.game.inning}회 ${s.game.half?'말':'초'} · ${s.game.score[0]} : ${s.game.score[1]}`}else{badge.textContent='저장되지 않음';badge.classList.add('failed');$('saveStatus').textContent='저장 파일이 없거나 브라우저 저장소를 사용할 수 없습니다.'}}
 function saveSnapshot(notify=false){
  if(restoringSave||!game||!playerNames.every(a=>a.length===9))return false;
- try{const snapshot=makeSave();localStorage.setItem(SAVE_KEY,JSON.stringify(snapshot));displaySaveStatus(snapshot);if(notify)showToast('✓ 경기 진행 상황을 저장했습니다.');return true}
+ try{
+   const snapshot=makeSave(),raw=JSON.stringify(snapshot),previous=localStorage.getItem(SAVE_KEY);
+   // Only valid, older primary saves may replace the recovery slot.
+   if(previous){
+     try{validateSave(JSON.parse(previous));
+       // A backup failure should not block updating the primary save.
+       try{localStorage.setItem(SAVE_BACKUP_KEY,previous)}catch(e){}
+     }catch(e){}
+   }
+   localStorage.setItem(SAVE_KEY,raw);
+   displaySaveStatus(snapshot);if(notify)showToast('✓ 경기 기록 저장 완료 (이전 저장 복구 지원)');return true;
+ }
  catch(e){displaySaveStatus(null);if(notify)showToast('저장 실패: 브라우저 저장 공간과 설정을 확인하세요.');return false}
 }
 function refreshResumeOffer(){
@@ -1875,13 +2175,13 @@ function restoreGuardFromSave(s){
  guardReason=['start','inning','earned','manual'].includes(gd.reason)?gd.reason:'inning';
  startGuard(guardReason);
  if(gd.phase==='decision')showDefenseChoices();
- else if(gd.phase==='setup'){showDefenseChoices();openSecretEntry()}
+ else if(gd.phase==='setup'){showDefenseChoices();openSecretEntry(['starter','replace','first'].includes(gd.entryAction)?gd.entryAction:(staff().secret?'replace':'first'))}
  else if(gd.phase==='return')showReturnScreen();
 }
 function restoreSnapshot(s){NBDirector.cancel();nbDirectorPendingGuard=null;nbDirectorPendingFinal=false;
  validateSave(s);matchGeneration++;restoringSave=true;
  try{
-  game=typeof structuredClone==='function'?structuredClone(s.game):JSON.parse(JSON.stringify(s.game));game.targetInnings=[3,5,7,9].includes(game.targetInnings)?game.targetInnings:9;game.maxInnings=Math.min(12,game.targetInnings+3);game.highlights=Array.isArray(game.highlights)?game.highlights:[];selectedInnings=game.targetInnings;document.querySelectorAll('input[name=matchInnings]').forEach(el=>el.checked=Number(el.value)===selectedInnings);
+  game=typeof structuredClone==='function'?structuredClone(s.game):JSON.parse(JSON.stringify(s.game));for(const t of game.teams){t.starterChanges=nbStarterChanges(t);if(!Array.isArray(t.starterSecrets))t.starterSecrets=t.pitcherNumber===1&&t.secret?[t.secret]:[];} game.targetInnings=[3,5,7,9].includes(game.targetInnings)?game.targetInnings:9;game.maxInnings=Math.min(12,game.targetInnings+3);game.highlights=Array.isArray(game.highlights)?game.highlights:[];selectedInnings=game.targetInnings;document.querySelectorAll('input[name=matchInnings]').forEach(el=>el.checked=Number(el.value)===selectedInnings);
   mode=s.mode;for(const m of ['brain','pro'])$(m).classList.toggle('active',m===mode);
   for(let i=0;i<2;i++){
    teamNames[i]=safeName(s.teamNames[i])||`TEAM ${i+1}`;
@@ -1896,7 +2196,7 @@ function restoreSnapshot(s){NBDirector.cancel();nbDirectorPendingGuard=null;nbDi
   benchPositions=[0,1].map(t=>Array.from({length:5},(_,i)=>s.benchPositions?.[t]?.[i]==='PR'?'PR':(!s.benchPositions&&i===1?'PR':'PH')));
   buildSetup();$('setupOverlay').style.display='none';$('finalstats').classList.add('hidden');
   broadcastEntries=Array.isArray(s.broadcastEntries)?s.broadcastEntries.slice(0,80).map(e=>({text:String(e.text||'').slice(0,700),kind:liveTypes[e.kind]?e.kind:'info',inning:String(e.inning||''),time:String(e.time||'')})):[];
-  guessHistoryEntries=Array.isArray(s.guessHistoryEntries)?s.guessHistoryEntries.slice(-1200).filter(e=>e&&/^\d{3}$/.test(String(e.guess||''))&&[e.s,e.b,e.f].every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&e.s+e.b+e.f===3&&[0,1].includes(e.defense)&&Number.isInteger(e.pitcherNumber)&&e.pitcherNumber>=1&&e.pitcherNumber<=11).map(e=>({guess:String(e.guess),s:e.s,b:e.b,f:e.f,action:String(e.action||'swing'),inning:Number(e.inning)||1,half:e.half===1?1:0,batter:String(e.batter||'타자').slice(0,35),pitcher:String(e.pitcher||'투수').slice(0,35),defense:e.defense,pitcherNumber:e.pitcherNumber,at:String(e.at||'').slice(0,30)})):[];
+  guessHistoryEntries=Array.isArray(s.guessHistoryEntries)?s.guessHistoryEntries.slice(-1200).filter(e=>e&&/^\d{3}$/.test(String(e.guess||''))&&[e.s,e.b,e.f].every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&e.s+e.b+e.f===3&&[0,1].includes(e.defense)&&Number.isInteger(e.pitcherNumber)&&e.pitcherNumber>=1&&e.pitcherNumber<=11).map(e=>({guess:String(e.guess),s:e.s,b:e.b,f:e.f,action:String(e.action||'swing'),inning:Number(e.inning)||1,half:e.half===1?1:0,batter:String(e.batter||'타자').slice(0,35),pitcher:String(e.pitcher||'투수').slice(0,35),defense:e.defense,pitcherNumber:e.pitcherNumber,numberSlot:Number.isInteger(e.numberSlot)&&e.numberSlot>=1&&e.numberSlot<=16?e.numberSlot:e.pitcherNumber,at:String(e.at||'').slice(0,30)})):[];
   guessView='current';renderGuessHistory();renderRosterPanel();
   $('caption').textContent=String(s.captionText||'경기를 이어합니다.');
   animation=null;lastAnnouncedKey=typeof s.lastAnnouncedKey==='string'?s.lastAnnouncedKey:null;pendingManagerVisit=Boolean(s.guard?.managerVisit);postPitchUnlock=Boolean(s.postPitchUnlock);
@@ -1980,7 +2280,7 @@ function updateRunners(){if(!scene)return;runnerMeshes.forEach(m=>scene.remove(m
 }
 function setCamera(){if(!camera)return;if(cameraMode===0){camera.position.set(0,5.8,17);camera.lookAt(0,1,-28)}else if(cameraMode===1){camera.position.set(-18,9,13);camera.lookAt(0,1,-26)}else{camera.position.set(0,55,38);camera.lookAt(0,0,-30)}}
 function render(t){requestAnimationFrame(render);
- if(NBDirector.active)return;
+ if(NBDirector.active||mainContextLost||document.hidden)return;
  if(managerAnimation&&managerMesh){
  let q=Math.min(1,(t-managerAnimation.start)/managerAnimation.duration);
  managerMesh.position.x=-15+15*Math.min(1,q/.65);
@@ -1988,8 +2288,17 @@ function render(t){requestAnimationFrame(render);
  managerMesh.rotation.y=Math.PI/3;
  managerMesh.position.y=Math.sin(q*38)*.08;
  if(q>=1){scene.remove(managerMesh);managerMesh=null;managerAnimation=null}
- }if(animation){let p=Math.min(1,(t-animation.start)/1550),v=Math.min(1,p/.5);pitcher.rotation.y=Math.sin(v*Math.PI)*.32;batPivot.rotation.z=-Math.sin(Math.min(1,Math.max(0,(p-.25)/.42))*Math.PI)*1.7;if(animation.effect==='homer'||animation.effect==='hit'||animation.effect==='fly'){if(p<.32)ball.position.set(0,1.8,-18+18*(p/.32));else{let q=(p-.32)/.68;ball.position.set(q*17,1.8+Math.sin(q*Math.PI)*24,-q*82)}}else{ball.position.set(0,1.8,-18+18*v)}if(p>=1){pitcher.rotation.y=0;batPivot.rotation.z=0;ball.position.set(0,1.8,-18)}}else{ball.position.set(0,1.8,-18);if(batter)batter.position.y=Math.sin(t*.002)*.018}if(renderer)renderer.render(scene,camera)}
-function init3D(){if(!window.THREE){$('error').classList.add('show');return}try{scene=new THREE.Scene();let w=$('stage').clientWidth,h=$('stage').clientHeight;camera=new THREE.PerspectiveCamera(57,w/h,.1,400);renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setSize(w,h);renderer.outputColorSpace=THREE.SRGBColorSpace;$('stage').prepend(renderer.domElement);stadium();setCamera();window.addEventListener('resize',()=>{let w=$('stage').clientWidth,h=$('stage').clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});requestAnimationFrame(render)}catch(e){$('error').classList.add('show');$('error').textContent='3D 렌더링 오류: '+e.message}}
+ }if(animation){let p=Math.min(1,(t-animation.start)/1550),v=Math.min(1,p/.5);pitcher.rotation.y=Math.sin(v*Math.PI)*.32;batPivot.rotation.z=-Math.sin(Math.min(1,Math.max(0,(p-.25)/.42))*Math.PI)*1.7;if(animation.effect==='homer'||animation.effect==='hit'||animation.effect==='fly'){if(p<.32)ball.position.set(0,1.8,-18+18*(p/.32));else{let q=(p-.32)/.68;ball.position.set(q*17,1.8+Math.sin(q*Math.PI)*24,-q*82)}}else{ball.position.set(0,1.8,-18+18*v)}if(p>=1){pitcher.rotation.y=0;batPivot.rotation.z=0;ball.position.set(0,1.8,-18)}}else{ball.position.set(0,1.8,-18);if(batter)batter.position.y=Math.sin(t*.002)*.018}if(renderer)try{renderer.render(scene,camera);nbRecordStadiumFrame()}catch(e){nbStadiumContextLost('⚠️ 기본 경기장 3D 오류 · 이전 경기장 화면을 유지합니다.')}}
+function init3D(){nbEnsureStadiumBackup();if(!window.THREE){$('error').classList.add('show');return}try{scene=new THREE.Scene();let w=$('stage').clientWidth,h=$('stage').clientHeight;camera=new THREE.PerspectiveCamera(57,w/h,.1,400);renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setSize(w,h);renderer.outputColorSpace=THREE.SRGBColorSpace;
+ renderer.domElement.addEventListener('webglcontextlost',e=>{
+  e.preventDefault();nbStadiumContextLost('⚠️ WebGL 연결 손실 · 저장된 경기장 화면을 유지하며 복구합니다.');
+ });
+ renderer.domElement.addEventListener('webglcontextrestored',()=>{
+  try{const w=$('stage').clientWidth,h=$('stage').clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);setCamera();
+   renderer.domElement.style.visibility='visible';mainContextLost=false;
+   NBDirector.report('✅ 기본 3D 그래픽 연결 복구 완료 · 고화질 유지');}catch(e){nbStadiumContextLost('⚠️ WebGL 재초기화 실패 · 경기장 정지 화면 유지');}
+ });
+ $('stage').insertBefore(renderer.domElement,$('nbDirectorFrame'));stadium();setCamera();window.addEventListener('resize',()=>{let w=$('stage').clientWidth,h=$('stage').clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});requestAnimationFrame(render)}catch(e){$('error').classList.add('show');$('error').textContent='3D 렌더링 오류: '+e.message}}
 $('swing').onclick=()=>play('swing');$('bunt').onclick=()=>play('bunt');$('fly').onclick=()=>play('fly');$('camera').onclick=()=>{cameraMode=(cameraMode+1)%3;setCamera()};$('reset').onclick=()=>{refreshResumeOffer();$('setupOverlay').style.display='block';$('guard').classList.add('hidden');busy=true};$('change').onclick=()=>{if(game.half===0||busy||!canChange())return;startGuard('manual')};for(let i=0;i<3;i++)$('d'+i).addEventListener('input',()=>{let el=$('d'+i);el.value=el.value.replace(/\D/g,'').slice(0,1);if(el.value&&i<2)$('d'+(i+1)).focus();updateKeypad()});for(const m of ['brain','pro'])$(m).onclick=()=>{mode=m;for(const n of ['brain','pro'])$(n).classList.toggle('active',n===m);refreshResumeOffer();$('setupOverlay').style.display='block';$('guard').classList.add('hidden');busy=true};window.addEventListener('keydown',e=>{if(e.key==='Enter'&&!busy&&$('subOverlay').classList.contains('hidden'))play('swing')});game=fresh();setupStats();aiCandidates=ALL_NUMBERS.slice();update();$('guard').classList.add('hidden');busy=true;init3D();refreshResumeOffer();
 })();
 
