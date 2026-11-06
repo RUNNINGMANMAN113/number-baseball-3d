@@ -1,0 +1,72 @@
+[
+  {
+    "code": "KT",
+    "team": "KT",
+    "batters": 25,
+    "pitchers": 23,
+    "total": 48
+  },
+  {
+    "code": "SS",
+    "team": "삼성",
+    "batters": 30,
+    "pitchers": 23,
+    "total": 53
+  },
+  {
+    "code": "HT",
+    "team": "KIA",
+    "batters": 24,
+    "pitchers": 22,
+    "total": 46
+  },
+  {
+    "code": "LG",
+    "team": "LG",
+    "batters": 20,
+    "pitchers": 29,
+    "total": 49
+  },
+  {
+    "code": "OB",
+    "team": "두산",
+    "batters": 24,
+    "pitchers": 24,
+    "total": 48
+  },
+  {
+    "code": "SK",
+    "team": "SSG",
+    "batters": 28,
+    "pitchers": 27,
+    "total": 55
+  },
+  {
+    "code": "LT",
+    "team": "롯데",
+    "batters": 29,
+    "pitchers": 29,
+    "total": 58
+  },
+  {
+    "code": "NC",
+    "team": "NC",
+    "batters": 27,
+    "pitchers": 30,
+    "total": 57
+  },
+  {
+    "code": "HH",
+    "team": "한화",
+    "batters": 23,
+    "pitchers": 28,
+    "total": 51
+  },
+  {
+    "code": "WO",
+    "team": "키움",
+    "batters": 34,
+    "pitchers": 32,
+    "total": 66
+  }
+]
