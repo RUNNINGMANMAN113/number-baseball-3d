@@ -45,6 +45,11 @@ body.nblab-embedded #specialOverlay{pointer-events:none}
 <script>
 (()=>{'use strict';
 const SCENES=[
+ {id:'sixF_foulTip',title:'6F ① 포수 파울팁 삼진',sub:'배트 스침 → 포수 미트 포구 → 삼진',tag:'6F · FOUL TIP STRIKEOUT',duration:6900,desc:'포수 파울팁 포구 · 삼진 · 주자 없음 · 1아웃. 6F 발생 결과를 파울팁으로 연출.'},
+ {id:'sixF_firstSolo',title:'6F ② 1루수 직접 아웃',sub:'1루 땅볼 → 직접 잡고 베이스 터치',tag:'6F · FIRST BASE UNASSISTED',duration:7400,desc:'1루수가 1루 방향 땅볼을 포구하고 직접 베이스를 밟아 아웃 처리(3U).'},
+ {id:'sixF_firstPitcher',title:'6F ③ 1루수→투수 3-1 아웃',sub:'1루수 땅볼 포구 → 투수 베이스 커버',tag:'6F · 3–1 GROUND OUT',duration:7900,desc:'1루수가 땅볼을 포구해 1루를 커버하는 투수에게 송구하고 타자가 아웃(3-1).'},
+ {id:'sixF_pitcherLiner',title:'6F ④ 투수 직선타 아웃',sub:'강한 투수 앞 라인드라이브 → 직접 포구',tag:'6F · LINE OUT TO PITCHER',duration:6800,desc:'타자의 빠른 직선타를 투수가 마운드에서 직접 포구하는 라인드라이브 아웃(1).'},
+
  {id:'walkoff',title:'① 끝내기 승리 세리머니',sub:'끝내기 홈런 → 홈 도착 → 동료들 축하',tag:'WALK-OFF WIN',duration:15900,desc:'끝내기 홈런: 공이 한 번 높게 날아가고 주자와 타자가 홈인한 뒤, 홈플레이트 주변에 동료들이 모여 축하해.'},
  {id:'finalWin',title:'② 일반 경기 종료',sub:'마지막 아웃 → 승리팀 마운드 집결',tag:'FINAL · WIN',duration:7800,desc:'마지막 아웃을 잡은 뒤 승리팀 수비수가 마운드로 모여 하이파이브해. 끝내기 축하와 구분해.'},
  {id:'grandSlam',title:'④ 만루홈런 특별 연출',sub:'3명 주자 + 타자 · 순차적으로 4득점',tag:'GRAND SLAM!',duration:15300,desc:'3S 만루홈런: 높은 단 한 번의 타구, 주자 3명과 타자가 홈에 들어오는 순서대로 점수가 1점씩 증가. 기존 HOME RUN 글씨 효과 유지.'},
@@ -157,7 +162,7 @@ function select(id){
  baseMask=Number(document.getElementById('baseSituation').value)||0;
  if(id==='pinchRun'&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
  pinchBaseIndex=syncPinchBaseOptions();
- if(['groundout','firstBaseCatch'].includes(id)&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
+ if((['groundout','firstBaseCatch'].includes(id)||id.startsWith('sixF_'))&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
  if(['buntSuccess','buntFoul','buntStrikeout','strategyBunt'].includes(id)&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
  if(['grandSlam','walkoff'].includes(id)){document.getElementById('baseSituation').value='7';baseMask=7;}
  if(['threeUp','finalWin','replay','homerDugout','fielderReturn'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
@@ -589,6 +594,111 @@ function showBaseRunners(t){
   p.root.rotation.y=move>0?Math.atan2(b[0]-a[0],b[1]-a[1]):0;
  }
 }
+
+// FULL COUNT · 6F VARIANTS PREVIEW (visual-only; base empty). ------------------
+function sixFRunner(t){
+  if(t<=.61)return;
+  const q=phase(t,.61,.97), dest=[17.5,-17.3];
+  batter.root.position.set(lerp(batter.x,dest[0],q),Math.abs(Math.sin(t*74))*.055*(1-phase(t,.94,1)),lerp(1.7,dest[1],q));
+  batter.root.rotation.y=Math.atan2(dest[0]-batter.x,dest[1]-1.7);
+  const gait=Math.sin(t*82)*.56*(1-phase(t,.94,1));batter.legL.rotation.x=gait;batter.legR.rotation.x=-gait;
+  batter.armL.rotation.x=-gait*.45;batter.armR.rotation.x=gait*.45;
+  bat.visible=false;
+  if(t>.9){batter.root.position.x=lerp(17.5,20.5,phase(t,.90,1))}
+}
+function sixFRecordOut(t,at=.88){
+  const first=selection.id!=='sixF_foulTip'&&selection.id!=='sixF_pitcherLiner';
+  const q=phase(t,at+.02,at+.09);
+  if(first&&t>at){
+    firstBaseUmpire.root.visible=true;
+    firstBaseUmpire.armR.rotation.x=-1.65*q;
+    firstBaseUmpire.armR.rotation.z=1.05*q;
+  }
+  if(t>at+.03){displaySpecial(t,'OUT!','6F · '+(selection.id==='sixF_foulTip'?'FOUL TIP K':selection.id==='sixF_firstSolo'?'3U':selection.id==='sixF_firstPitcher'?'3–1':'PITCHER LINE OUT'),t<.98)}
+}
+function sixFFoulTipMotion(t){
+  throwMotion(t);swingMotion(t,t>.52);
+  // Bat grazes pitch; the SINGLE baseball continues directly into the catcher's mitt.
+  if(t>=CONTACT&&t<.715){
+    const q=phase(t,CONTACT,.715);
+    ball.visible=true;
+    ball.position.set(.22*Math.sin(q*Math.PI),lerp(1.48,1.58,q),lerp(contactPoint.z,4.12,q));
+  }else if(t>=.715){ball.visible=false;}
+  const received=phase(t,.68,.74);
+  catcher.armL.rotation.x=-1.35*received;
+  catcher.armL.rotation.z=-.26*received;
+  catcher.torso.rotation.x=.18*received;
+  umpireStrike(t);
+  sixFRecordOut(t,.77);
+}
+function sixFFirstSoloMotion(t){
+  const pickup=[14.2,-15.0],bag=[18,-18],catchT=.75,bagT=.875;
+  throwMotion(t);swingMotion(t,t>.52);
+  if(t>=CONTACT&&t<=catchT){
+    const q=phase(t,CONTACT,catchT);
+    ball.visible=true;ball.position.set(lerp(contactPoint.x,pickup[0],q),.30,lerp(contactPoint.z,pickup[1],q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(lerp(0,pickup[0],f),.31,lerp(contactPoint.z,pickup[1],f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>catchT){ball.visible=false;hitTrail.visible=false;}
+  const p=fielders[6],rush=phase(t,.54,.75),step=phase(t,.75,bagT),grab=phase(t,.70,.78);
+  p.root.position.set(lerp(p.x,pickup[0],rush)+ (bag[0]-pickup[0])*step,0,lerp(p.z,pickup[1],rush)+(bag[1]-pickup[1])*step);
+  p.root.rotation.y=Math.atan2(bag[0]-pickup[0],bag[1]-pickup[1]);
+  const gait=Math.sin(t*70)*.62*(rush*(1-grab)+step*(1-phase(t,.875,.92)));
+  p.legL.rotation.x=gait;p.legR.rotation.x=-gait;
+  p.torso.rotation.x=.72*grab*(1-step);p.armL.rotation.x=-1.2*grab;
+  p.armL.rotation.z=-.24*grab;p.armR.rotation.x=-.4*grab;
+  if(t>.82){p.legR.rotation.x=.34*phase(t,.82,.88)}
+  sixFRunner(t);sixFRecordOut(t,bagT);
+  firstBaseCatchRing.visible=t>=bagT&&t<.93;
+  if(firstBaseCatchRing.visible){const q=phase(t,bagT,.93);firstBaseCatchRing.position.set(18,.24,-18);firstBaseCatchRing.scale.setScalar(.55+q*.9);firstBaseCatchRing.material.opacity=.9*(1-q)}
+}
+function sixFFirstPitcherMotion(t){
+  const pickup=[20.2,-14.7],bag=[18,-18],start=.79,end=.895;
+  throwMotion(t);swingMotion(t,t>.52);
+  if(t>=CONTACT&&t<.76){
+    const q=phase(t,CONTACT,.76);
+    ball.visible=true;ball.position.set(lerp(0,pickup[0],q),.3,lerp(contactPoint.z,pickup[1],q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(lerp(0,pickup[0],f),.30,lerp(contactPoint.z,pickup[1],f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>=start&&t<end){
+    const q=phase(t,start,end);ball.visible=true;hitTrail.visible=false;
+    ball.position.set(lerp(pickup[0],bag[0],q),lerp(1.35,1.42,q)+1.0*Math.sin(Math.PI*q),lerp(pickup[1],bag[1],q));
+  }else{ball.visible=false;hitTrail.visible=false;}
+  const f=fielders[6],rush=phase(t,.54,.73),grab=phase(t,.70,.78);
+  f.root.position.set(lerp(f.x,pickup[0],rush),0,lerp(f.z,pickup[1],rush));
+  f.root.rotation.y=-.70*phase(t,.76,.83);
+  f.torso.rotation.x=.8*grab*(1-phase(t,.82,.86));
+  f.armL.rotation.x=-1.4*grab;f.armR.rotation.x=-2.1*phase(t,.78,.83)*(1-phase(t,.88,.92));
+  const gait=Math.sin(t*70)*.5*rush*(1-grab);f.legL.rotation.x=gait;f.legR.rotation.x=-gait;
+  // The pitcher leaves the mound and reaches the bag before the batter.
+  const run=phase(t,.56,.855),stop=phase(t,.84,.91);
+  pitcher.root.position.set(lerp(0,bag[0],run),0,lerp(-18,bag[1],run));
+  pitcher.root.rotation.y=Math.PI/2*(1-stop);
+  const pg=Math.sin(t*88)*.65*run*(1-stop);pitcher.legL.rotation.x=pg;pitcher.legR.rotation.x=-pg;
+  pitcher.armL.rotation.x=-1.15*phase(t,.84,.90);
+  sixFRunner(t);sixFRecordOut(t,end);
+  firstBaseCatchRing.visible=t>=end&&t<.955;
+  if(firstBaseCatchRing.visible){const q=phase(t,end,.955);firstBaseCatchRing.position.set(18,1.5,-18);firstBaseCatchRing.scale.setScalar(.5+q*.8);firstBaseCatchRing.material.opacity=.9*(1-q)}
+}
+function sixFPitcherLinerMotion(t){
+  throwMotion(t);swingMotion(t,t>.52);
+  const end=.725;
+  if(t>=CONTACT&&t<=end){
+    const q=phase(t,CONTACT,end);
+    ball.visible=true;
+    ball.position.set(lerp(0,.2,q),lerp(1.48,2.18,q)+.50*Math.sin(q*Math.PI),lerp(contactPoint.z,-17.3,q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(.2*f,lerp(1.48,2.18,f)+.50*Math.sin(f*Math.PI),lerp(contactPoint.z,-17.3,f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>end){ball.visible=false;hitTrail.visible=false;}
+  const p=phase(t,.58,.73);
+  pitcher.root.position.x=.24*p;pitcher.root.rotation.y=-.13*p;
+  pitcher.torso.rotation.z=-.20*p;
+  pitcher.armL.rotation.x=-1.55*p;pitcher.armL.rotation.z=-.50*p;
+  pitcher.armR.rotation.x=-.7*p;
+  batter.torso.rotation.y+=.3*phase(t,.78,.90);
+  sixFRecordOut(t,end);
+}
+
 function groundOutMotion(t){
  // One batted groundball, then a single 1B throw; no second batted-ball flight.
  const pickup=[hitDirection>0?11:-11,-23],first=[18,-18],throwStart=.735,throwEnd=.842;
@@ -963,6 +1073,7 @@ function updateScoreboard(t){
  if(selection.id==='strategyFly'&&t>=.94)runs=1;
  if(selection.id==='buntSuccess')outs=t>=.85?1:0;
  if(['groundout','firstBaseCatch'].includes(selection.id))outs=t>=.842?1:0;
+ if(selection.id.startsWith('sixF_'))outs=t>=(selection.id==='sixF_foulTip'?.76:selection.id==='sixF_pitcherLiner'?.73:.88)?1:0;
  if(selection.id==='firstBaseSafe')outs=0;
  if(selection.id==='buntStrikeout')outs=t>=.83?1:0;
  const score=document.getElementById('scoreTag');
@@ -1361,7 +1472,12 @@ function pose(){
  for(const p of [pitcher,batter,catcher,umpire,manager,ghostRunner,firstCoach,firstBaseUmpire,...baseRunners,...fielders,...incomingPlayers,incomingPitcher,incomingCatcher,incomingBatter,nextBatterActor,scoredRunnerActor])reset(p);
  updateHands();manager.root.visible=false;ghostRunner.root.visible=false;firstCoach.root.visible=false;firstBaseUmpire.root.visible=false;rosinBag.visible=true;showBaseRunners(t);incomingPlayers.forEach(p=>p.root.visible=false);incomingPitcher.root.visible=false;incomingCatcher.root.visible=false;incomingBatter.root.visible=false;nextBatterActor.root.visible=false;scoredRunnerActor.root.visible=false;document.getElementById('inningBanner').classList.remove('show');bat.visible=true;ball.visible=false;bat.rotation.set(-.35,0,.60);batter.armR.rotation.x=-.72;batter.armL.rotation.x=-.72;batter.armR.rotation.z=-.30;batter.armL.rotation.z=.36;batTrail.visible=false;hitTrail.visible=false;if(firstBaseCatchRing)firstBaseCatchRing.visible=false;
  document.getElementById('batFlash').classList.remove('show');document.getElementById('specialOverlay').classList.remove('show');updateOverlays(t);
- if(selection.id==='signalBunt'||selection.id==='signalFly'){
+ if(selection.id.startsWith('sixF_')){
+   if(selection.id==='sixF_foulTip'){sixFFoulTipMotion(t);caption.firstChild.nodeValue=t<.54?'투구! 타자의 배트에 공이 살짝 스칩니다':t<.76?'파울팁! 포수가 미트에 공을 담습니다':'파울팁 삼진 · OUT!';}
+   else if(selection.id==='sixF_firstSolo'){sixFFirstSoloMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.76?'1루수가 땅볼을 직접 포구합니다':t<.88?'1루수 직접 1루 베이스 터치!':'3U · 타자 아웃';}
+   else if(selection.id==='sixF_firstPitcher'){sixFFirstPitcherMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.79?'1루수 포구 · 투수 1루 베이스 커버!':t<.90?'1루수에서 투수에게 송구!':'3-1 · 타자 아웃';}
+   else {sixFPitcherLinerMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 배트에 정면으로 맞습니다':t<.73?'빠른 직선타! 투수가 글러브를 뻗습니다':'투수 직선타 포구 · OUT!';}
+ }else if(selection.id==='signalBunt'||selection.id==='signalFly'){
    ball.visible=false;bat.visible=true;
    directorSign(.24*t);
    caption.firstChild.nodeValue=selection.id==='signalBunt'?'감독이 희생번트 작전을 지시합니다':'감독이 희생플라이 작전을 지시합니다';
@@ -1517,7 +1633,16 @@ function applySceneCamera(t){
  if(v!=='broadcast'){setCamera();return} // user's manual camera choice is honored
  const bx=0,by=6.6,bz=21,tx=0,ty=1,tz=-27;
  let mix=0,cx=bx,cy=by,cz=bz,lx=tx,ly=ty,lz=tz;
- if(selection.id==='firstBaseCatch'||selection.id==='firstBaseSafe'){
+ if(selection.id==='sixF_firstSolo'||selection.id==='sixF_firstPitcher'){
+  mix=phase(t,.58,.70)*(1-phase(t,.955,1));
+  cx=30;cy=7;cz=-2;lx=18;ly=1.35;lz=-17.5;
+ }else if(selection.id==='sixF_pitcherLiner'){
+  mix=phase(t,.54,.63)*(1-phase(t,.94,1));
+  cx=-9;cy=6;cz=-7;lx=0;ly=1.9;lz=-18;
+ }else if(selection.id==='sixF_foulTip'){
+  mix=phase(t,.57,.67)*(1-phase(t,.91,.98));
+  cx=-7;cy=3.7;cz=10.8;lx=0;ly=1.5;lz=3.5;
+ }else if(selection.id==='firstBaseCatch'||selection.id==='firstBaseSafe'){
   // The full pitch/contact stays in the original broadcast view. Cut toward first only during the throw.
   mix=phase(t,.735,.790)*(1-phase(t,.960,1));
   cx=30;cy=6.9;cz=-4;lx=17.7;ly=1.4;lz=-18;
@@ -1574,14 +1699,14 @@ makeStadium();updateHands();setCamera();select('pitch');
 let nbEmbeddedToken=null,nbEmbeddedComplete=false,nbEmbeddedLastProgress=-1,nbEmbeddedSameTeams=false;
 // V39: timeline-aligned SFX cues. Parent page owns AudioContext so user sound consent is respected.
 const NB39_FOUL_SCENES=new Set(Object.keys(NB_FOUL_PATHS));
-const NB39_CONTACT_SCENES=new Set([
+const NB39_CONTACT_SCENES=new Set(['sixF_foulTip','sixF_firstSolo','sixF_firstPitcher','sixF_pitcherLiner',
  'single','double','triple','homerun','homerDugout','grandSlam','walkoff',
  'fielding','lineout','groundout','firstBaseCatch','firstBaseSafe','fielderReturn',
  'sacFlySuccess','sacFlyOut','slideFirst','strategyFly','strategyBunt',
  'buntSuccess','buntFoul','buntStrikeout','replay','rbiCelebrate',
  ...NB39_FOUL_SCENES
 ]);
-const NB39_MITT_SCENES=new Set(['pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall','escapeK']);
+const NB39_MITT_SCENES=new Set(['sixF_foulTip','pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall','escapeK']);
 let nb39SoundSent=new Set();
 function nb39CueOnce(label,type,pan=0){
  if(nbEmbeddedToken===null||nb39SoundSent.has(label))return;
