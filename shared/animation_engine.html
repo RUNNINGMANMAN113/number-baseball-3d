@@ -1,0 +1,1822 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NUMBER BASEBALL 3D | 애니메이션 검토실 v24</title>
+<style>
+:root{font-family:system-ui,'Noto Sans KR',sans-serif;background:#07131f;color:#ebf4ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 30% 0,#183d55,#07131f 66%)}
+header{max-width:1250px;margin:auto;padding:22px 22px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}header h1{font-size:clamp(20px,3vw,31px);margin:0;font-weight:900;letter-spacing:-.7px}header h1 b{color:#f6b84e}header p{color:#a1c0d4;font-size:13px;margin:6px 0 0}small{color:#9bb8cc}
+main{max-width:1250px;margin:auto;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,.78fr);gap:15px;padding:10px 20px 28px}
+.frame{background:#10283c;border:1px solid #42657d;border-radius:16px;overflow:hidden;box-shadow:0 20px 55px #0006}.viewport{height:min(57vw,530px);min-height:320px;position:relative;background:linear-gradient(#8ed5f8 0%,#7bc6e4 55%,#2e9760 56%)}canvas{display:block;width:100%;height:100%}.overlay{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;gap:10px}.scoretag,.scene-tag{background:#041928e8;border:1px solid #587b8b;padding:8px 11px;border-radius:9px;font-size:12px;line-height:1.5}.scoretag b{color:#f6c568}.scene-tag{color:#f4bf62;font-weight:800;text-align:right}.lowerthird{position:absolute;bottom:12px;left:12px;right:12px;background:#071825ed;border-left:4px solid #fac169;padding:12px 15px;border-radius:5px;font-weight:800;font-size:15px;pointer-events:none}.lowerthird span{display:block;color:#9dbed3;font-weight:500;font-size:12px;margin-top:3px}.speed-readout{position:absolute;right:16px;bottom:87px;background:linear-gradient(145deg,#071b2beF,#153856eF);border:1px solid #ffd680;border-radius:11px;padding:13px 16px;min-width:156px;text-align:right;pointer-events:none;z-index:3;box-shadow:0 5px 25px #0008;opacity:0;transform:translateY(12px);transition:opacity .12s,transform .12s}.speed-readout.show{opacity:1;transform:translateY(0)}.speed-readout small{display:block;color:#9fcae2;font-size:11px;letter-spacing:.1em}.speed-readout b{font-size:31px;color:#ffdb87;font-variant-numeric:tabular-nums}.speed-readout em{font-style:normal;font-size:12px;color:#dce8f7}.abs-panel{position:absolute;right:16px;top:77px;z-index:4;pointer-events:none;width:177px;min-height:204px;background:#041725eb;border:1px solid #86c8e8;border-radius:11px;padding:10px 12px;opacity:0;transform:scale(.9);transition:opacity .15s,transform .15s}.abs-panel.show{opacity:1;transform:scale(1)}.abs-panel .abs-heading{color:#fbd48b;font-size:12px;font-weight:900;letter-spacing:.08em;text-align:center}.abs-panel svg{display:block;width:100%;height:145px}.abs-panel .abs-caption{color:#fff;text-align:center;font-size:11px;font-weight:800}.homer-banner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;z-index:4;opacity:0;transform:scale(.74);transition:opacity .13s,transform .13s;text-shadow:0 4px 12px #000,0 0 25px #da711d}.homer-banner.show{opacity:1;transform:scale(1)}.homer-banner strong{font-size:clamp(28px,5.8vw,65px);font-weight:1000;letter-spacing:.04em;line-height:1;color:#ffd66b;-webkit-text-stroke:1px #9b4e19}.homer-banner span{margin-top:8px;color:#fff3cf;letter-spacing:.25em;font-size:12px}.inning-banner{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;background:#061927ba;opacity:0;pointer-events:none;transition:opacity .3s;text-align:center}.inning-banner.show{opacity:1}.inning-banner strong{font-size:clamp(22px,4vw,47px);letter-spacing:.09em;color:#ffcf79;text-shadow:0 3px 15px #000}.inning-banner span{font-size:12px;color:#e2f1ff;letter-spacing:.12em}.special-overlay{position:absolute;z-index:5;inset:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#00131b60,#001b2a99);text-align:center;opacity:0;transition:opacity .16s}.special-overlay.show{opacity:1}.special-overlay strong{font-size:clamp(22px,4.4vw,55px);font-weight:1000;color:#ffe29a;text-shadow:0 4px 16px #000;letter-spacing:.07em}.special-overlay span{font-size:clamp(12px,1.8vw,19px);font-weight:850;color:#eff7ff;text-shadow:0 3px 12px #000}.bat-flash{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 38% 63%,#fff0a055,transparent 28%);opacity:0}.bat-flash.show{opacity:1}.noscript{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:25px;text-align:center;background:#092234;color:#fff;font-weight:700;z-index:5}
+.bottom{padding:13px 15px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#10263b}button,select{font:inherit;border:1px solid #42617a;background:#1f4059;color:#eff7ff;border-radius:9px;padding:10px 12px;font-weight:700;cursor:pointer}button:hover{filter:brightness(1.14)}button:focus-visible,select:focus-visible{outline:3px solid #ffd07d;outline-offset:2px}button.active{background:#e8a947;color:#172336;border-color:#e8a947}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{font-size:13px}
+.panel{border:1px solid #36536b;background:#11283b;border-radius:14px;padding:17px;align-self:start}.panel h2{font-size:17px;margin:0 0 9px}.panel p{font-size:13px;color:#a9c5d7;line-height:1.7;margin:4px 0 13px}.scene-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scene-button{text-align:left;padding:12px 11px;min-height:73px;font-size:13px}.scene-button strong{display:block;margin-bottom:3px}.scene-button small{font-weight:500;font-size:11px;display:block}.divider{height:1px;background:#31506a;margin:17px 0}.settings{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.settings label{font-size:12px;color:#b6cfe0}.settings select{max-width:130px}.note{background:#0a1c2c;border-radius:10px;padding:11px 13px;color:#b8d0de;font-size:12px;line-height:1.65;margin-top:12px}.status{font-size:12px;color:#ffc978;font-weight:700}.progress{height:6px;background:#294355}.progress div{width:0;height:100%;background:linear-gradient(90deg,#e1a13e,#f6d486);transition:width .06s linear}.foot{max-width:1250px;margin:auto;padding:0 21px 26px;color:#8faec2;font-size:12px;line-height:1.7}
+@media(max-width:580px){.speed-readout{right:8px;bottom:78px;padding:8px 10px;min-width:120px}.speed-readout b{font-size:24px}.abs-panel{right:8px;top:58px;width:136px;min-height:166px;padding:7px}.abs-panel svg{height:110px}}@media(max-width:850px){main{grid-template-columns:1fr}.viewport{height:60vw;min-height:310px}.scene-list{grid-template-columns:repeat(3,1fr)}}@media(max-width:580px){header{padding:17px 12px 8px}main{padding:8px 10px 18px}.viewport{height:72vw;min-height:275px}.scene-list{grid-template-columns:1fr 1fr}.scene-button{min-height:70px}.panel{padding:13px}.lowerthird{font-size:12px;padding:10px}.overlay{top:8px;left:8px;right:8px}.scoretag,.scene-tag{font-size:10px;padding:6px 8px}.actions button{padding:9px}}
+
+.integrated-panel{border:1px solid #7db6cb;background:linear-gradient(135deg,#0e3048,#081e2c);border-radius:13px;padding:14px;margin-bottom:15px}
+.integrated-panel h2{margin:0 0 6px;font-size:17px}.integrated-panel p{margin:5px 0 12px;color:#c7dfeb}
+.flow-actions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.flow-actions button{padding:9px;font-size:12px}.flow-actions button:disabled{opacity:.4;cursor:not-allowed}
+.flow-pill{display:inline-block;border:1px solid #60849b;background:#09243a;border-radius:9px;font-size:12px;padding:7px 9px;margin:2px 5px 7px 0}
+.flow-steps{max-height:220px;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:3px}
+.flow-step{font-size:11px;min-height:43px;text-align:left;padding:7px;background:#14344a;border-color:#365e75;font-weight:600}.flow-step.active{border-color:#f7d078;background:#f3b85b;color:#102435}
+.flow-status{font-size:12px;color:#f3ddb7;padding:9px 10px;border-radius:8px;background:#071e30;line-height:1.6}
+@media(max-width:580px){.flow-steps{grid-template-columns:1fr 1fr}}
+</style>
+<style id="nblab-embedded-style">
+html,body{height:100%;overflow:hidden}body.nblab-embedded{background:#0b2639;margin:0}
+body.nblab-embedded header,body.nblab-embedded aside,body.nblab-embedded .bottom,
+body.nblab-embedded .progress,body.nblab-embedded .foot{display:none!important}
+body.nblab-embedded main{max-width:none!important;display:block!important;height:100vh!important;padding:0!important;margin:0!important}
+body.nblab-embedded .frame{height:100vh!important;width:100vw!important;max-width:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+body.nblab-embedded .viewport{height:100vh!important;min-height:0!important;width:100vw!important}
+body.nblab-embedded .scoretag{display:none!important}
+body.nblab-embedded .lowerthird{font-size:clamp(11px,1.55vw,15px);padding:9px 12px;right:9px;left:9px;bottom:12px}
+body.nblab-embedded .speed-readout{bottom:89px}
+body.nblab-embedded #specialOverlay{pointer-events:none}
+</style>
+</head><body class="nblab-embedded">
+<header><div><h1>⚾ NUMBER BASEBALL <b>3D</b></h1><p>ANIMATION LAB v24 · 개별 애니메이션 + 한 이닝 연속 시연</p></div><div class="status" id="status">장면 선택 후 재생</div></header>
+<main><div class="frame"><div class="viewport" id="viewport"><div class="noscript" id="fallback">3D 엔진을 불러오지 못했습니다.<br>인터넷 연결을 확인해 주세요.</div><div class="speed-readout" id="speedReadout" aria-live="polite"><small>PITCH SPEED</small><b id="speedValue">151</b> <em>km/h</em></div><div id="pitchKindReadout" style="position:absolute;bottom:70px;right:16px;z-index:8;background:#091a2cdd;color:#fff;font-size:14px;font-weight:900;border-radius:7px;padding:7px 11px;pointer-events:none;opacity:0;transform:translateY(7px);transition:opacity .12s,transform .12s">포심 <small style="font-size:10px;color:#e6effb">142 km/h</small></div><div class="abs-panel" id="absPanel" aria-label="ABS 스트라이크존 시연"><div class="abs-heading">ABS · STRIKE ZONE</div><svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="13" width="80" height="102" fill="#347aa522" stroke="#caecff" stroke-width="3"/><path d="M56.7 13V115 M83.3 13V115 M30 47H110 M30 81H110" stroke="#b8d9ed" stroke-opacity=".48"/><path id="absBreakPath" d="" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" opacity="0" stroke-dasharray="5 4"/><circle id="absLocation" cx="34" cy="17" r="7" fill="#f8d368" stroke="#fff" stroke-width="3"/><text x="70" y="128" text-anchor="middle" font-size="9" fill="#b7d7ec">DEMO LOCATION</text></svg><div class="abs-caption">STRIKE · LOOKING K</div></div><div class="inning-banner" id="inningBanner"><strong>SIDE RETIRED</strong><span>3 OUTS · CHANGE SIDES</span></div><div class="homer-banner" id="homerBanner"><strong>HOME RUN!</strong><span>3 STRIKES · 3S</span></div><div class="bat-flash" id="batFlash"></div><div class="special-overlay" id="specialOverlay"><strong id="specialTitle"></strong><span id="specialSubtitle"></span></div><div class="overlay"><div class="scoretag" id="scoreTag">AWAY <b>0</b> · HOME <b>0</b><br>1회 초 · B 0 S 0 O 0</div><div class="scene-tag" id="sceneTag">PITCH · SWING</div></div><div class="lowerthird" id="caption">투수가 와인드업을 시작합니다.</div></div><div class="progress"><div id="bar"></div></div><div class="bottom"><div class="actions"><button class="active" id="play">▶ 다시 재생</button><button id="pause">⏸ 일시정지</button><button id="skip">⏭ 장면 끝으로</button><button id="speedDemo" title="5% 확률과 별개로 구속 표시를 바로 점검">⚡ 구속 표시 테스트</button></div><div class="settings"><label for="cameraMode">카메라</label><select id="cameraMode"><option value="broadcast">중계</option><option value="side">측면</option><option value="top">상공</option><option value="batterClose">타자 클로즈업</option><option value="pitcherClose">마운드 클로즈업</option></select><label for="fieldLocation">수비 위치</label><select id="fieldLocation"><option value="random">무작위</option><option value="infieldR">내야 1·2루 사이</option><option value="infieldL">내야 2·3루 사이</option><option value="left">좌익수 근처</option><option value="center">중견수 근처</option><option value="right">우익수 근처</option></select><label for="baseSituation">주자 상황</label><select id="baseSituation" title="주자 없음 또는 1·2·3루 조합" style="max-width:175px"><option value="0">주자 없음</option><option value="1">1루</option><option value="2">2루</option><option value="4">3루</option><option value="3">1·2루</option><option value="5">1·3루</option><option value="6">2·3루</option><option value="7">만루</option></select><label for="pinchBase">대주자 교체 베이스</label><select id="pinchBase" title="주자가 있는 베이스만 선택할 수 있음"><option value="">주자 먼저 선택</option><option value="1">1루 주자</option><option value="2">2루 주자</option><option value="3">3루 주자</option></select><label for="hitDirection">안타 방향</label><select id="hitDirection"><option value="random">무작위 (좌·우)</option><option value="right">1·2루 사이</option><option value="left">2·3루 사이</option></select></div></div></div>
+<aside class="panel"><h2>애니메이션 선택</h2><p><b>v13 수정:</b> 배트가 어깨 뒤 위로 향하도록 위치를 교정하고 번트 파울의 낙하지점을 홈플레이트 근처로 줄였어. 볼넷도 ABS에서 존 바깥 공 위치를 표시하며 구속은 145~160km/h야. <b>v12 방향 수정:</b> 타자·포수의 대기 방향과 포수 마운드 방문 복귀를 수정했어. <b>v11 내용:</b> 희생번트 성공 / 파울 실패 / 파울 삼진, 희생플라이 성공 / 타자 아웃 실패 / 카운트만 진행. 아래 목록에서 각각 재생 가능.<br>준비 동작 ①②와 포수 포구 ③은 제외했어. 뜬공은 타격 후 상공 카메라, 직선타는 중계 카메라에서 포구해. 헛스윙·루킹 삼진은 포구 후 심판 콜이 자동으로 이어져. 땅볼 송구 아웃은 무주자에서, 뜬공 귀루는 주자 8개 조합에서 시험해 봐. 선택한 주자 상황은 기존 베이스 점유를 보여주는 시각적 테스트용이야. 이닝 교대는 실제 공수 교대야.</p><section class="integrated-panel" aria-label="연속 경기 시연">
+<h2>⚾ 한 이닝 연속 시연</h2><p>안타 → 볼넷 → 안타(만루) → 희생플라이 득점 → 삼진 → 뜬공 아웃 → 공수교대. 다음 타자 입장과 득점 주자 퇴장을 사이에 연결해.</p>
+<div class="flow-actions"><button type="button" id="flowStart">▶ 처음부터 연속 재생</button><button type="button" id="flowPrev">◀ 이전 장면</button><button type="button" id="flowNext">다음 장면 ▶</button><button type="button" id="flowAuto" aria-pressed="true">자동 진행: 켜짐</button><button type="button" id="flowStop">개별 시연 복귀</button></div>
+<div class="flow-status" id="flowStatus" aria-live="polite">연속 시연을 시작하면 점수·주자·아웃·타순이 장면마다 이어져.</div>
+<div class="flow-steps" id="flowSteps"></div>
+<div class="note"><b>중요:</b> 이 모드는 숫자 추리 결과를 새로 판정하지 않는 <b>고정 시나리오 검증</b>이야. 실제 정식 게임의 경기 상태는 바뀌지 않아. 경기 진행 속도는 위쪽 「속도」에서 조정할 수 있어.</div>
+</section><div class="scene-list" id="sceneList"></div><div class="divider"></div><h2>KBO 현역 선수 · 좌우 시연</h2><p>공식 KBO 등록 명단에서 확인한 선수만 시연 선택지에 넣었어. 직접 입력 선수에게는 좌우 설정을 요구하지 않아.</p><div class="settings"><label for="pitcherProfile">투수</label><select id="pitcherProfile"><option value="so">소형준 · 우투</option><option value="oh">오원석 · 좌투</option></select><label for="batterProfile">타자</label><select id="batterProfile"><option value="ahn">안현민 · 우타</option><option value="kim">김현수 · 좌타</option></select></div><p id="handInfo" style="margin-top:9px">소형준 우투 · 안현민 우타</p><div class="divider"></div><h2>볼넷 상황 · 확률 검토</h2><p>경기 상황에 따라 고의사구 연출의 등장 가능성이 달라져. 실제 게임 승패나 주자 계산은 하지 않는 독립 시연이야.</p><div class="settings"><label for="scoreSituation">현재 수비팀</label><select id="scoreSituation"><option value="normal">동점 또는 뒤짐</option><option value="narrow">1~2점 차 리드</option><option value="wide">3점 이상 리드</option></select><button id="walkDemo" type="button">🎲 볼넷 판정 재추첨</button></div><p id="walkOutcome" style="margin-top:8px;color:#f6ca7c;font-size:12px">기본 볼넷</p><div class="divider"></div><div class="note"><b>대주자 교체 시연:</b> 위쪽 「주자 상황」에서 주자가 있는 루를 지정한 뒤, 「대주자 교체 베이스」를 고르면 돼. 주자가 없는 루는 선택할 수 없어. 타자와 대주자는 별개 인물이야.</div><h2>이번 시연에서 확인할 부분</h2><p id="sceneDescription">투구 도착 시점과 스윙 임팩트 일치 · 한 번의 타구 궤적</p><div class="note"><b>v7 새 장면</b><br>①② 준비 동작 제외. 심판 오른쪽 삼진 콜, 5개 수비 위치 × 뜬공/직선타, 1루 코치의 가까운 축하, 안타 시 5% 실책 연출을 추가했어. 수비 위치 선택 메뉴로 방향을 확인하고 「실책 테스트」 장면에서는 확률을 기다리지 않아도 돼.</div><div class="note"><b>구속</b><br>일반 투구는 구종 옆에 115~144 km/h의 시연 구속을 작게 표시하고, 별도 5% 이벤트에서 145~160 km/h 큰 구속 UI를 표시. 공이 포수에게 도착한 후에만 오른쪽 아래에 노출하며, 안타·홈런·몸에 맞는 공은 포수가 그 공을 받지 않으므로 표시하지 않아. 점수·판정과 무관. 「구속 표시 테스트」 버튼은 확률 검증이 아닌 디자인 확인용이야.</div><div class="note"><b>ABS</b><br>루킹 삼진은 스트라이크존 경계 부근, 볼넷은 존 바깥쪽 공의 위치를 시각화해. 숫자야구에는 실제 공의 위치 판정이 없으므로 ABS 좌표는 <b>연출용 예시</b>야.</div><div class="note"><b>설계 원칙</b><br>4B에서 안타 연출을 선택해도 실제 득점·주자 위치가 달라지지 않아야 해. 볼넷은 포구 후 걸어서 1루 도착, 1루타는 타격 후 달리기로 표현해. 현재 시연에서는 경기 로직을 변경하지 않아. 일반 볼넷 4B에서 3%는 몸에 맞는 공, 수비팀이 1~2점 리드일 때 1%는 고의사구 연출이야. 세 결과의 주자·점수 효과는 동일하게 처리해. 볼넷 발생 후 20% 확률로, 타자가 1루에 완전히 도착한 다음 포수가 마운드를 방문하고 돌아와.</div><div class="note"><b>포수·심판 구별</b><br>포수는 투수와 같은 수비 유니폼에 진청색 마스크·가슴 보호구·미트를 착용해. 포수 뒤에 서 있는 검은 옷이 심판이야. 안타는 오른쪽 설정에서 1·2루 사이 / 2·3루 사이를 직접 비교할 수 있어.</div><div class="note"><b>v17 특별 연출</b> 끝내기 홈런 축하 · 승리팀 마운드 집결 · 만루홈런 · 삼자범퇴 · 두 각도 리플레이 · 감독 작전 지시. 시연용으로 점수와 상황을 고정해서 보여줘. 정식 게임에는 아직 연결하지 않았어.<br><b>v16 추가 검토</b> 투구 후 한국어 구종·구속 표시, 변화구 ABS 흰색 곡선, 선택한 베이스의 대주자 교체.<br><b>v15 추가 검토</b> 희생플라이 실패의 최선행 주자 원위치 송구 · 구종 표시 · 배트/번트 접촉 · 득점 주자별 점수 갱신.<br><b>희생작전 테스트 안내</b><br>희생번트는 1루·2루 주자, 희생플라이는 3루 주자가 필요해. 해당 장면을 고르면 주자 상황이 자동 선택돼. 희생플라이 성공은 외야 포구 후 태그업·홈 송구·SAFE 순서이고, 실패는 최선행 주자의 원래 베이스로 송구해. 득점 애니메이션은 홈 도착 순간에만 1점씩 반영돼.<br>실패가 무조건 주자 아웃은 아니야. 현재 정식 게임 규칙의 1S 실패는 타자만 아웃, 0S 실패는 일반 카운트 판정이야.</div><div class="note"><b>아직 미적용</b><br>이 파일은 독립 3D 미리보기야. v27 게임 자체는 변경하지 않았어. 시연을 보고 동작·길이·시점이 정해지면 연결할 예정이야.</div></aside></main>
+<div class="foot">* 이 미리보기는 게임의 기존 구장 배치·캐릭터 비율·색채를 참고해 새로 작성한 17차 동작 시연이야. 실제 게임 장면과 완전히 동일한 파일은 아니야. Three.js 라이브러리 로딩에 인터넷 연결이 필요해. 좌우 시연 선수 정보: KBO 공식 등록 현황 참조 (https://www.koreabaseball.com/Player/Register.aspx).</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script>
+(()=>{'use strict';
+const SCENES=[
+ {id:'outVar_foulTip',title:'기존 삼진 ① 포수 파울팁 포구',sub:'배트 스침 → 포수 미트 포구 → 삼진',tag:'FOUL TIP · STRIKEOUT',duration:6900,desc:'기존 삼진이 확정됐을 때만 선택되는 포수 파울팁 포구 연출. 새로운 아웃을 만들지 않습니다.'},
+ {id:'outVar_firstSolo',title:'기존 아웃 ② 1루수 직접 처리',sub:'1루 땅볼 → 직접 잡고 베이스 터치',tag:'FIRST BASE · 3U',duration:7400,desc:'1루수가 1루 방향 땅볼을 포구하고 직접 베이스를 밟아 아웃 처리(3U).'},
+ {id:'outVar_firstPitcher',title:'기존 아웃 ③ 투수 1루 커버',sub:'1루수 땅볼 포구 → 투수 베이스 커버',tag:'FIRST BASE · 3–1 OUT',duration:7900,desc:'1루수가 땅볼을 포구해 1루를 커버하는 투수에게 송구하고 타자가 아웃(3-1).'},
+ {id:'outVar_pitcherLiner',title:'기존 아웃 ④ 투수 직선타 포구',sub:'강한 투수 앞 라인드라이브 → 직접 포구',tag:'PITCHER · LINE OUT',duration:6800,desc:'타자의 빠른 직선타를 투수가 마운드에서 직접 포구하는 라인드라이브 아웃(1).'},
+
+ {id:'walkoff',title:'① 끝내기 승리 세리머니',sub:'끝내기 홈런 → 홈 도착 → 동료들 축하',tag:'WALK-OFF WIN',duration:15900,desc:'끝내기 홈런: 공이 한 번 높게 날아가고 주자와 타자가 홈인한 뒤, 홈플레이트 주변에 동료들이 모여 축하해.'},
+ {id:'finalWin',title:'② 일반 경기 종료',sub:'마지막 아웃 → 승리팀 마운드 집결',tag:'FINAL · WIN',duration:7800,desc:'마지막 아웃을 잡은 뒤 승리팀 수비수가 마운드로 모여 하이파이브해. 끝내기 축하와 구분해.'},
+ {id:'grandSlam',title:'④ 만루홈런 특별 연출',sub:'3명 주자 + 타자 · 순차적으로 4득점',tag:'GRAND SLAM!',duration:15300,desc:'3S 만루홈런: 높은 단 한 번의 타구, 주자 3명과 타자가 홈에 들어오는 순서대로 점수가 1점씩 증가. 기존 HOME RUN 글씨 효과 유지.'},
+ {id:'threeUp',title:'⑥ 삼자범퇴',sub:'세 번째 아웃 → 투수 작은 환호 → 공수교대',tag:'THREE UP, THREE DOWN',duration:7800,desc:'주자 없는 이닝에서 세 타자 연속 아웃. 세 번째 타자 삼진 이후 투수가 짧게 환호하고 SIDE RETIRED 자막이 나타나.'},
+ {id:'replay',title:'⑦ 중요 장면 리플레이',sub:'홈런 → 다른 카메라에서 타격 장면 다시 보기',tag:'INSTANT REPLAY',duration:13200,desc:'기본 중계에서 타구를 한 번 보여준 다음 REPLAY 자막과 함께 측면 시점에서 공과 배트의 접촉 및 타구 궤적을 다시 재생해. 실제 경기에서는 중요 장면에만 사용하도록 제안.'},
+ {id:'strategyBunt',title:'⑧ 감독 작전 지시 · 번트',sub:'감독 사인 → 희생번트 시도',tag:'SAC BUNT SIGNAL',duration:7300,desc:'더그아웃 감독이 짧게 사인을 보내고 타자는 희생번트 시도. 판정은 기존 성공 규칙 예시를 사용해.'},
+ {id:'strategyFly',title:'⑧ 감독 작전 지시 · 희생플라이',sub:'감독 사인 → 외야 뜬공 → 태그업',tag:'SAC FLY SIGNAL',duration:9000,desc:'감독의 짧은 손짓을 보여준 뒤 희생플라이 성공 연출로 이어져. 감독 동작 자체는 숫자야구 판정을 바꾸지 않아.'},
+ {id:'buntSuccess',title:'희생번트 성공',sub:'번트 → 포구 → 1루 송구 아웃 · 주자 진루',tag:'SAC BUNT · SUCCESS',duration:7100,desc:'S가 1개 이상: 타자가 번트를 대고 1루에서 아웃, 원래 주자는 다음 루로 진루. 게임 기존 규칙과 동일해.'},
+ {id:'buntFoul',title:'희생번트 실패 · 번트 파울',sub:'S 0개 · 스트라이크 +1 · 주자 유지',tag:'BUNT FOUL',duration:4800,desc:'S가 0개: 번트 타구가 파울 지역으로 굴러가 스트라이크 1개가 추가돼. 주자와 타자는 아직 아웃되지 않아.'},
+ {id:'buntStrikeout',title:'희생번트 실패 · 번트 파울 삼진',sub:'이미 2스트라이크 · S 0개 → 삼진',tag:'BUNT STRIKEOUT',duration:5000,desc:'S가 0개인 번트 시도로 스트라이크가 3개가 되면 번트 파울 삼진. 타자만 아웃, 주자는 유지돼.'},
+ {id:'sacFlySuccess',title:'희생플라이 성공',sub:'외야 포구 → 3루 주자 태그업 → 홈 송구 → 세이프',tag:'SAC FLY · RBI',duration:8700,desc:'S가 2개 이상: 타자는 뜬공으로 아웃. 포구 후 3루 주자가 홈에 뛰고 외야수의 홈 송구보다 먼저 도착해 득점해.'},
+ {id:'sacFlyOut',title:'희생플라이 실패 · 플라이 아웃',sub:'포구 후 최선행 주자가 있던 베이스에 송구',tag:'FLY OUT · NO RUN',duration:7000,desc:'S가 1개인 실패: 타자 플라이아웃. 포구 이후 외야수가 가장 앞선 주자의 원래 베이스로 송구하며, 귀루하는 주자는 아웃되지 않아.'},
+ {id:'sacFlyCount',title:'희생플라이 실패 · 일반 카운트',sub:'S 0개 · 타자도 주자도 아웃 확정 아님',tag:'SAC FLY · NO RESULT',duration:4400,desc:'S가 0개인 실패: 기본 S·B·F 카운트 판정으로 이어져. 이 시연은 아웃 없이 파울처럼 끝나는 한 가지 예시야.'},
+ {id:'umpireCall',title:'④ 삼진 심판 콜 단독 검토',sub:'헛스윙/루킹에도 자동 연결',tag:'STRIKE THREE!',duration:4000,desc:'포구 뒤 삼진을 선언하는 심판의 오른쪽 아웃 콜을 따로 검토해. 이 동작은 헛스윙·루킹 삼진에도 자동 연결돼.'},
+ {id:'coach',title:'⑤ 1루 코치 축하',sub:'인사 순간만 측면 카메라',tag:'FIRST BASE COACH',duration:7500,desc:'타자가 1루에 도착한 뒤 코치가 다가와 인사해. 기본 중계 시점을 유지하다 인사 순간에만 측면으로 바뀌고 다시 돌아와.'},
+ {id:'fielding',title:'⑥ 뜬공 아웃',sub:'3F · 내야/외야 다양한 수비 위치',tag:'FLY OUT',duration:6100,desc:'3F 아웃을 표현하는 여러 연출 중 하나. 내야/외야 위치를 바꿔서 포구를 확인해.'},
+ {id:'groundout',title:'⑥ 땅볼 송구 아웃',sub:'무주자 · 내야 포구 → 1루수 글러브 포구',tag:'GROUND OUT',duration:6500,desc:'내야수가 땅볼을 잡아 송구하면 1루수가 베이스를 밟은 채 글러브를 뻗어 포구해. 타자가 도착하기 전에 아웃이며 1루심 콜은 20% 확률로 등장해.'},
+ {id:'firstBaseCatch',title:'추가② 1루수 송구 포구 · 아웃',sub:'내야 송구 → 1루수 글러브 포구 → 아웃',tag:'FIRST BASE · OUT',duration:6900,desc:'투구부터 땅볼 타격·내야수 포구·1루 송구·1루수의 글러브 포구·타자 아웃까지 재생. 송구 직전 1루 쪽으로 카메라를 이동하고 포구 직후 아웃 판정과 가끔 심판 콜을 보여줘.'},
+ {id:'slideFirst',title:'추가② 3루 주자 홈 슬라이딩',sub:'3루 주자 홈인 시 50% · 1루 주자는 평상시 주루',tag:'SLIDE AT HOME',duration:8700,desc:'3루 주자가 희생플라이로 홈에 들어오는 장면. 득점 시 절반의 확률로 홈플레이트에 슬라이딩하며 1루 주자는 기존처럼 달려간다.'},
+ {id:'firstBaseSafe',title:'추가③ 1루 접전 세이프 콜',sub:'땅볼 송구 접전 · 1루심 세이프',tag:'BANG-BANG SAFE',duration:7100,desc:'내야 땅볼 후 1루 송구가 들어오지만 타자가 반 발 먼저 베이스를 밟는다. 1루심이 양팔을 벌려 세이프를 선언한다.'},
+ {id:'lineout',title:'⑥ 직선타 아웃',sub:'3F · 내야수의 낮은 타구 포구',tag:'LINE OUT',duration:5300,desc:'낮고 빠른 직선타를 내야수가 잡아 아웃 처리해. 카메라는 기존 중계 시점을 유지해.'},
+ {id:'error',title:'실책성 출루 테스트',sub:'안타 상황 5% · 땅볼 후 1루 악송구',tag:'FIELDING ERROR',duration:6500,desc:'땅볼을 잡은 내야수가 1루로 던진 공이 빗나가는 실책을 시연해. 출루 결과는 기존과 같고 정식 E 기록은 미확정이야.'},
+ {id:'pinchHit',title:'⑦ 대타 등장',sub:'더그아웃 → 타석',tag:'PINCH HITTER',duration:4900,desc:'대타가 더그아웃 방향에서 걸어 나와 타석에 선 뒤 배트를 드는 장면이야.'},
+ {id:'nextBatter',title:'추가① 다음 타자 등장',sub:'기존 플레이 종료 → 더그아웃에서 다음 타자 입장',tag:'NEXT BATTER',duration:3900,desc:'이전 타자의 플레이가 끝난 뒤 다음 타자가 파란팀 더그아웃에서 나와 타석에 들어오고 투수를 바라봐.'},
+ {id:'scoredReturn',title:'추가② 득점 주자 복귀',sub:'홈플레이트 터치 → 득점 주자 더그아웃 퇴장',tag:'RUN SCORED',duration:4600,desc:'홈을 밟아 이미 득점한 주자가 더그아웃으로 걸어가. 다른 주자들과 홈플레이트에서 겹치지 않도록 빈 공간으로 빠져.'},
+ {id:'pinchRun',title:'⑦ 대주자 등장',sub:'선택한 1·2·3루의 기존 주자를 교체',tag:'PINCH RUNNER',duration:4900,desc:'출루가 완료되고 플레이가 멈춘 다음 대주자가 들어와 해당 베이스의 주자를 대체해. 1루뿐 아니라 다른 베이스의 주자도 교체 가능해.'},
+ {id:'rbiCelebrate',title:'추가① 적시타 후 타자 세리머니',sub:'적시타 → 1루 도착 → 주먹 세리머니',tag:'RBI HIT',duration:7600,desc:'주자를 불러들이는 적시타가 나온 뒤 타자가 1루에 도착해 더그아웃을 향해 짧게 세리머니하는 연출.'},
+ {id:'bullpenEnter',title:'추가② 불펜 투수 등장',sub:'기존 투수 퇴장 → 새 투수 입장',tag:'BULLPEN CALL',duration:7600,desc:'교체된 투수가 마운드를 내려가고, 새 투수가 불펜 방향에서 걸어와 마운드에 오른다.'},
+ {id:'homeSafeCall',title:'추가③ 홈 세이프 콜',sub:'홈 쇄도 → 포수 태그 시도 → 심판 세이프',tag:'SAFE AT HOME',duration:8200,desc:'주자가 홈으로 쇄도하고 포수가 태그를 시도하지만, 홈플레이트 심판이 양팔을 벌려 세이프를 선언한다.'},
+ {id:'escapeK',title:'추가⑤ 위기 탈출 세리머니',sub:'득점권 위기 → 삼진 → 투수 환호',tag:'ESCAPE THE JAM',duration:7200,desc:'득점권 위기 상황에서 삼진으로 이닝을 끝낸 뒤 투수가 주먹을 쥐고 환호하는 장면.'},
+ {id:'batterExit',title:'추가⑦ 아웃된 타자 퇴장',sub:'아웃 후 더그아웃으로 복귀',tag:'BATTER RETURNS',duration:5200,desc:'삼진이나 땅볼 아웃 뒤 타자가 타석에 남지 않고 더그아웃 방향으로 걸어가는 장면.'},
+ {id:'homerDugout',title:'추가④ 일반 홈런 후 더그아웃 축하',sub:'홈런 → 홈인 → 동료 하이파이브',tag:'HOME RUN · DUGOUT',duration:17800,desc:'일반 홈런: 타자가 베이스를 모두 돌고 홈을 밟은 뒤, 더그아웃 쪽에서 나온 동료들과 짧게 하이파이브해. 끝내기 세리머니와 별개야.'},
+ {id:'foulReset',title:'추가⑤ 파울볼 후 경기 재개',sub:'파울 타구 → 스트라이크 반영 → 재정비',tag:'FOUL BALL · RESET',duration:6700,desc:'타자가 공을 치면 홈 근처 파울 지역으로 짧게 떨어진 뒤 플레이가 정지돼. 심판이 새 공을 전달하고 타자·투수가 다음 투구를 준비해.'},
+ {id:'countWhiff',title:'v38 일반 헛스윙 (삼진 아님)',sub:'포수 포구 → 다음 공 준비 · 카운트 판정 유지',tag:'SWING & MISS · COUNT CONTINUES',duration:4100,desc:'타자가 타이밍을 놓치고 헛스윙하지만 삼진이 아닌 카운트 상황입니다. 스트라이크·볼·파울 숫자는 게임 원래 판정대로만 적용됩니다.'},
+ {id:'countTake',title:'v38 지켜보기 (삼진 아님)',sub:'타자 노스윙 → 포수 포구 · 카운트 진행',tag:'TAKE PITCH · COUNT CONTINUES',duration:4100,desc:'타자가 스윙하지 않고 공을 지켜봅니다. 루킹 삼진 심판 콜은 나오지 않으며 기존 숫자 판정만 유지됩니다.'},
+ {id:'foulLeft',title:'v38 3루선 파울',sub:'좌측 파울 지역 · 낮은 라이너성 타구',tag:'FOUL · THIRD BASE SIDE',duration:6700,desc:'타구가 3루 선상 바깥쪽으로 빠져 파울 지역으로 향합니다. 심판이 공을 교체하고 다음 투구를 준비합니다.'},
+ {id:'foulRight',title:'v38 1루선 파울',sub:'우측 파울 지역 · 낮은 라이너성 타구',tag:'FOUL · FIRST BASE SIDE',duration:6700,desc:'타구가 1루 선상 바깥쪽으로 빠져 파울 지역으로 향합니다. 심판이 공을 교체하고 다음 투구를 준비합니다.'},
+ {id:'foulBack',title:'v38 포수 뒤 파울',sub:'포수 뒤 백스톱 방향 · 파울',tag:'FOUL · BEHIND HOME',duration:6700,desc:'타구가 포수 머리 위를 지나 뒤쪽 백스톱을 향합니다. 심판이 새 공을 주고 경기를 재개합니다.'},
+ {id:'foulHighLeft',title:'v38 높은 왼쪽 뜬파울',sub:'높게 떠오르는 파울 · 좌측 관중석 방향',tag:'FOUL POP · LEFT',duration:7300,desc:'공이 높게 떠올라 3루 쪽 파울 지역에 떨어집니다. 수비수가 타구 방향을 바라봅니다.'},
+ {id:'foulHighRight',title:'v38 높은 오른쪽 뜬파울',sub:'높게 떠오르는 파울 · 우측 관중석 방향',tag:'FOUL POP · RIGHT',duration:7300,desc:'공이 높게 떠올라 1루 쪽 파울 지역에 떨어집니다. 수비수가 타구 방향을 바라봅니다.'},
+ {id:'fielderReturn',title:'추가⑥ 수비수 포지션 복귀',sub:'뜬공 포구 → 야수 원래 위치로 복귀',tag:'DEFENSE RESET',duration:7900,desc:'수비수가 뜬공을 잡고 마지막 포구 지점에서 원래 수비 위치까지 달려 돌아와. 공이 날아갈 때만 상공 카메라를 쓰고 복귀 시 중계 시점으로 전환해.'},
+ {id:'inning',title:'⑧ 3아웃 이닝 교대',sub:'노란 수비·파란 타자 퇴장 → 파란 수비·노란 타자 입장',tag:'SIDE RETIRED',duration:7800,desc:'노란 수비팀과 파란 타자가 모두 퇴장한 뒤, 파란 수비수 9명(투수·포수 포함)과 노란 타자가 나와 공수를 완전히 교대해.'},
+ {id:'pitch',title:'풀스윙',sub:'노컨택 · 포수 직진',tag:'FULL SWING',duration:3600,desc:'공은 배트에 절대 맞지 않고 x=0 직선으로 포수에게 향해. 배트 팔로스루와 거리를 비교해 봐.'},
+ {id:'whiff',title:'헛스윙 삼진 + 심판 콜',sub:'포수 포구 후 심판 콜',tag:'SWINGING STRIKEOUT',duration:4000,desc:'배트를 크게 휘둘러도 공은 x=0 직선으로 포수까지 이동. 배트 충돌·타구 전환 없음.'},
+ {id:'looking',title:'루킹 삼진 + ABS + 심판 콜',sub:'포구 후 ABS와 심판 콜',tag:'CALLED STRIKEOUT',duration:4100,desc:'타자가 배트를 내지 않고 공을 바라봐. 포구 직후 예시 ABS 존이 표시돼.'},
+ {id:'walk',title:'4B · 볼넷',sub:'걷기 / 공 가시성',tag:'BASE ON BALLS',duration:5900,desc:'4B 볼넷 표시. 공 외곽선과 느린 출루를 확인해.'},
+ {id:'single',title:'4B · 안타',sub:'강한 타격 / 1루 질주',tag:'BASE HIT',duration:5900,desc:'4B가 안타로 기록될 때 타격과 달리기를 보여줘. 주자 이동·득점은 기존 4B와 같아.'},
+ {id:'homerun',title:'3S · 홈런',sub:'안타와 동일한 투구 속도',tag:'HOME RUN!',duration:14500,desc:'안타와 똑같은 RELEASE~CONTACT 구간 뒤, 한 번만 높은 타구로 전환하고 느긋하게 베이스 일주.'},
+ {id:'catcherVisit',title:'포수 마운드 방문',sub:'타자 1루 도착 후 방문',tag:'CATCHER VISIT',duration:7600,desc:'타자가 1루에 도착한 뒤에만 포수가 출발해 마운드까지 걸어가고, 대화한 후 원래 자리로 돌아와.'},
+ {id:'hbpDemo',title:'몸에 맞는 공 테스트',sub:'4B · 3% 특수 결과',tag:'HIT BY PITCH',duration:5900,desc:'투구가 타자에게 닿은 뒤 1루로 걸어가며 HBP로 기록하는 연출.'},
+ {id:'ibbDemo',title:'고의사구 테스트',sub:'1~2점 앞선 수비팀 · 1%',tag:'INTENTIONAL WALK',duration:5900,desc:'적은 점수 차로 앞서는 수비팀의 고의사구 연출. 수비팀 1~2점 리드에서만 자동 추첨 가능.'},
+ {id:'manager',title:'투수교체',sub:'감독의 마운드 방문',tag:'PITCHING CHANGE',duration:4500,desc:'감독의 마운드 방문. 상대에게는 비밀 숫자를 유지했는지 알려주지 않아.'},
+ {id:'signalBunt',title:'희생번트 작전 사인',sub:'결과와 무관하게 사인을 지시',tag:'SAC BUNT SIGNAL',duration:2400,desc:'감독이 희생번트를 지시합니다. 성공 여부는 뒤이은 실제 판정 장면에서 확인합니다.'},
+ {id:'signalFly',title:'희생플라이 작전 사인',sub:'결과와 무관하게 사인을 지시',tag:'SAC FLY SIGNAL',duration:2400,desc:'감독이 희생플라이를 지시합니다. 성공 여부는 뒤이은 실제 판정 장면에서 확인합니다.'},
+ {id:'walkoffCelebrate',title:'끝내기 세리머니',sub:'득점 완료 → 홈에서 축하',tag:'WALK-OFF!',duration:6800,desc:'홈팀의 끝내기 득점이 확정된 후 선수들이 홈플레이트 주변에 모여 축하합니다.'},
+ {id:'finalCelebrate',title:'경기 종료 세리머니',sub:'승리팀 마운드에서 축하',tag:'FINAL',duration:6100,desc:'정규 경기 종료 후 승리팀이 마운드에서 하이파이브를 나눕니다.'},
+ {id:'finalTie',title:'무승부 경기 종료',sub:'양 팀 경기 종료',tag:'TIE GAME',duration:4000,desc:'무승부로 끝나면 승리 세리머니 대신 경기 종료를 표시합니다.'},
+ {id:'double',title:'2루타',sub:'안타 → 타자 2루 도착',tag:'DOUBLE',duration:8800,desc:'타구가 외야로 뻗고 타자는 1루를 지나 2루에 도착합니다.'},
+ {id:'triple',title:'3루타',sub:'안타 → 타자 3루 도착',tag:'TRIPLE',duration:10900,desc:'타구가 외야로 뻗고 타자는 1·2루를 돌아 3루에 도착합니다.'}
+];
+const sceneList=document.getElementById('sceneList'), caption=document.getElementById('caption'), sceneTag=document.getElementById('sceneTag'),desc=document.getElementById('sceneDescription'),status=document.getElementById('status'),bar=document.getElementById('bar');
+let integration={active:false,index:0,auto:true,steps:[],switching:false},nextBatterActor,scoredRunnerActor;
+let firstBaseGlove,firstBaseCatchRing;let selection=SCENES[0],playing=true,elapsed=0,last=0,speed=1,pitchSpeed=null,forcedSpeed=false,catcherVisit=false,walkType='BB',hitDirection=1,sceneDuration=3600,fieldTarget='center',errorSelected=false,coachSelected=false,firstBaseCall=false,firstSafeSelected=false,homeSlideSelected=false,baseMask=0,pitchType='포심',smallPitchSpeed=142,pinchBaseIndex=0;let scene,camera,renderer,pitcher,batter,catcher,umpire,manager,ball,bat,batBarrel,batTrail,hitTrail,hitTrailGeometry,fielders=[],crowd=[],ghostRunner,firstCoach,rosinBag,incomingPlayers=[],incomingPitcher,incomingCatcher,incomingBatter,firstBaseUmpire,baseRunners=[];
+function syncPinchBaseOptions(preferred){
+ const control=document.getElementById('pinchBase');
+ const mask=Number(document.getElementById('baseSituation').value)||0;
+ let chosen=preferred||control.value;
+ Array.from(control.options).forEach(o=>{if(!o.value)return;o.disabled=!(mask&(1<<(Number(o.value)-1)))});
+ if(!chosen||!(mask&(1<<(Number(chosen)-1))))chosen=[1,2,3].find(i=>(mask&(1<<(i-1)))!==0)||'';
+ control.value=chosen?String(chosen):'';
+ return chosen?Number(chosen)-1:-1;
+}
+const PITCHES=[
+ {name:'포심',min:139,max:144,mean:143,curve:0},
+ {name:'투심',min:137,max:144,mean:141,curve:0},
+ {name:'커터',min:133,max:143,mean:139,curve:1},
+ {name:'싱커',min:136,max:144,mean:141,curve:1},
+ {name:'슬라이더',min:126,max:139,mean:134,curve:2},
+ {name:'커브',min:115,max:129,mean:124,curve:3},
+ {name:'체인지업',min:126,max:138,mean:133,curve:2},
+ {name:'스플리터',min:129,max:141,mean:136,curve:2}
+];
+const FAST_PITCHES=PITCHES.filter(p=>p.name==='포심'||p.name==='투심');
+function choosePitch(high){
+ const pool=high?(pitchSpeed>=150?FAST_PITCHES:PITCHES.filter(p=>['포심','투심','커터','싱커'].includes(p.name))):PITCHES;
+ const p=pool[Math.floor(Math.random()*pool.length)];
+ pitchType=p.name;
+ // Cluster close to representative averages; never display speeds outside the pitch's believable demonstration range.
+ const raw=Math.round(p.mean+(Math.random()+Math.random()+Math.random()-1.5)*6);
+ smallPitchSpeed=Math.max(p.min,Math.min(p.max,raw));
+ return p;
+}
+function drawAbsMovement(){
+ const c=document.getElementById('absLocation'), path=document.getElementById('absBreakPath');
+ const pitch=PITCHES.find(p=>p.name===pitchType);
+ if(!c||!path)return;
+ if(!pitch||pitch.curve===0){path.setAttribute('opacity','0');return}
+ const x=Number(c.getAttribute('cx')),y=Number(c.getAttribute('cy'));
+ const handedness=document.getElementById('pitcherProfile').value==='oh'?-1:1;
+ const dx=(pitch.curve===3?20:10)*handedness;
+ const dy=pitch.curve===3?36:pitch.curve===2?22:13;
+ const x0=Math.max(9,Math.min(131,x-dx)), y0=Math.max(7,y-dy);
+ const curve=`M ${x0.toFixed(1)} ${y0.toFixed(1)} C ${(x0+dx*.10).toFixed(1)} ${(y0+dy*.36).toFixed(1)}, ${(x0+dx*.70).toFixed(1)} ${(y0+dy*.76).toFixed(1)}, ${x.toFixed(1)} ${y.toFixed(1)}`;
+ path.setAttribute('d',curve);path.setAttribute('opacity','1');
+}
+SCENES.forEach(s=>{const b=document.createElement('button');b.className='scene-button'+(s.id==='pitch'?' active':'');b.dataset.id=s.id;b.innerHTML='<strong>'+s.title+'</strong><small>'+s.sub+'</small>';b.onclick=()=>select(s.id);sceneList.appendChild(b)});
+function select(id){
+ if(integration.active&&!integration.switching){integration.active=false;updateIntegrationControls();}
+ selection=SCENES.find(s=>s.id===id)||SCENES[0];
+ baseMask=Number(document.getElementById('baseSituation').value)||0;
+ if(id==='pinchRun'&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
+ pinchBaseIndex=syncPinchBaseOptions();
+ if((['groundout','firstBaseCatch'].includes(id)||(id.startsWith('outVar_')&&id!=='outVar_foulTip'))&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
+ if(['buntSuccess','buntFoul','buntStrikeout','strategyBunt'].includes(id)&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
+ if(['grandSlam','walkoff'].includes(id)){document.getElementById('baseSituation').value='7';baseMask=7;}
+ if(['threeUp','finalWin','replay','homerDugout','fielderReturn'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
+ if(['sacFlySuccess','strategyFly','slideFirst'].includes(id)&&!(baseMask&4)){document.getElementById('baseSituation').value='4';baseMask=4;}
+ if(id==='homeSafeCall'&&!(baseMask&4)){document.getElementById('baseSituation').value='4';baseMask=4;}
+ if(id==='escapeK'){document.getElementById('baseSituation').value='6';baseMask=6;}
+ if(id==='rbiCelebrate'){document.getElementById('baseSituation').value='2';baseMask=2;}
+ if(['bullpenEnter','batterExit'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
+ firstBaseCall=id==='firstBaseCatch'||(id==='groundout'&&Math.random()<.20);
+ // One random draw per play. Ordinary hits may receive a SAFE call; no outcome changes.
+ firstSafeSelected=['single','rbiCelebrate'].includes(id)&&Math.random()<.20;
+ // Only 3B runner scoring plays may receive a home slide. The dedicated button forces it for inspection.
+ homeSlideSelected=id==='slideFirst'||((baseMask&4)!==0&&['single','double','triple','error','coach','rbiCelebrate','homerun','homerDugout','grandSlam','walkoff','walk','hbpDemo','ibbDemo','catcherVisit','sacFlySuccess','strategyFly','homeSafeCall'].includes(id)&&Math.random()<.50);
+ // Start from the original broadcast camera. Only the moment of a catch or greeting changes it.
+ document.getElementById('cameraMode').value='broadcast';setCamera();document.getElementById('scoreTag').innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>1회 초 · B 0 S 0 O 0';
+ elapsed=0;playing=true;forcedSpeed=false;
+ pitchSpeed=(['manager','walkoff','finalWin','grandSlam','threeUp','replay','strategyBunt','strategyFly','bullpenEnter'].includes(id)||Math.random()>=.05)?null:Math.floor(145+Math.random()*16);
+ choosePitch(pitchSpeed!==null);
+ catcherVisit=(id==='catcherVisit'||(id==='walk'&&Math.random()<.20));
+ coachSelected=id==='coach'||(id==='single'&&Math.random()<.20);
+ sceneDuration=catcherVisit?10000:coachSelected?7500:selection.duration;
+ const locationMode=document.getElementById('fieldLocation').value;
+ const allTargets=['infieldR','infieldL','left','center','right'];
+ const allowedTargets=id==='lineout'?['infieldR','infieldL']:allTargets;
+ fieldTarget=locationMode==='random'||!allowedTargets.includes(locationMode)
+   ?allowedTargets[Math.floor(Math.random()*allowedTargets.length)]
+   :locationMode;
+ const directionMode=document.getElementById('hitDirection').value;
+ hitDirection=directionMode==='right'?1:directionMode==='left'?-1:(Math.random()<.5?1:-1);
+ errorSelected=id==='error'||(id==='single'&&Math.random()<.05);
+ // Error and first-base coach greetings are different outcomes; a fielding error never triggers a greeting.
+ if(errorSelected){coachSelected=false;firstSafeSelected=false;sceneDuration=6500;}
+ if(firstSafeSelected){coachSelected=false;sceneDuration=selection.duration;}
+ const narrowLead=document.getElementById('scoreSituation').value==='narrow';
+ const random=Math.random();
+ walkType=id==='hbpDemo'?'HBP':id==='ibbDemo'?'IBB':id==='walk'?(narrowLead&&random<.01?'IBB':random<(narrowLead?.04:.03)?'HBP':'BB'):'BB';
+ const walkLabel={BB:'일반 볼넷',HBP:'몸에 맞는 공',IBB:'고의사구'};
+ document.getElementById('walkOutcome').textContent='이번 볼넷 결과: '+walkLabel[walkType]+(catcherVisit?' · 포수 마운드 방문 포함':'');
+  const c=document.getElementById('absLocation');
+  if(c){
+   const ballAbs=['walk','catcherVisit','ibbDemo'].includes(id)&&walkType!=='HBP';
+   const edge=Math.floor(Math.random()*4),along=Math.random();
+   let x,y;
+   if(ballAbs){ // BALL: deliberately off the borders, including outside all four zone corners.
+    const diagonal=Math.random()<.55;
+    const gap=12+Math.random()*9;
+    if(diagonal){
+     x=edge===0||edge===2?Math.max(7,30-gap):Math.min(133,110+gap);
+     y=edge===0||edge===1?Math.max(5,13-gap*.55):Math.min(129,115+gap*.65);
+    }else if(edge===0){x=Math.max(7,30-gap);y=21+along*85}
+    else if(edge===1){x=Math.min(133,110+gap);y=21+along*85}
+    else if(edge===2){x=35+along*70;y=Math.max(5,13-gap*.55)}
+    else{x=35+along*70;y=Math.min(129,115+gap*.65)}
+   }else{ // Borderline strike for looking-K / ordinary ABS preview.
+    const inset=3+Math.random()*8;
+    if(edge===0){x=30+inset;y=22+along*83}
+    else if(edge===1){x=110-inset;y=22+along*83}
+    else if(edge===2){x=40+along*60;y=13+inset}
+    else{x=40+along*60;y=115-inset}
+   }
+   c.setAttribute('cx',x.toFixed(1));c.setAttribute('cy',y.toFixed(1));c.setAttribute('fill',ballAbs?'#43e18f':'#f8d368');c.setAttribute('stroke',ballAbs?'#0b5734':'#fff');
+  }
+  drawAbsMovement();
+  const absCaption=document.querySelector('#absPanel .abs-caption');
+  if(absCaption)absCaption.textContent=['walk','catcherVisit','ibbDemo'].includes(id)?'BALL 4 · OUTSIDE ZONE':'STRIKE · LOOKING K';
+ sceneTag.textContent=errorSelected?'FIELDING ERROR':selection.tag;
+ if(['groundout','firstBaseCatch'].includes(id))sceneTag.textContent=firstBaseCall?'GROUND OUT · 1B UMP CALL':'GROUND OUT';
+ desc.textContent=['groundout','firstBaseCatch'].includes(id)?(selection.desc+(firstBaseCall?' 이번에는 1루심의 아웃 콜도 재생해.':' 이번에는 1루심의 특별한 아웃 콜 없이 처리해.')):errorSelected?'땅볼을 처리한 내야수의 1루 악송구로 출루하는 연출(안타 가능 상황 중 5% 시연). 실제 E 기록 처리와 승부 규칙 변경은 아직 미확정이야.':selection.desc+(coachSelected&&id==='single'?' 1루 코치 인사는 이 안타에서만 재생돼(일반 안타당 20% 확률).':'');
+ status.textContent='재생 중 · '+selection.title;
+ caption.firstChild.nodeValue=selection.desc;
+ document.querySelectorAll('.scene-button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+ document.getElementById('pause').textContent='⏸ 일시정지';document.getElementById('play').classList.add('active');updateOverlays(0)
+}
+document.getElementById('baseSituation').addEventListener('change',()=>{pinchBaseIndex=syncPinchBaseOptions();select(selection.id)});document.getElementById('pinchBase').addEventListener('change',()=>{pinchBaseIndex=syncPinchBaseOptions(document.getElementById('pinchBase').value);if(selection.id==='pinchRun')select('pinchRun')});
+document.getElementById('scoreSituation').onchange=()=>{if(selection.id==='walk')select('walk')};document.getElementById('walkDemo').onclick=()=>select('walk');document.getElementById('play').onclick=()=>integration.active?loadIntegrationStep(integration.index):select(selection.id);document.getElementById('speedDemo').onclick=()=>{if(['manager','single','homerun','inning','pinchHit','pinchRun','fielding','lineout','groundout','firstBaseCatch','error'].includes(selection.id))select('pitch');elapsed=0;playing=true;pitchSpeed=145+Math.floor(Math.random()*16);choosePitch(true);forcedSpeed=true;status.textContent='구속 UI 테스트 · '+pitchSpeed+' km/h';updateOverlays(0)};document.getElementById('pause').onclick=()=>{playing=!playing;document.getElementById('pause').textContent=playing?'⏸ 일시정지':'▶ 계속';status.textContent=playing?'재생 중 · '+selection.title:'일시정지'};document.getElementById('skip').onclick=()=>{elapsed=sceneDuration;playing=false;status.textContent='장면 종료';document.getElementById('pause').textContent='▶ 계속';pose()};document.getElementById('cameraMode').onchange=()=>setCamera();document.getElementById('pitcherProfile').onchange=()=>{updateHands();pose()};document.getElementById('batterProfile').onchange=()=>{updateHands();pose()};document.getElementById('baseSituation').onchange=()=>select(selection.id);document.getElementById('hitDirection').onchange=()=>{if(['single','error','coach'].includes(selection.id))select(selection.id)};document.getElementById('fieldLocation').onchange=()=>{if(['fielding','lineout','groundout','firstBaseCatch'].includes(selection.id))select(selection.id)};
+// Integrated mode has its own deterministic game-state snapshots. It does NOT evaluate guesses or mutate v27.
+const DEMO_EVENTS=[
+ {id:'single',label:'1번 타자 안타',play:'single'},
+ {id:'nextBatter',label:'2번 타자 등장'},
+ {id:'walk',label:'2번 타자 볼넷',play:'walk'},
+ {id:'nextBatter',label:'3번 타자 등장'},
+ {id:'single',label:'3번 타자 안타 · 만루',play:'single'},
+ {id:'nextBatter',label:'4번 타자 등장'},
+ {id:'sacFlySuccess',label:'4번 희생플라이 · 1득점',play:'sacfly'},
+ {id:'scoredReturn',label:'득점한 3루 주자 복귀'},
+ {id:'nextBatter',label:'5번 타자 등장'},
+ {id:'whiff',label:'5번 헛스윙 삼진',play:'out'},
+ {id:'batterExit',label:'아웃된 타자 퇴장'},
+ {id:'nextBatter',label:'6번 타자 등장'},
+ {id:'fielding',label:'6번 뜬공 아웃 · 3아웃',play:'out'},
+ {id:'inning',label:'공수교대 · 1회 말',play:'inning'}
+];
+function demoInitialState(){return {bases:[null,null,null],outs:0,score:[0,0],batter:1,inning:1,half:'초'};}
+function cloneDemoState(x){return {bases:x.bases.slice(),outs:x.outs,score:x.score.slice(),batter:x.batter,inning:x.inning,half:x.half};}
+function applyDemoEvent(state,event){
+ const n=cloneDemoState(state),label=state.batter+'번';
+ if(event.play==='single'){
+  if(n.bases[2])n.score[state.half==='초'?0:1]++;
+  n.bases=[label,n.bases[0],n.bases[1]];
+  n.batter++;
+ }else if(event.play==='walk'){
+  const b=n.bases;
+  if(b[0]&&b[1]&&b[2])n.score[state.half==='초'?0:1]++;
+  if(b[0]&&b[1])b[2]=b[1];
+  if(b[0])b[1]=b[0];
+  b[0]=label;n.batter++;
+ }else if(event.play==='sacfly'){
+  if(n.bases[2])n.score[state.half==='초'?0:1]++;
+  n.bases[2]=null;n.outs++;n.batter++;
+ }else if(event.play==='out'){
+  n.outs++;n.batter++;
+ }else if(event.play==='inning'){
+  n.bases=[null,null,null];n.outs=0;n.half='말';n.batter=1;
+ }
+ return n;
+}
+function buildDemoTimeline(){
+ let state=demoInitialState();return DEMO_EVENTS.map((event)=>{
+  const before=cloneDemoState(state),after=applyDemoEvent(state,event);
+  state=cloneDemoState(after);return {...event,before,after};
+ });
+}
+function maskOf(bases){return bases.reduce((n,x,i)=>n|(x?(1<<i):0),0)}
+function formatBases(b){const occupied=b.map((x,i)=>x?(i+1)+'루':'').filter(Boolean);return occupied.join('·')||'주자 없음'}
+function updateIntegrationControls(){
+ const active=integration.active;
+ const panel=document.getElementById('flowStatus');
+ if(!active)panel.textContent='연속 시연을 시작하면 점수·주자·아웃·타순이 장면마다 이어져.';
+ document.getElementById('flowPrev').disabled=!active||integration.index===0;
+ document.getElementById('flowNext').disabled=!active||integration.index>=integration.steps.length-1;
+ const auto=document.getElementById('flowAuto');auto.textContent='자동 진행: '+(integration.auto?'켜짐':'꺼짐');auto.setAttribute('aria-pressed',String(integration.auto));
+ document.querySelectorAll('.flow-step').forEach((b,i)=>b.classList.toggle('active',active&&i===integration.index));
+}
+function paintDemoSteps(){
+ const host=document.getElementById('flowSteps');host.replaceChildren();
+ integration.steps.forEach((step,i)=>{
+  const b=document.createElement('button');b.type='button';b.className='flow-step';
+  b.textContent=(i+1)+'. '+step.label;
+  b.onclick=()=>loadIntegrationStep(i);host.appendChild(b);
+ });
+}
+function loadIntegrationStep(index){
+ if(!integration.steps.length)integration.steps=buildDemoTimeline();
+ if(index<0||index>=integration.steps.length)return;
+ integration.active=true;integration.index=index;
+ const item=integration.steps[index];
+ document.getElementById('baseSituation').value=String(maskOf(item.before.bases));
+ integration.switching=true;
+ try{select(item.id);}finally{integration.switching=false;}
+ // For a fixed demo, do not introduce random fielding errors, mound visits or greetings.
+ errorSelected=false;coachSelected=false;catcherVisit=false;walkType='BB';sceneDuration=selection.duration;
+ if(item.id==='fielding')fieldTarget='center';
+ elapsed=0;playing=true;
+ renderIntegratedState(0);updateIntegrationControls();
+}
+function renderIntegratedState(t){
+ const item=integration.steps[integration.index];if(!item)return;
+ const changeAt=item.id==='sacFlySuccess'?.895:item.id==='single'?.97:item.id==='walk'?.975:item.id==='whiff'?.80:item.id==='fielding'?.84:item.id==='inning'?.54:1;
+ const n=t>=changeAt?item.after:item.before;
+ const half=n.inning+'회 '+n.half;
+ const html='AWAY <b>'+n.score[0]+'</b> · HOME <b>'+n.score[1]+'</b><br>'+half+' · B 0 S 0 O '+n.outs;
+ const score=document.getElementById('scoreTag');if(score.innerHTML!==html)score.innerHTML=html;
+ const flowText=(integration.index+1)+'/'+integration.steps.length+' · '+item.label+' | '+half+' · '+n.outs+'아웃 · '+formatBases(n.bases)+' · '+n.batter+'번 타자 · '+n.score[0]+':'+n.score[1];
+ const el=document.getElementById('flowStatus');if(el.textContent!==flowText)el.textContent=flowText;
+ sceneTag.textContent='연속 경기 · '+item.label;
+ if(t>=1&&integration.index===integration.steps.length-1)status.textContent='연속 시연 종료 · 1회 말 공격 시작';
+}
+integration.steps=buildDemoTimeline();paintDemoSteps();updateIntegrationControls();
+document.getElementById('flowStart').onclick=()=>loadIntegrationStep(0);
+document.getElementById('flowPrev').onclick=()=>loadIntegrationStep(integration.index-1);
+document.getElementById('flowNext').onclick=()=>loadIntegrationStep(integration.index+1);
+document.getElementById('flowAuto').onclick=()=>{integration.auto=!integration.auto;updateIntegrationControls();};
+document.getElementById('flowStop').onclick=()=>{integration.active=false;updateIntegrationControls();select('pitch');};
+
+if(!window.THREE){document.getElementById('fallback').style.display='flex';status.textContent='3D 엔진 로딩 실패';return}
+const V=document.getElementById('viewport');scene=new THREE.Scene();scene.background=new THREE.Color(0x85cdec);scene.fog=new THREE.FogExp2(0xa9dff8,.003);camera=new THREE.PerspectiveCamera(58,V.clientWidth/V.clientHeight,.1,340);renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(1.6,window.devicePixelRatio||1));renderer.setSize(V.clientWidth,V.clientHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;V.prepend(renderer.domElement);
+const mat=(color,roughness=.85)=>new THREE.MeshStandardMaterial({color,roughness});function mesh(g,m,p,x=0,y=0,z=0){const v=new THREE.Mesh(g,m);v.position.set(x,y,z);p.add(v);return v}function cube(p,m,w,h,d,x,y,z){return mesh(new THREE.BoxGeometry(w,h,d),m,p,x,y,z)}function sph(p,m,r,x,y,z){return mesh(new THREE.SphereGeometry(r,12,10),m,p,x,y,z)}
+const GRASS=mat(0x43ad68),DIRT=mat(0xaa724e),WHITE=mat(0xf5f0e0),SKIN=mat(0xd9a37a),PANTS=mat(0xf0eee6),SHOES=mat(0x17283b),BALL=mat(0xffffff,.22);
+const group=(p=scene)=>{const g=new THREE.Group();p.add(g);return g};
+function polygon(pts,c,y){let coords=[];for(let i=1;i<pts.length-1;i++)for(const xy of [pts[0],pts[i],pts[i+1]])coords.push(xy[0],y,xy[1]);const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(coords,3));geo.computeVertexNormals();const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:c,side:THREE.DoubleSide}));scene.add(m)}
+function createPlayer(x,z,shirt,scale=1){const root=group();root.position.set(x,0,z);root.scale.setScalar(scale);const torso=group(root),shirtMat=mat(shirt),capMat=mat(shirt);cube(torso,shirtMat,.42,.57,.24,0,1.15,0);cube(torso,capMat,.34,.045,.25,0,1.39,.016);sph(torso,SKIN,.18,0,1.62,0);cube(torso,capMat,.43,.10,.3,0,1.77,0);const armL=group(torso),armR=group(torso),legL=group(root),legR=group(root);armL.position.set(-.29,1.35,0);armR.position.set(.29,1.35,0);legL.position.set(-.13,.77,0);legR.position.set(.13,.77,0);cube(armL,shirtMat,.15,.48,.16,-.03,-.22,0);cube(armR,shirtMat,.15,.48,.16,.03,-.22,0);cube(legL,PANTS,.17,.58,.17,0,-.27,0);cube(legR,PANTS,.17,.58,.17,0,-.27,0);cube(legL,SHOES,.21,.12,.3,0,-.54,.08);cube(legR,SHOES,.21,.12,.3,0,-.54,.08);return {root,torso,armL,armR,legL,legR,x,z,shirt,shirtMat,capMat}}
+function makeStadium(){const plane=mesh(new THREE.PlaneGeometry(220,220),GRASS,scene,0,-.045,-30);plane.rotation.x=-Math.PI/2;polygon([[0,5],[23,-18],[0,-41],[-23,-18]],0xb78057,.005);polygon([[0,-3.2],[14.7,-18],[0,-32.8],[-14.7,-18]],0x4fbc71,.02);for(const [x,z] of [[0,0],[18,-18],[0,-36],[-18,-18]])cube(scene,WHITE,1.35,.16,1.35,x,.13,z).rotation.y=Math.PI/4;mesh(new THREE.CylinderGeometry(3.2,3.2,.22,24),DIRT,scene,0,.08,-18);
+for(let i=0;i<46;i++){const angle=Math.PI*(.08+i/45*.84),x=86*Math.cos(angle),z=-86*Math.sin(angle);const f=cube(scene,mat(0x2878a3),4,5,.8,x,2.5,z);f.rotation.y=angle-Math.PI/2;for(let tier=0;tier<6;tier++){let r=92+tier*3.5,px=r*Math.cos(angle),pz=-r*Math.sin(angle),color=[0x60a9db,0x7fc4eb,0xf4c76e,0xf3eee4,0x4497cc][(i*3+tier)%5],seat=cube(scene,mat(color),4,1.5,2.4,px,3+tier*1.45,pz);seat.rotation.y=angle-Math.PI/2}}
+for(let x of [-70,70]){cube(scene,mat(0x7a9aa5),.6,23,.6,x,11,-65);const light=cube(scene,mat(0xfff3cc,.2),13,1.5,1,x,23,-65);light.material.emissive=new THREE.Color(0xe0c785);light.material.emissiveIntensity=1.3}
+for(const [x,z] of [[-24,-62],[0,-75],[24,-62],[-18,-29],[18,-29],[-25,-17],[25,-17]])fielders.push(createPlayer(x,z,0xe6b765,.83));pitcher=createPlayer(0,-18,0xe6b765);batter=createPlayer(-2.6,1.7,0x4087c6,1.05);catcher=createPlayer(0,4.4,0xe6b765,.92);umpire=createPlayer(0,6.55,0x212c39,.98);manager=createPlayer(-15,5,0x273f63,1.02);firstCoach=createPlayer(23,-13,0x4087c6,.92);rosinBag=mesh(new THREE.CylinderGeometry(.32,.38,.16,10),mat(0xf2e8d5),scene,-1.9,.2,-19.7);// Incoming blue defensive team: 7 fielders + pitcher + catcher, and the new yellow batter.
+const defensePositions=[[-24,-62],[0,-75],[24,-62],[-18,-29],[18,-29],[-25,-17],[25,-17]];
+for(let i=0;i<defensePositions.length;i++) incomingPlayers.push(createPlayer(34+(i%3)*2,15+i*.6,0x4087c6,.83));
+incomingPitcher=createPlayer(36,19,0x4087c6);
+incomingCatcher=createPlayer(39,20,0x4087c6,.92);
+incomingBatter=createPlayer(-36,14,0xe6b765,1.05);
+// Equip the incoming yellow batter and blue catcher so swapped roles read clearly.
+const newBatterBat=group(incomingBatter.torso);newBatterBat.position.set(.30,1.26,-.18);newBatterBat.rotation.set(-.63,0,-.36);
+mesh(new THREE.CylinderGeometry(.13,.095,1.52,12),mat(0xf8cf72,.32),newBatterBat,.0,.86,0);
+const newCatcherNavy=mat(0x173c5a),newCatcherBars=mat(0xa9c6d5);
+cube(incomingCatcher.torso,newCatcherNavy,.46,.53,.29,0,1.16,.145);
+sph(incomingCatcher.torso,newCatcherNavy,.205,0,1.65,.005);
+for(const dx of [-.13,0,.13])cube(incomingCatcher.torso,newCatcherBars,.023,.28,.025,dx,1.61,.19);
+for(const dy of [1.50,1.60,1.70])cube(incomingCatcher.torso,newCatcherBars,.31,.021,.025,0,dy,.19);
+sph(incomingCatcher.armL,mat(0x67472e),.16,-.04,-.42,.12);
+// Catcher: defensive team uniform with unmistakable protective equipment.
+// Dark-clad umpire stands BEHIND the catcher; never confuse the two.
+const catchNavy=mat(0x173c5a),maskBars=mat(0xa9c6d5),leather=mat(0x67472e);
+cube(catcher.torso,catchNavy,.46,.53,.29,0,1.16,.145); // chest protector
+sph(catcher.torso,catchNavy,.205,0,1.65,.005); // protective helmet
+for(const dx of [-.13,0,.13])cube(catcher.torso,maskBars,.023,.28,.025,dx,1.61,.19);
+for(const dy of [1.50,1.60,1.70])cube(catcher.torso,maskBars,.31,.021,.025,0,dy,.19);
+sph(catcher.armL,leather,.16,-.04,-.42,.12); // catching mitt
+cube(umpire.torso,mat(0x0b151e),.47,.3,.25,0,1.22,.14);
+umpire.root.position.z=6.55;
+// Bat pivot is at the hands beside the back shoulder, not below the right arm.
+// Local +Y points from grip toward the raised barrel; mirroring the complete player gives the lefty pose.
+bat=group(batter.root);bat.position.set(-.56,1.33,.17);
+const wood=mat(0xf8cf72,.32);
+batBarrel=mesh(new THREE.CylinderGeometry(.13,.095,1.52,12),wood,bat,0,.86,0);
+const grip=mesh(new THREE.CylinderGeometry(.063,.07,.47,12),mat(0x17222c),bat,0,.21,0);
+const blackOutline=new THREE.MeshBasicMaterial({color:0x18212b,side:THREE.BackSide});
+mesh(new THREE.CylinderGeometry(.162,.123,1.56,12),blackOutline,bat,0,.86,0);
+batTrail=group(scene);for(let i=0;i<4;i++){const t=i/3;const trail=mesh(new THREE.TorusGeometry(1.05+i*.09,.035,5,30,Math.PI*.7),new THREE.MeshBasicMaterial({color:0xfddf9a,transparent:true,opacity:.35-i*.07,side:THREE.DoubleSide}),batTrail,0,1.38,0);trail.rotation.y=.6;trail.rotation.z=.25+i*.14;}batTrail.visible=false;ball=sph(scene,new THREE.MeshStandardMaterial({color:0xffffff,roughness:.25,emissive:0x303030}),.29,0,1.8,-18);sph(ball,new THREE.MeshBasicMaterial({color:0x17232e,side:THREE.BackSide}),.34,0,0,0);ghostRunner=createPlayer(-2.6,1.7,0x4087c6,.9);ghostRunner.root.visible=false;
+ for(const [x,z] of [[18,-18],[0,-36],[-18,-18]]){const runner=createPlayer(x,z,0x4087c6,.88);runner.root.visible=false;baseRunners.push(runner)}
+ // Dedicated catching mitt and contact marker for 1B, attached to receiving glove hand.
+ const catchLeather=mat(0x745035,.62),seams=mat(0xeed8a7,.8);
+ const receiver=fielders[6];
+ firstBaseGlove=group(receiver.armL);
+ firstBaseGlove.position.set(-.035,-.43,.16);
+ sph(firstBaseGlove,catchLeather,.235,0,0,0);
+ cube(firstBaseGlove,seams,.15,.027,.015,0,.02,.217);
+ firstBaseCatchRing=mesh(new THREE.TorusGeometry(.41,.045,7,28),new THREE.MeshBasicMaterial({color:0xffe6a8,transparent:true,opacity:.9,depthTest:false}),scene,18,1.57,-18);
+ firstBaseCatchRing.rotation.x=.22;firstBaseCatchRing.visible=false;
+ firstBaseUmpire=createPlayer(24,-23,0x141c27,.95);firstBaseUmpire.root.visible=false;
+ cube(firstBaseUmpire.torso,mat(0x0b151e),.46,.33,.28,0,1.22,.12);hitTrailGeometry=new THREE.BufferGeometry();hitTrail=new THREE.Line(hitTrailGeometry,new THREE.LineBasicMaterial({color:0xffe5aa,transparent:true,opacity:.9,depthTest:false}));hitTrail.visible=false;hitTrail.renderOrder=5;scene.add(hitTrail);
+// NEW (v22) separate players: the next hitter is not a duplicated base runner.
+nextBatterActor=createPlayer(-22,11,0x4087c6,1.05);
+const nextBatGroup=group(nextBatterActor.root);nextBatGroup.position.set(-.56,1.33,.17);nextBatGroup.rotation.set(-.35,0,.60);
+mesh(new THREE.CylinderGeometry(.13,.095,1.52,12),mat(0xf8cf72,.32),nextBatGroup,0,.86,0);
+scoredRunnerActor=createPlayer(0,0,0x4087c6,.88);
+scene.add(new THREE.HemisphereLight(0xe5f8ff,0x86ba7e,2.5));const sun=new THREE.DirectionalLight(0xfff1d2,3.35);sun.position.set(-30,90,40);scene.add(sun)}
+const clamp=(v)=>Math.min(1,Math.max(0,v)),smooth=t=>{t=clamp(t);return t*t*(3-2*t)},phase=(t,a,b)=>smooth((t-a)/(b-a)),lerp=(a,b,t)=>a+(b-a)*t;
+function reset(p){p.root.visible=true;p.root.position.set(p.x,0,p.z);
+ // Built-in meshes face local +Z. At home, BOTH batter and catcher face the field/mound (-Z), never the stands (+Z).
+ const facesMound=(p===batter||p===catcher||p===incomingBatter||p===incomingCatcher);
+ p.root.rotation.set(0,facesMound?Math.PI:0,0);p.torso.rotation.set(0,0,0);p.armL.rotation.set(0,0,0);p.armR.rotation.set(0,0,0);p.legL.rotation.set(0,0,0);p.legR.rotation.set(0,0,0)}
+// One continuous pitch flight; the swing never precedes the ball's arrival.
+const RELEASE=.27, CONTACT=.54, PITCH_END=.64;
+const ballStart=new THREE.Vector3(0,1.83,-18),contactPoint=new THREE.Vector3(0,1.48,1.08),mittPoint=new THREE.Vector3(0,1.48,4.28);
+function updateHands(){
+ const leftPitch=document.getElementById('pitcherProfile').value==='oh',leftBat=document.getElementById('batterProfile').value==='kim';
+ pitcher.root.scale.x=leftPitch?-1:1;
+ batter.x=leftBat?2.6:-2.6;batter.root.position.x=batter.x;batter.root.scale.x=leftBat?-1.05:1.05;
+ // Mirror the complete batter (including bat grip) as one unit: no handedness-specific re-parenting.
+ if(bat.parent!==batter.root)batter.root.add(bat);bat.position.set(-.56,1.33,.17);
+ document.getElementById('handInfo').textContent=(leftPitch?'오원석 · 좌투':'소형준 · 우투')+' / '+(leftBat?'김현수 · 좌타':'안현민 · 우타')+' · 좌우에 따라 타석 위치와 투구 팔 변경';
+}
+function throwMotion(t){
+ const wind=phase(t,.04,.22),release=phase(t,.22,.31),settle=phase(t,.41,.62);const l=document.getElementById('pitcherProfile').value==='oh';
+ const throwingArm=l?pitcher.armL:pitcher.armR,gloveArm=l?pitcher.armR:pitcher.armL,leadLeg=l?pitcher.legR:pitcher.legL;
+ leadLeg.rotation.x=-.94*wind*(1-release);pitcher.torso.rotation.y=.43*wind-.77*release+.30*settle;
+ throwingArm.rotation.x=-1.12*wind+2.85*release-1.43*settle;gloveArm.rotation.x=.57*wind-.45*release;
+ pitcher.root.position.y=.09*Math.sin(wind*Math.PI)*(1-release);
+ // Common pitch: straight ahead (x=0), no curve or contact for full swing / swinging strikeout.
+ // Hit plays use the SAME delivery and switch to one batted-ball path ONLY at CONTACT.
+ const hit=['single','homerun','homerDugout','foulReset','foulLeft','foulRight','foulBack','foulHighLeft','foulHighRight','fielderReturn'].includes(selection.id);
+ const specialHbp=['walk','hbpDemo'].includes(selection.id)&&walkType==='HBP';
+ const specialIbb=['walk','ibbDemo'].includes(selection.id)&&walkType==='IBB';
+ if(t<RELEASE){ball.visible=true;ball.position.copy(ballStart)}
+ else if(t<=CONTACT){
+  const q=clamp((t-RELEASE)/(CONTACT-RELEASE));ball.visible=true;
+  const targetX=specialHbp?(document.getElementById('batterProfile').value==='kim'?1.9:-1.9):specialIbb?1.2:0;
+  ball.position.set(targetX*q,lerp(ballStart.y,contactPoint.y,q),lerp(ballStart.z,contactPoint.z,q));
+ }else if(hit){ball.visible=false;} // outfieldBall owns the single post-contact flight
+ else if(t<=PITCH_END){
+  const q=clamp((t-CONTACT)/(PITCH_END-CONTACT));ball.visible=!specialHbp;
+  ball.position.set(specialIbb?lerp(1.2,1.5,q):0,lerp(contactPoint.y,mittPoint.y,q),lerp(contactPoint.z,mittPoint.z,q));
+ }else ball.visible=false;
+}
+function swingMotion(t,hit){
+ const load=phase(t,.32,.48),through=phase(t,.505,.635),end=phase(t,.635,.76),recover=phase(t,.83,.99);
+ const s=through; // quick bat acceleration at ~CONTACT, full swing and visible follow-through.
+ batter.torso.rotation.y=-.42*load+2.85*s+.30*end-.58*recover;
+ batter.torso.rotation.z=.10*s;batter.armR.rotation.y=-.8*load-2.55*s;batter.armL.rotation.y=-.65*load-2.1*s;
+ batter.armR.rotation.z=-.35-1.15*s;batter.armL.rotation.z=.6-.66*s;
+ bat.rotation.x=-.35-.20*load+.92*s+.26*end;bat.rotation.z=.60-.30*load-2.85*s-.22*end;bat.rotation.y=.06-.17*load+2.45*s;
+ batTrail.visible=t>.49&&t<.73;batTrail.position.set(batter.x,0,1.7);batTrail.rotation.y=2.75*s;
+ document.getElementById('batFlash').classList.toggle('show',hit&&t>.533&&t<.566);
+}
+function pathRunner(q,homer,walk){
+ const pts=homer?[[batter.x,1.7],[18,-18],[0,-36],[-18,-18],[0,0]]:[[batter.x,1.7],[18,-18]];
+ q=clamp(q);const i=Math.min(pts.length-2,Math.floor(q*(pts.length-1)));const v=q>=1?1:q*(pts.length-1)-i;
+ const a=pts[i],b=pts[i+1],f=smooth(v);
+ batter.root.position.set(lerp(a[0],b[0],f),q<1?Math.abs(Math.sin(q*(walk?24:45)))*(walk?.025:.075):0,lerp(a[1],b[1],f));
+ batter.root.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+ const gait=Math.sin(q*(walk?24:48));batter.legL.rotation.x=gait*(walk?.23:.45);batter.legR.rotation.x=-batter.legL.rotation.x;
+ batter.armL.rotation.x=-batter.legL.rotation.x*.55;batter.armR.rotation.x=-batter.armL.rotation.x;bat.visible=false;
+}
+function outfieldBall(t,homer){
+ const begin=CONTACT,end=homer?.78:.79;
+ if(t<begin||t>end){ball.visible=false;hitTrail.visible=t>=begin&&t<=end;return}
+ const q=clamp((t-begin)/(end-begin));
+ const endX=homer?39:hitDirection*24,endZ=homer?-116:-53,high=homer?39:12;
+ const endY=homer?3:.55;
+ ball.position.set(lerp(contactPoint.x,endX,q),lerp(contactPoint.y,endY,q)+high*4*q*(1-q),lerp(contactPoint.z,endZ,q));ball.visible=true;
+ let pts=[];const n=42;for(let i=0;i<=n;i++){const r=q*i/n;pts.push(new THREE.Vector3(lerp(contactPoint.x,endX,r),lerp(contactPoint.y,endY,r)+high*4*r*(1-r),lerp(contactPoint.z,endZ,r)))}
+ hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+}
+function visitMound(t){
+ // t is elapsed time SINCE the batter has already arrived at first base.
+ // 0~.37 approach, .37~.62 conversation, .62~.99 walk back.
+ if(!catcherVisit||t<=0)return;
+ const arrival=phase(t,.04,.37),returning=phase(t,.62,.99),forward=arrival*(1-returning);
+ catcher.root.position.set(0,Math.abs(Math.sin(t*63))*.055*((t<.37||t>.62)?1:0),lerp(4.4,-17.1,forward));
+ const moving=(t>.04&&t<.37)||(t>.62&&t<.99);
+ catcher.legL.rotation.x=moving?Math.sin(t*54)*.52:0;
+ catcher.legR.rotation.x=-catcher.legL.rotation.x;
+ // Catcher faces the mound (-Z) while approaching and talking.
+ // On the return trip (+Z), turn toward home, then face the mound again after arriving.
+ const returnFacing=phase(t,.61,.70)*(1-phase(t,.90,.985));
+ catcher.root.rotation.y=Math.PI*(1-returnFacing);
+ if(t>.37&&t<.62){catcher.armR.rotation.x=-.65;pitcher.armL.rotation.x=-.35;}
+}
+
+
+// v7 scene extensions: no slow warmup routines; the main broadcast stays focused on gameplay.
+function umpireStrike(t){
+ const call=phase(t,.66,.76),hold=1-phase(t,.88,.98);
+ umpire.torso.rotation.y=-.23*call;
+ umpire.armR.rotation.x=-1.55*call*hold;
+ umpire.armR.rotation.z=1.05*call*hold; // right-side punch-out on screen
+ umpire.armL.rotation.x=-.35*call*hold;
+ umpire.root.position.y=.09*call*hold;
+}
+function coachRoutine(t){
+ // Full hit, safe at first, coach approaches from FOUL territory AFTER arrival.
+ if(t<=CONTACT)throwMotion(t);else if(t<.76)outfieldBall(t,false);
+ swingMotion(t,true);
+ if(t>CONTACT)pathRunner(phase(t,CONTACT+.015,.875),false,false);
+ firstCoach.root.visible=true;
+ const approach=phase(t,.885,.94),cheer=phase(t,.94,.96)*(1-phase(t,.985,1));
+ // Base path is near (18,-18). The coach stays on the foul-side (+x), away from live play.
+ firstCoach.root.position.set(lerp(23,20.65,approach),.025*Math.abs(Math.sin(t*72))*approach,lerp(-13,-16.85,approach));
+ firstCoach.root.rotation.y=-1.0*approach;
+ firstCoach.legL.rotation.x=Math.sin(t*45)*.4*approach*(1-cheer);
+ firstCoach.legR.rotation.x=-firstCoach.legL.rotation.x;
+ firstCoach.armR.rotation.x=-1.3*cheer;
+ batter.armL.rotation.x=-.8*cheer;
+}
+const FIELD_TARGETS={
+ infieldR:{x:10,y:1.8,z:-21,label:'내야 1·2루 사이'},
+ infieldL:{x:-10,y:1.8,z:-21,label:'내야 2·3루 사이'},
+ left:{x:-29,y:2.2,z:-56,label:'좌익수 앞'},
+ center:{x:0,y:2.2,z:-63,label:'중견수 앞'},
+ right:{x:29,y:2.2,z:-56,label:'우익수 앞'}
+};
+function fieldingMotion(t,linear=false){
+ const target=FIELD_TARGETS[linear&&(!['infieldR','infieldL'].includes(fieldTarget))?'infieldR':fieldTarget]||FIELD_TARGETS.center;
+ const endT=linear?.72:.84;
+ if(t<=CONTACT)throwMotion(t);else{
+   const q=clamp((t-CONTACT)/(endT-CONTACT));
+   const h=linear?2.7:target.z<-40?21:11;
+   ball.visible=q<1;
+   ball.position.set(lerp(0,target.x,q),lerp(contactPoint.y,target.y,q)+h*4*q*(1-q),lerp(contactPoint.z,target.z,q));
+   let pts=[];for(let i=0;i<=32;i++){const r=q*i/32;pts.push(new THREE.Vector3(lerp(0,target.x,r),lerp(contactPoint.y,target.y,r)+h*4*r*(1-r),lerp(contactPoint.z,target.z,r)))}
+   hitTrailGeometry.setFromPoints(pts);hitTrail.visible=q<1;
+ }
+ swingMotion(t,true);
+ // Choose a nearby fielder so their approach and catch are both visible.
+ let nearest=0,dist=Infinity;
+ for(let i=0;i<fielders.length;i++){const p=fielders[i],d=(p.x-target.x)**2+(p.z-target.z)**2;if(d<dist){dist=d;nearest=i}}
+ const p=fielders[nearest],approach=phase(t,.52,endT-.055),catchT=phase(t,endT-.05,endT);
+ p.root.position.set(lerp(p.x,target.x,approach),.035*Math.abs(Math.sin(t*48))*approach*(1-catchT),lerp(p.z,target.z,approach));
+ p.legL.rotation.x=Math.sin(t*62)*.45*approach*(1-catchT);p.legR.rotation.x=-p.legL.rotation.x;
+ p.armL.rotation.x=-(linear?1.35:2.1)*catchT;p.armR.rotation.x=-.6*catchT;
+ if(t>endT){ball.visible=false;hitTrail.visible=false}
+}
+
+// Existing baserunners are independent actors; they never substitute for the batter or fielder.
+const BASE_COORDS=[[18,-18],[0,-36],[-18,-18]],NEXT_BASE=[[0,-36],[-18,-18],[0,0]];
+const HOME_COORD=[0,0];
+// A "walk" forces only a contiguous occupied chain from first base; a hit advances every runner.
+function forcedWalkRunner(i,mask){
+ if(!(mask&(1<<i)))return false;
+ if(i===0)return true;
+ if(i===1)return (mask&1)!==0;
+ return (mask&3)===3;
+}
+function animateExistingRunners(t,kind){
+ // Existing runners are their own characters; a batter never replaces them.
+ // HOME RUN: third-base runner scores first, then second, then first, ahead of the batter.
+ for(let i=0;i<3;i++){
+  const p=baseRunners[i]; if(!(baseMask&(1<<i)))continue;
+  const start=BASE_COORDS[i];
+  if(kind==='force'&&!forcedWalkRunner(i,baseMask))continue;
+  if(kind==='home'){
+   const paths=[ [BASE_COORDS[0],BASE_COORDS[1],BASE_COORDS[2],HOME_COORD],
+                 [BASE_COORDS[1],BASE_COORDS[2],HOME_COORD],
+                 [BASE_COORDS[2],HOME_COORD] ];
+   const points=paths[i];const finish=[.88,.79,.70][i];
+   const q=phase(t,CONTACT+.02,finish),segs=points.length-1;
+   const step=q*segs,j=Math.min(segs-1,Math.floor(step)),progress=q>=1?1:step-j;
+   moveActor(p,points[j],points[j+1],progress);
+   if(i===2&&homeSlideSelected)homeSlidePose(p,t,finish);
+   if(q>=1){p.root.visible=i===2&&homeSlideSelected&&t<finish+.08;} // Hide scored runner after the slide, not before.
+  }else{
+   const begin=kind==='force'?PITCH_END+.025:CONTACT+.012;
+   const finish=kind==='force'?.94:.88;
+   moveActor(p,start,NEXT_BASE[i],phase(t,begin,finish));
+   if(i===2&&homeSlideSelected){
+     homeSlidePose(p,t,finish);
+     if(t>=finish && t<finish+.075)p.root.visible=true;
+   }
+   if(i===2&&t>=finish+.08){p.root.visible=false;} // runner from third has scored
+  }
+ }
+}
+
+function showBaseRunners(t){
+ for(let i=0;i<3;i++){
+  const p=baseRunners[i];p.root.visible=!!(baseMask&(1<<i));
+  if(!p.root.visible)continue;
+  const a=BASE_COORDS[i],b=NEXT_BASE[i];let move=0;
+  if(selection.id==='fielding'){
+   // On a caught fly ball runners must return to the original bases (no scoring).
+   // Step off the base BEFORE the catch, retreat once the fielder secures it.
+   const lead=phase(t,.57,.70),retreat=phase(t,.78,.91);
+   move=.36*lead*(1-retreat);
+   const gait=Math.sin(t*56)*.45*lead*(1-retreat);
+   p.legL.rotation.x=gait;p.legR.rotation.x=-gait;
+   p.armL.rotation.x=-gait*.55;p.armR.rotation.x=gait*.55;
+  }
+  p.root.position.set(lerp(a[0],b[0],move),0,lerp(a[1],b[1],move));
+  p.root.rotation.y=move>0?Math.atan2(b[0]-a[0],b[1]-a[1]):0;
+ }
+}
+
+// FULL COUNT · OUT VARIANTS PREVIEW (visual-only; base empty). ------------------
+function sixFRunner(t){
+  if(t<=.61)return;
+  const q=phase(t,.61,.97), dest=[17.5,-17.3];
+  batter.root.position.set(lerp(batter.x,dest[0],q),Math.abs(Math.sin(t*74))*.055*(1-phase(t,.94,1)),lerp(1.7,dest[1],q));
+  batter.root.rotation.y=Math.atan2(dest[0]-batter.x,dest[1]-1.7);
+  const gait=Math.sin(t*82)*.56*(1-phase(t,.94,1));batter.legL.rotation.x=gait;batter.legR.rotation.x=-gait;
+  batter.armL.rotation.x=-gait*.45;batter.armR.rotation.x=gait*.45;
+  bat.visible=false;
+  if(t>.9){batter.root.position.x=lerp(17.5,20.5,phase(t,.90,1))}
+}
+function sixFRecordOut(t,at=.88){
+  const first=selection.id!=='outVar_foulTip'&&selection.id!=='outVar_pitcherLiner';
+  const q=phase(t,at+.02,at+.09);
+  if(first&&t>at){
+    firstBaseUmpire.root.visible=true;
+    firstBaseUmpire.armR.rotation.x=-1.65*q;
+    firstBaseUmpire.armR.rotation.z=1.05*q;
+  }
+  if(t>at+.03){displaySpecial(t,'OUT!','OUT · '+(selection.id==='outVar_foulTip'?'FOUL TIP K':selection.id==='outVar_firstSolo'?'3U':selection.id==='outVar_firstPitcher'?'3–1':'PITCHER LINE OUT'),t<.98)}
+}
+function sixFFoulTipMotion(t){
+  throwMotion(t);swingMotion(t,t>.52);
+  // Bat grazes pitch; the SINGLE baseball continues directly into the catcher's mitt.
+  if(t>=CONTACT&&t<.715){
+    const q=phase(t,CONTACT,.715);
+    ball.visible=true;
+    ball.position.set(.22*Math.sin(q*Math.PI),lerp(1.48,1.58,q),lerp(contactPoint.z,4.12,q));
+  }else if(t>=.715){ball.visible=false;}
+  const received=phase(t,.68,.74);
+  catcher.armL.rotation.x=-1.35*received;
+  catcher.armL.rotation.z=-.26*received;
+  catcher.torso.rotation.x=.18*received;
+  umpireStrike(t);
+  sixFRecordOut(t,.77);
+}
+function sixFFirstSoloMotion(t){
+  const pickup=[14.2,-15.0],bag=[18,-18],catchT=.75,bagT=.875;
+  throwMotion(t);swingMotion(t,t>.52);
+  if(t>=CONTACT&&t<=catchT){
+    const q=phase(t,CONTACT,catchT);
+    ball.visible=true;ball.position.set(lerp(contactPoint.x,pickup[0],q),.30,lerp(contactPoint.z,pickup[1],q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(lerp(0,pickup[0],f),.31,lerp(contactPoint.z,pickup[1],f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>catchT){ball.visible=false;hitTrail.visible=false;}
+  const p=fielders[6],rush=phase(t,.54,.75),step=phase(t,.75,bagT),grab=phase(t,.70,.78);
+  p.root.position.set(lerp(p.x,pickup[0],rush)+ (bag[0]-pickup[0])*step,0,lerp(p.z,pickup[1],rush)+(bag[1]-pickup[1])*step);
+  p.root.rotation.y=Math.atan2(bag[0]-pickup[0],bag[1]-pickup[1]);
+  const gait=Math.sin(t*70)*.62*(rush*(1-grab)+step*(1-phase(t,.875,.92)));
+  p.legL.rotation.x=gait;p.legR.rotation.x=-gait;
+  p.torso.rotation.x=.72*grab*(1-step);p.armL.rotation.x=-1.2*grab;
+  p.armL.rotation.z=-.24*grab;p.armR.rotation.x=-.4*grab;
+  if(t>.82){p.legR.rotation.x=.34*phase(t,.82,.88)}
+  sixFRunner(t);sixFRecordOut(t,bagT);
+  firstBaseCatchRing.visible=t>=bagT&&t<.93;
+  if(firstBaseCatchRing.visible){const q=phase(t,bagT,.93);firstBaseCatchRing.position.set(18,.24,-18);firstBaseCatchRing.scale.setScalar(.55+q*.9);firstBaseCatchRing.material.opacity=.9*(1-q)}
+}
+function sixFFirstPitcherMotion(t){
+  const pickup=[20.2,-14.7],bag=[18,-18],start=.79,end=.895;
+  throwMotion(t);swingMotion(t,t>.52);
+  if(t>=CONTACT&&t<.76){
+    const q=phase(t,CONTACT,.76);
+    ball.visible=true;ball.position.set(lerp(0,pickup[0],q),.3,lerp(contactPoint.z,pickup[1],q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(lerp(0,pickup[0],f),.30,lerp(contactPoint.z,pickup[1],f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>=start&&t<end){
+    const q=phase(t,start,end);ball.visible=true;hitTrail.visible=false;
+    ball.position.set(lerp(pickup[0],bag[0],q),lerp(1.35,1.42,q)+1.0*Math.sin(Math.PI*q),lerp(pickup[1],bag[1],q));
+  }else{ball.visible=false;hitTrail.visible=false;}
+  const f=fielders[6],rush=phase(t,.54,.73),grab=phase(t,.70,.78);
+  f.root.position.set(lerp(f.x,pickup[0],rush),0,lerp(f.z,pickup[1],rush));
+  f.root.rotation.y=-.70*phase(t,.76,.83);
+  f.torso.rotation.x=.8*grab*(1-phase(t,.82,.86));
+  f.armL.rotation.x=-1.4*grab;f.armR.rotation.x=-2.1*phase(t,.78,.83)*(1-phase(t,.88,.92));
+  const gait=Math.sin(t*70)*.5*rush*(1-grab);f.legL.rotation.x=gait;f.legR.rotation.x=-gait;
+  // The pitcher leaves the mound and reaches the bag before the batter.
+  const run=phase(t,.56,.855),stop=phase(t,.84,.91);
+  pitcher.root.position.set(lerp(0,bag[0],run),0,lerp(-18,bag[1],run));
+  pitcher.root.rotation.y=Math.PI/2*(1-stop);
+  const pg=Math.sin(t*88)*.65*run*(1-stop);pitcher.legL.rotation.x=pg;pitcher.legR.rotation.x=-pg;
+  pitcher.armL.rotation.x=-1.15*phase(t,.84,.90);
+  sixFRunner(t);sixFRecordOut(t,end);
+  firstBaseCatchRing.visible=t>=end&&t<.955;
+  if(firstBaseCatchRing.visible){const q=phase(t,end,.955);firstBaseCatchRing.position.set(18,1.5,-18);firstBaseCatchRing.scale.setScalar(.5+q*.8);firstBaseCatchRing.material.opacity=.9*(1-q)}
+}
+function sixFPitcherLinerMotion(t){
+  throwMotion(t);swingMotion(t,t>.52);
+  const end=.725;
+  if(t>=CONTACT&&t<=end){
+    const q=phase(t,CONTACT,end);
+    ball.visible=true;
+    ball.position.set(lerp(0,.2,q),lerp(1.48,2.18,q)+.50*Math.sin(q*Math.PI),lerp(contactPoint.z,-17.3,q));
+    const pts=[];for(let i=0;i<=22;i++){const f=q*i/22;pts.push(new THREE.Vector3(.2*f,lerp(1.48,2.18,f)+.50*Math.sin(f*Math.PI),lerp(contactPoint.z,-17.3,f)))}
+    hitTrailGeometry.setFromPoints(pts);hitTrail.visible=true;
+  }else if(t>end){ball.visible=false;hitTrail.visible=false;}
+  const p=phase(t,.58,.73);
+  pitcher.root.position.x=.24*p;pitcher.root.rotation.y=-.13*p;
+  pitcher.torso.rotation.z=-.20*p;
+  pitcher.armL.rotation.x=-1.55*p;pitcher.armL.rotation.z=-.50*p;
+  pitcher.armR.rotation.x=-.7*p;
+  batter.torso.rotation.y+=.3*phase(t,.78,.90);
+  sixFRecordOut(t,end);
+}
+
+function groundOutMotion(t){
+ // One batted groundball, then a single 1B throw; no second batted-ball flight.
+ const pickup=[hitDirection>0?11:-11,-23],first=[18,-18],throwStart=.735,throwEnd=.842;
+ if(t<=CONTACT){throwMotion(t);}
+ else if(t<throwStart){
+  const q=phase(t,CONTACT,.72);ball.visible=true;
+  ball.position.set(lerp(0,pickup[0],q),.29,lerp(contactPoint.z,pickup[1],q));
+  let pts=[];for(let k=0;k<=24;k++){const v=q*k/24;pts.push(new THREE.Vector3(lerp(0,pickup[0],v),.29,lerp(contactPoint.z,pickup[1],v)))}
+  hitTrailGeometry.setFromPoints(pts);hitTrail.visible=t<.72;
+ }else if(t<=throwEnd){
+  const q=phase(t,throwStart,throwEnd);ball.visible=true;
+  ball.position.set(lerp(pickup[0],first[0],q),lerp(1.55,1.62,q)+1.9*Math.sin(q*Math.PI),lerp(pickup[1],first[1],q));
+  hitTrail.visible=false;
+ }else{ball.visible=false;hitTrail.visible=false}
+ swingMotion(t,true);
+ // Only the batter moves toward 1B; the baseman already waits to complete the out.
+ if(t>.66){const q=phase(t,.66,.87);const a=[batter.x,1.7],b=[16.7,-16.75];
+  batter.root.position.set(lerp(a[0],b[0],q),0,lerp(a[1],b[1],q));
+  batter.root.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+  batter.legL.rotation.x=Math.sin(t*73)*.5*(1-phase(t,.89,.96));batter.legR.rotation.x=-batter.legL.rotation.x;
+  bat.visible=false;
+  if(t>.90)batter.root.position.x=lerp(16.7,23,phase(t,.91,1));
+ }
+ let nearest=0,dist=Infinity;for(let i=0;i<fielders.length;i++){
+  const p=fielders[i],d=(p.x-pickup[0])**2+(p.z-pickup[1])**2;if(d<dist){nearest=i;dist=d}
+ }
+ const defender=fielders[nearest],come=phase(t,.56,.69),retrieve=phase(t,.67,.74);
+ defender.root.position.set(lerp(defender.x,pickup[0],come),0,lerp(defender.z,pickup[1],come));
+ defender.legL.rotation.x=.45*Math.sin(t*57)*come*(1-retrieve);defender.legR.rotation.x=-defender.legL.rotation.x;
+ defender.torso.rotation.x=.50*retrieve*(1-phase(t,.78,.84));
+ defender.armL.rotation.x=1.05*retrieve;
+ defender.armR.rotation.x=-1.9*phase(t,.73,.81)*(1-phase(t,.85,.92));
+ // One of the defensive infielders covers first base and catches the throw.
+ const firstBaseman=fielders[6],cover=phase(t,.62,.79),ready=phase(t,.72,.815),caught=phase(t,.842,.875);
+ firstBaseman.root.position.set(lerp(firstBaseman.x,17.8,cover),0,lerp(firstBaseman.z,-18.35,cover));
+ // Keep 1B's foot planted on the bag. Track the ball with an extending LEFT glove.
+ firstBaseman.root.rotation.y=-.30*ready;
+ firstBaseman.legR.rotation.z=.16*ready;firstBaseman.legL.rotation.z=-.10*ready;
+ firstBaseman.armL.rotation.x=-1.2*ready+.24*caught;
+ firstBaseman.armL.rotation.z=-.42*ready;
+ firstBaseman.torso.rotation.x=.15*ready*(1-caught);
+ // A restrained glove flash only AFTER the throw reaches first; not a second baseball.
+ firstBaseCatchRing.visible=t>=.842&&t<.895;
+ if(firstBaseCatchRing.visible){const q=phase(t,.842,.895);firstBaseCatchRing.position.set(18,1.62,-18);firstBaseCatchRing.scale.setScalar(.45+q*.8);firstBaseCatchRing.material.opacity=.92*(1-q)}
+ // Occasional 1B umpire punch-out (20%) AFTER ball reaches the first baseman.
+ firstBaseUmpire.root.visible=true;
+ if(firstBaseCall){const call=phase(t,.865,.91),release=1-phase(t,.965,1);
+  firstBaseUmpire.armR.rotation.x=-1.7*call*release;
+  firstBaseUmpire.armR.rotation.z=1.05*call*release;
+  firstBaseUmpire.torso.rotation.y=-.2*call;
+ }
+}
+
+// Shared slide animation is applied ONLY to the runner from third as they cross home.
+// It does not change the score timestamp or whether the runner is safe.
+function homeSlidePose(runner,t,arrival){
+ if(!homeSlideSelected)return;
+ const begin=arrival-.075,slide=phase(t,begin,arrival),recover=phase(t,arrival+.018,arrival+.11);
+ const lean=slide*(1-recover);
+ runner.torso.rotation.x=.92*lean;
+ runner.armL.rotation.x=.95*lean;runner.armR.rotation.x=.95*lean;
+ runner.legL.rotation.x=-.20*lean;runner.legR.rotation.x=.18*lean;
+ runner.root.position.y=.01+.05*Math.sin(Math.PI*slide)*(1-recover);
+ // On arrival, place the leading hand at the plate; keep the character on the home path.
+ if(t>=begin && t<=arrival+.07){runner.root.rotation.y=-2.35;}
+}
+function showFirstBaseSafeCall(t){
+ if(!firstSafeSelected)return;
+ // The call occurs only after the batter's foot reaches first base.
+ const q=phase(t,.965,.987),release=1-phase(t,.995,1);
+ firstBaseUmpire.root.visible=t>=.965;
+ firstBaseUmpire.armL.rotation.z=-1.7*q*release;
+ firstBaseUmpire.armR.rotation.z=1.7*q*release;
+ firstBaseUmpire.armL.rotation.x=-.15*q*release;
+ firstBaseUmpire.armR.rotation.x=-.15*q*release;
+}
+function slideFirstMotion(t){
+ // Demonstration is now THIRD-BASE RUNNER sliding into HOME after a fly is caught.
+ // Ordinary first-base running is left untouched.
+ sacFly(t,true,false);
+}
+
+function firstBaseSafeMotion(t){
+ // Same overall sequence as a groundout, but the batter reaches first before the catch is completed.
+ const pickup=[hitDirection>0?11:-11,-23], first=[18,-18], throwStart=.735, throwEnd=.848;
+ if(t<=CONTACT){throwMotion(t);}
+ else if(t<throwStart){
+   const q=phase(t,CONTACT,.72); ball.visible=true;
+   ball.position.set(lerp(0,pickup[0],q),.29,lerp(contactPoint.z,pickup[1],q));
+   let pts=[];for(let k=0;k<=24;k++){const v=q*k/24;pts.push(new THREE.Vector3(lerp(0,pickup[0],v),.29,lerp(contactPoint.z,pickup[1],v)))}
+   hitTrailGeometry.setFromPoints(pts); hitTrail.visible=t<.72;
+ }else if(t<=throwEnd){
+   const q=phase(t,throwStart,throwEnd); ball.visible=true;
+   ball.position.set(lerp(pickup[0],first[0],q),lerp(1.55,1.62,q)+1.9*Math.sin(q*Math.PI),lerp(pickup[1],first[1],q));
+   hitTrail.visible=false;
+ }else{ ball.visible=false; hitTrail.visible=false; }
+ swingMotion(t,true);
+ // Faster runner: reaches the bag a fraction earlier than the throw.
+ if(t>.64){
+   const q=phase(t,.64,.825),a=[batter.x,1.7],b=[18.1,-18.05];
+   batter.root.position.set(lerp(a[0],b[0],q),0,lerp(a[1],b[1],q));
+   batter.root.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+   batter.legL.rotation.x=Math.sin(t*76)*.54*(1-phase(t,.845,.92));
+   batter.legR.rotation.x=-batter.legL.rotation.x; bat.visible=false;
+   if(t>.825){
+     const s=phase(t,.825,.90);
+     batter.root.position.set(18.15,0,-18.05);
+     batter.root.rotation.y=lerp(-1.32,-1.42,s);
+     batter.torso.rotation.x=.18*(1-s);
+   }
+ }
+ let nearest=0,dist=Infinity;for(let i=0;i<fielders.length;i++){
+   const p=fielders[i],d=(p.x-pickup[0])**2+(p.z-pickup[1])**2;if(d<dist){nearest=i;dist=d}
+ }
+ const defender=fielders[nearest],come=phase(t,.56,.69),retrieve=phase(t,.67,.74);
+ defender.root.position.set(lerp(defender.x,pickup[0],come),0,lerp(defender.z,pickup[1],come));
+ defender.legL.rotation.x=.45*Math.sin(t*57)*come*(1-retrieve);defender.legR.rotation.x=-defender.legL.rotation.x;
+ defender.torso.rotation.x=.50*retrieve*(1-phase(t,.78,.84)); defender.armL.rotation.x=1.05*retrieve;
+ defender.armR.rotation.x=-1.9*phase(t,.73,.81)*(1-phase(t,.85,.92));
+ const firstBaseman=fielders[6],cover=phase(t,.62,.80),ready=phase(t,.73,.86),caught=phase(t,.848,.885);
+ firstBaseman.root.position.set(lerp(firstBaseman.x,17.8,cover),0,lerp(firstBaseman.z,-18.35,cover));
+ firstBaseman.root.rotation.y=-.30*ready;
+ firstBaseman.legR.rotation.z=.16*ready;firstBaseman.legL.rotation.z=-.10*ready;
+ firstBaseman.armL.rotation.x=-1.2*ready+.24*caught; firstBaseman.armL.rotation.z=-.42*ready;
+ firstBaseman.torso.rotation.x=.15*ready*(1-caught);
+ firstBaseCatchRing.visible=t>=.848&&t<.905;
+ if(firstBaseCatchRing.visible){const q=phase(t,.848,.905);firstBaseCatchRing.position.set(18,1.62,-18);firstBaseCatchRing.scale.setScalar(.45+q*.8);firstBaseCatchRing.material.opacity=.92*(1-q)}
+ // 1B umpire SAFE call with arms spread wide.
+ firstBaseUmpire.root.visible=true;
+ const call=phase(t,.865,.93),release=1-phase(t,.965,1);
+ firstBaseUmpire.armL.rotation.z=-1.55*call*release;
+ firstBaseUmpire.armR.rotation.z=1.55*call*release;
+ firstBaseUmpire.armL.rotation.x=-.22*call*release;
+ firstBaseUmpire.armR.rotation.x=-.22*call*release;
+ firstBaseUmpire.torso.rotation.y=.05*call;
+}
+
+function errorMotion(t){
+ // The error is NOT a dropped fly ball: a defender fields a GROUNDBALL, then throws past first.
+ const pickupX=hitDirection>0?10:-10, pickupZ=-21;
+ const pickupEnd=.74,throwBegin=.755,throwEnd=.88;
+ if(t<=CONTACT)throwMotion(t);
+ else if(t<throwBegin){
+  const q=phase(t,CONTACT,.695);
+  ball.visible=true;
+  ball.position.set(lerp(contactPoint.x,pickupX,q),.32,lerp(contactPoint.z,pickupZ,q)); // groundball stays low
+  const pts=[];for(let i=0;i<=24;i++){const r=q*i/24;pts.push(new THREE.Vector3(lerp(contactPoint.x,pickupX,r),.32,lerp(contactPoint.z,pickupZ,r)))}
+  hitTrailGeometry.setFromPoints(pts);hitTrail.visible=t<.69;
+ }else if(t<=throwEnd){
+  const q=phase(t,throwBegin,throwEnd),x=lerp(pickupX,26.2,q),z=lerp(pickupZ,-13.3,q);
+  ball.visible=true;ball.position.set(x,1.25+2.5*Math.sin(Math.PI*q),z); // overshoots first base (18,-18)
+  hitTrail.visible=false;
+ }else{ball.visible=false;hitTrail.visible=false}
+ swingMotion(t,true);
+ if(t>CONTACT)pathRunner(phase(t,CONTACT+.015,.98),false,false);
+ // Defending infielder goes to ground level for pickup and then releases a bad throw.
+ let nearest=0,dist=Infinity;
+ for(let i=0;i<fielders.length;i++){const p=fielders[i],d=(p.x-pickupX)**2+(p.z-pickupZ)**2;if(d<dist){dist=d;nearest=i}}
+ const p=fielders[nearest],approach=phase(t,.58,.70),pick=phase(t,.69,pickupEnd);
+ p.root.position.set(lerp(p.x,pickupX,approach),0,lerp(p.z,pickupZ,approach));
+ p.legL.rotation.x=Math.sin(t*58)*.45*approach*(1-pick);p.legR.rotation.x=-p.legL.rotation.x;
+ p.torso.rotation.x=.42*pick*(1-phase(t,.76,.83));
+ p.armL.rotation.x=.95*pick;
+ p.armR.rotation.x=-2.0*phase(t,.75,.81)*(1-phase(t,.87,.94));
+ p.root.rotation.z=.20*phase(t,.79,.87);
+}
+function substitution(t,isRunner){
+ const enter=phase(t,.09,.80),settle=phase(t,.80,.94),from=[-29,12];
+ if(isRunner){
+  const i=pinchBaseIndex;
+  if(i<0||!(baseMask&(1<<i))){ghostRunner.root.visible=false;return}
+  const dest=BASE_COORDS[i], outgoing=baseRunners[i];
+  // The batter remains in the batter's box. Replace ONLY the actual selected baserunner.
+  const oldTo=[-27,14],oldPhase=phase(t,.12,.58);
+  outgoing.root.visible=t<.61;
+  outgoing.root.position.set(lerp(dest[0],oldTo[0],oldPhase),0,lerp(dest[1],oldTo[1],oldPhase));
+  outgoing.root.rotation.y=Math.atan2(oldTo[0]-dest[0],oldTo[1]-dest[1]);
+  outgoing.legL.rotation.x=.32*Math.sin(t*50)*(1-phase(t,.55,.61));outgoing.legR.rotation.x=-outgoing.legL.rotation.x;
+  const inPhase=phase(t,.42,.88);
+  ghostRunner.root.visible=t>=.42;
+  ghostRunner.root.position.set(lerp(from[0],dest[0],inPhase),.03*Math.abs(Math.sin(t*55))*inPhase*(1-settle),lerp(from[1],dest[1],inPhase));
+  ghostRunner.root.rotation.y=Math.atan2(dest[0]-from[0],dest[1]-from[1]);
+  ghostRunner.legL.rotation.x=.43*Math.sin(t*48)*inPhase*(1-settle);ghostRunner.legR.rotation.x=-ghostRunner.legL.rotation.x;
+  return;
+ }
+ const dest=[batter.x,1.7];
+ ghostRunner.root.visible=true;
+ ghostRunner.root.position.set(lerp(from[0],dest[0],enter),.04*Math.abs(Math.sin(t*52))*enter*(1-settle),lerp(from[1],dest[1],enter));
+ ghostRunner.root.rotation.y=Math.atan2(dest[0]-from[0],dest[1]-from[1]);
+ ghostRunner.legL.rotation.x=.45*Math.sin(t*47)*enter*(1-settle);ghostRunner.legR.rotation.x=-ghostRunner.legL.rotation.x;
+ batter.root.visible=false;
+ ghostRunner.armR.rotation.x=-.8*phase(t,.81,.96);
+}
+
+// v11 sacrifice animations — all pitches reach the bat before contact; the batted ball is a separate trajectory.
+function moveActor(p,from,to,q,run=true){
+ q=clamp(q); p.root.position.set(lerp(from[0],to[0],q),run?.065*Math.abs(Math.sin(q*35)):0,lerp(from[1],to[1],q));
+ p.root.rotation.y=Math.atan2(to[0]-from[0],to[1]-from[1]);
+ const gait=(run?.5:.23)*Math.sin(q*34);p.legL.rotation.x=gait;p.legR.rotation.x=-gait;
+ p.armL.rotation.x=-gait*.55;p.armR.rotation.x=gait*.55;
+}
+function sacBunt(t,isSuccess,isStrikeout){
+ const pickup=[hitDirection>0?8:-8,-19],first=[18,-18];
+ // Rather than a big full swing, angle the bat forward while the body stays comparatively still.
+ const approach=phase(t,.43,CONTACT),push=phase(t,CONTACT,.58);
+ batter.torso.rotation.y=.04*approach;batter.armR.rotation.x=-1.25*approach;
+ batter.armL.rotation.x=-1.18*approach;
+ // Hold the bat horizontally over the inner half of the plate: the front end reaches the incoming ball.
+ bat.position.set(-.56-.22*approach,1.33+.02*approach,.17+.75*approach);
+ bat.rotation.set(-1.40*approach-.35*(1-approach),.05,.60*(1-approach)+1.10*approach);
+ batTrail.visible=false;
+ if(t<=CONTACT){
+  batter.root.position.x=batter.x+(batter.x<0?1:-1)*.66*approach;
+  throwMotion(t);return}
+ if(!isSuccess){
+  // Bunt foul: one contact and short, low roll into foul territory. No base advancement.
+  const q=phase(t,CONTACT,.78),end=[hitDirection>0?5.4:-5.4,7.3];
+  ball.visible=t<.80;ball.position.set(lerp(contactPoint.x,end[0],q),.28,lerp(contactPoint.z,end[1],q));
+  hitTrail.visible=false;
+  if(isStrikeout&&t>.80){umpire.armR.rotation.x=-1.55*phase(t,.84,.91);umpire.armR.rotation.z=1.05*phase(t,.84,.91)}
+  return;
+ }
+ const pickupEnd=.72,throwBegin=.735,throwEnd=.85;
+ if(t<throwBegin){
+  const q=phase(t,CONTACT,pickupEnd);
+  ball.visible=true;ball.position.set(lerp(contactPoint.x,pickup[0],q),.3,lerp(contactPoint.z,pickup[1],q));
+ }else if(t<=throwEnd){
+  const q=phase(t,throwBegin,throwEnd);ball.visible=true;
+  ball.position.set(lerp(pickup[0],first[0],q),1.45+1.35*Math.sin(Math.PI*q),lerp(pickup[1],first[1],q));
+ }else ball.visible=false;
+ // Fielder picks the bunt up, then throws it to first.
+ const f=fielders.reduce((best,p)=>!best||((p.x-pickup[0])**2+(p.z-pickup[1])**2)<((best.x-pickup[0])**2+(best.z-pickup[1])**2)?p:best,null);
+ const q=phase(t,.57,.71);f.root.position.set(lerp(f.x,pickup[0],q),0,lerp(f.z,pickup[1],q));
+ f.torso.rotation.x=.5*phase(t,.66,.73);f.armR.rotation.x=-1.4*phase(t,.75,.82);
+ const fb=fielders[6];fb.root.position.set(lerp(fb.x,17.7,phase(t,.64,.79)),0,lerp(fb.z,-18.15,phase(t,.64,.79)));fb.armL.rotation.x=-1.4*phase(t,.82,.88);
+ if(t>.6){moveActor(batter,[batter.x,1.7],[16.4,-16.4],phase(t,.60,.92));bat.visible=false;}
+ // Crucially runner advance doesn't start until contact; none of their lanes overlap.
+ for(let i=0;i<3;i++){
+  if(!(baseMask&(1<<i)))continue;
+  const p=baseRunners[i],a=BASE_COORDS[i],b=NEXT_BASE[i];
+  moveActor(p,a,b,phase(t,.61,.94));
+ }
+ if(t>.88){batter.root.position.set(lerp(16.4,22,phase(t,.89,1)),0,-16.4)}
+}
+function sacFly(t,isSuccess,isCountOnly){
+ if(isCountOnly){
+  if(t<=CONTACT)throwMotion(t);
+  else{const q=phase(t,CONTACT,.79);ball.visible=t<.81;ball.position.set(lerp(0,18,q),1.5+3.5*q*(1-q),lerp(contactPoint.z,10,q));}
+  // Fouled away: runner remains at third; no recorded out in this sample.
+  swingMotion(t,true);return;
+ }
+ const catchT=.735,target={x:hitDirection>0?27:-27,y:2.1,z:-56};
+ if(t<=CONTACT)throwMotion(t);
+ else if(t<catchT){
+  const q=phase(t,CONTACT,catchT);ball.visible=true;
+  ball.position.set(lerp(0,target.x,q),lerp(contactPoint.y,target.y,q)+24*4*q*(1-q),lerp(contactPoint.z,target.z,q));
+ }else if(!isSuccess&&t>=.78&&t<=.94){
+  // Relay the ball to the furthest occupied ORIGINAL base after the catch.
+  const leadIndex=(baseMask&4)?2:(baseMask&2)?1:(baseMask&1)?0:-1;
+  const targetBase=leadIndex<0?[0,-36]:BASE_COORDS[leadIndex];
+  const q=phase(t,.80,.94);ball.visible=true;
+  ball.position.set(lerp(target.x,targetBase[0],q),lerp(target.y,1.25,q)+4*Math.sin(Math.PI*q),lerp(target.z,targetBase[1],q));
+ }else if(isSuccess&&t<=.955){
+  // Single throw after catch, reaching home only AFTER the runner has crossed the plate.
+  const q=phase(t,.795,.955);ball.visible=t>=.795;
+  ball.position.set(lerp(target.x,0,q),lerp(target.y,1.2,q)+5*Math.sin(Math.PI*q),lerp(target.z,0,q));
+ }else ball.visible=false;
+ swingMotion(t,true);
+ const f=fielders.reduce((best,p)=>!best||((p.x-target.x)**2+(p.z-target.z)**2)<((best.x-target.x)**2+(best.z-target.z)**2)?p:best,null);
+ f.root.position.set(lerp(f.x,target.x,phase(t,.57,.70)),0,lerp(f.z,target.z,phase(t,.57,.70)));
+ f.armL.rotation.x=-2.05*phase(t,.70,.735);
+ f.armR.rotation.x=-2.15*phase(t,.79,.84)*(1-phase(t,.9,.95));
+ // 3B runner stays on the bag until the outfielder catches it. Tag up only afterwards.
+ const runner=baseRunners[2];
+ if(baseMask&4){
+  if(isSuccess){
+   moveActor(runner,BASE_COORDS[2],[0,0],phase(t,.755,.895));
+   if(homeSlideSelected)homeSlidePose(runner,t,.895);
+   // After the scoring slide/standing run, move toward the dugout instead of lingering at home.
+   if(t>.97)runner.root.position.set(lerp(0,4.8,phase(t,.97,1)),0,lerp(0,4,phase(t,.97,1)));
+  }else{
+   // Failed fly: the runner steps off and gets back before the relay.
+   const step=phase(t,.58,.68)*(1-phase(t,.735,.86));
+   moveActor(runner,BASE_COORDS[2],[0,0],step*.20);
+  }
+ }
+ if(!isSuccess){
+  // Other occupied bags also hold and retreat; the relay never puts a runner out in this preview.
+  const step=phase(t,.58,.68)*(1-phase(t,.735,.86));
+  for(let i=0;i<2;i++)if(baseMask&(1<<i))moveActor(baseRunners[i],BASE_COORDS[i],NEXT_BASE[i],step*.20);
+ }
+ if(t>.77){batter.root.position.set(lerp(batter.x,29,phase(t,.78,1)),0,lerp(1.7,10,phase(t,.78,1)));bat.visible=false;}
+}
+function inningChange(t){
+ // A genuine change of sides: old yellow defense AND blue batter leave;
+ // new blue defense (7 fielders + P/C) AND yellow batter enter.
+ const leave=phase(t,.06,.45),arrive=phase(t,.56,.92),settle=1-phase(t,.88,.99);
+ const oldDefense=[...fielders,pitcher,catcher];
+ for(let i=0;i<oldDefense.length;i++){
+   const p=oldDefense[i],exit=[-36+(i%3)*2,13+(i%4)*2];
+   p.root.visible=t<.54;
+   p.root.position.set(lerp(p.x,exit[0],leave),.055*Math.abs(Math.sin(t*48+i))*leave,lerp(p.z,exit[1],leave));
+   p.root.rotation.y=Math.atan2(exit[0]-p.x,exit[1]-p.z);
+   p.legL.rotation.x=.48*Math.sin(t*48+i)*leave*(1-phase(t,.43,.52));p.legR.rotation.x=-p.legL.rotation.x;
+   p.armL.rotation.x=-p.legL.rotation.x*.55;p.armR.rotation.x=-p.armL.rotation.x;
+ }
+ // Old blue batter steps out and heads to the dugout with his team on offense now finished.
+ const oldBatterStart=[batter.x,1.7],oldBatterExit=[35,13];
+ batter.root.visible=t<.54;
+ batter.root.position.set(lerp(oldBatterStart[0],oldBatterExit[0],leave),.06*Math.abs(Math.sin(t*45))*leave,lerp(oldBatterStart[1],oldBatterExit[1],leave));
+ batter.root.rotation.y=Math.atan2(oldBatterExit[0]-oldBatterStart[0],oldBatterExit[1]-oldBatterStart[1]);
+ batter.legL.rotation.x=.49*Math.sin(t*47)*leave*(1-phase(t,.43,.52));batter.legR.rotation.x=-batter.legL.rotation.x;
+ bat.visible=false;batTrail.visible=false;
+ // 7 fresh BLUE fielders spread out to precisely the former YELLOW defensive positions.
+ const newFieldPositions=[[-24,-62],[0,-75],[24,-62],[-18,-29],[18,-29],[-25,-17],[25,-17]];
+ for(let i=0;i<incomingPlayers.length;i++){
+   const p=incomingPlayers[i],dest=newFieldPositions[i];p.root.visible=t>=.54;
+   p.root.position.set(lerp(p.x,dest[0],arrive),.052*Math.abs(Math.sin(t*50+i))*arrive*settle,lerp(p.z,dest[1],arrive));
+   p.root.rotation.y=Math.atan2(dest[0]-p.x,dest[1]-p.z)*(1-phase(t,.88,.97));
+   p.legL.rotation.x=.46*Math.sin(t*44+i)*arrive*settle;p.legR.rotation.x=-p.legL.rotation.x;
+ }
+ // Blue pitcher takes the mound, blue catcher replaces the yellow catcher behind home plate.
+ for(const [p,dest] of [[incomingPitcher,[0,-18]],[incomingCatcher,[0,4.4]]]){
+   p.root.visible=t>=.54;p.root.position.set(lerp(p.x,dest[0],arrive),.04*Math.abs(Math.sin(t*51))*arrive*settle,lerp(p.z,dest[1],arrive));
+   p.root.rotation.y=Math.atan2(dest[0]-p.x,dest[1]-p.z)*(1-phase(t,.88,.97))+(p===incomingCatcher?Math.PI:0)*phase(t,.88,.97);
+   p.legL.rotation.x=.46*Math.sin(t*47)*arrive*settle;p.legR.rotation.x=-p.legL.rotation.x;
+ }
+ // Yellow batter (the old defensive team) enters the right-handed batter box.
+ const yellowDest=[-2.6,1.7];incomingBatter.root.visible=t>=.54;
+ incomingBatter.root.position.set(lerp(incomingBatter.x,yellowDest[0],arrive),.055*Math.abs(Math.sin(t*47))*arrive*settle,lerp(incomingBatter.z,yellowDest[1],arrive));
+ incomingBatter.root.rotation.y=Math.atan2(yellowDest[0]-incomingBatter.x,yellowDest[1]-incomingBatter.z)*(1-phase(t,.88,.97))+Math.PI*phase(t,.88,.97);
+ incomingBatter.legL.rotation.x=.42*Math.sin(t*44)*arrive*settle;incomingBatter.legR.rotation.x=-incomingBatter.legL.rotation.x;
+ // Umpire stays neutral; no team-color change.
+ document.getElementById('inningBanner').classList.toggle('show',t>.20&&t<.62);
+ document.getElementById('scoreTag').innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>'+(t<.54?'1회 초':'1회 말')+' · B 0 S 0 O 0';
+}
+function updatePitchOverlay(t){
+ const el=document.getElementById('pitchKindReadout');if(!el)return;
+ const received=t>=PITCH_END+.012;
+ const catcherReceipt=['pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','buntFoul','buntStrikeout','umpireCall'].includes(selection.id) && walkType!=='HBP';
+ const visible=received&&catcherReceipt;
+ el.style.opacity=visible?'1':'0';el.style.transform=visible?'translateY(0)':'translateY(7px)';el.style.bottom=pitchSpeed===null?'78px':'184px';
+ const compact=pitchSpeed===null;
+ el.textContent=pitchType;
+ if(compact){const little=document.createElement('small');little.style.cssText='font-size:10px;color:#eff6ff;margin-left:8px;font-weight:700';little.textContent=smallPitchSpeed+' km/h';el.appendChild(little)}
+}
+function updateScoreboard(t){
+ // The animation is deterministic: counting the threshold crossed never double-adds when paused or rewound.
+ let runs=0;
+ if(['homerun','walkoff','grandSlam','homerDugout'].includes(selection.id)){
+  const scoreT=selection.id==='homerDugout'?clamp(t/.80):t;
+  for(let i=0;i<3;i++)if(baseMask&(1<<i))runs+=[.88,.79,.70][i]<=scoreT?1:0;
+  if(scoreT>=.995)runs++;
+ }else if(selection.id==='rbiCelebrate'){
+  if(t>=.87)runs=1;
+ }else if(selection.id==='homeSafeCall'){
+  if(t>=.88)runs=1;
+ }else if(selection.id==='single'||selection.id==='error'||selection.id==='coach'||selection.id==='slideFirst'){
+  if((baseMask&4)!==0&&t>=.88)runs=1;
+ }else if(['walk','catcherVisit','hbpDemo','ibbDemo'].includes(selection.id)){
+  if((baseMask&7)===7&&clamp(elapsed/5900)>=.94)runs=1;
+ }else if(selection.id==='buntSuccess'){
+  if((baseMask&4)!==0&&t>=.94)runs=1;
+ }else if(['sacFlySuccess','slideFirst'].includes(selection.id)){
+  if(t>=.895)runs=1;
+ }
+ let outs=0;
+ if(['sacFlySuccess','sacFlyOut','slideFirst'].includes(selection.id))outs=t>=.735?1:0;
+ if(selection.id==='threeUp'||selection.id==='finalWin')outs=t>=.43?3:2;
+ if(selection.id==='strategyBunt')outs=t>=.88?1:0;
+ if(selection.id==='strategyFly')outs=t>=.88?1:0;
+ if(selection.id==='strategyFly'&&t>=.94)runs=1;
+ if(selection.id==='buntSuccess')outs=t>=.85?1:0;
+ if(['groundout','firstBaseCatch'].includes(selection.id))outs=t>=.842?1:0;
+ if(selection.id.startsWith('outVar_'))outs=t>=(selection.id==='outVar_foulTip'?.76:selection.id==='outVar_pitcherLiner'?.73:.88)?1:0;
+ if(selection.id==='firstBaseSafe')outs=0;
+ if(selection.id==='buntStrikeout')outs=t>=.83?1:0;
+ const score=document.getElementById('scoreTag');
+ if(selection.id==='inning')return;
+ if(selection.id==='homerDugout'){score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>4회 초 · B 0 S 0 O 1';return;}
+ if(NB_FOUL_PATHS[selection.id]){score.innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>2회 초 · B 0 S '+(t>.80?1:0)+' O 1';return;}
+ if(selection.id==='fielderReturn'){score.innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>2회 초 · B 0 S 0 O '+(t>.72?1:0);return;}
+ if(selection.id==='homeSafeCall'){score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>6회 초 · B 0 S 1 O 1';return;}
+ if(selection.id==='rbiCelebrate'){score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>3회 초 · B 0 S 0 O 1';return;}
+ if(selection.id==='slideFirst'){score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>2회 초 · B 0 S 0 O '+outs;return;}
+ if(selection.id==='firstBaseSafe'){score.innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>2회 초 · B 0 S 0 O 1';return;}
+ if(selection.id==='finalWin'){score.innerHTML='AWAY <b>3</b> · HOME <b>2</b><br>9회 말 · B 0 S 2 O '+outs;return;}
+ if(selection.id==='threeUp'){score.innerHTML='AWAY <b>0</b> · HOME <b>0</b><br>3회 초 · B 0 S 2 O '+outs;return;}
+ if(selection.id==='walkoff'){score.innerHTML='AWAY <b>4</b> · HOME <b>'+(3+runs)+'</b><br>9회 말 · B 0 S 0 O 1';return;}
+ if(selection.id==='grandSlam'){score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>5회 초 · B 0 S 0 O 1';return;}
+ score.innerHTML='AWAY <b>'+runs+'</b> · HOME <b>0</b><br>1회 초 · B 0 S 0 O '+outs;
+}
+function updateOverlays(t){
+ const sr=document.getElementById('speedReadout'),abs=document.getElementById('absPanel'),hb=document.getElementById('homerBanner');
+ const caught=['pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo'].includes(selection.id)&&walkType!=='HBP';
+ sr.classList.toggle('show',caught&&pitchSpeed!==null&&t>PITCH_END+.015&&t<.89);
+ if(pitchSpeed!==null)document.getElementById('speedValue').textContent=pitchSpeed;updatePitchOverlay(t);
+ const absWalk=['walk','catcherVisit','ibbDemo'].includes(selection.id)&&walkType!=='HBP';
+  abs.classList.toggle('show',(selection.id==='looking'||absWalk)&&t>PITCH_END+.01&&t<.96);
+ hb.classList.toggle('show',(['homerun','walkoff','grandSlam'].includes(selection.id)&&t>.78&&t<.92)||(selection.id==='homerDugout'&&t>.60&&t<.74));
+}
+function displaySpecial(t,title,subtitle,show){
+ const e=document.getElementById('specialOverlay');e.classList.toggle('show',!!show);
+ if(show){document.getElementById('specialTitle').textContent=title;document.getElementById('specialSubtitle').textContent=subtitle||''}
+}
+function cheerMotion(p,t,baseX,baseZ,arrive=.78,side=0){
+ const approach=phase(t,.60,arrive),jump=phase(t,arrive,.92);
+ p.root.visible=t>=.58;
+ p.root.position.set(lerp(p.x,baseX,approach),jump*.14*Math.abs(Math.sin(t*65+side)),lerp(p.z,baseZ,approach));
+ p.root.rotation.y=Math.atan2(baseX-p.x,baseZ-p.z)*(1-approach);
+ const walk=Math.sin(t*44+side)*.45*approach*(1-jump);
+ p.legL.rotation.x=walk;p.legR.rotation.x=-walk;
+ p.armL.rotation.z=-2.55*jump;p.armR.rotation.z=2.55*jump;
+ p.armL.rotation.x=-.55*jump;p.armR.rotation.x=-.55*jump;
+}
+function afterGame(t,walkoff){
+ const teammates=[...incomingPlayers, incomingPitcher, incomingCatcher];
+ if(walkoff){
+  for(const p of teammates){p.shirtMat?.color.copy(batter.shirtMat.color);p.capMat?.color.copy(batter.capMat.color)}
+  // Hide the losing defense before the winning team's home-plate celebration.
+  if(t>=.61){fielders.forEach(p=>p.root.visible=false);pitcher.root.visible=false;catcher.root.visible=false;}
+  for(let i=0;i<teammates.length;i++){
+   const p=teammates[i];const a=i/teammates.length*Math.PI*1.7;
+   cheerMotion(p,t,Math.sin(a)*3.0,Math.cos(a)*2.4+1.0,.84+i*.008,i);
+  }
+  if(t>.89){batter.armL.rotation.z=-1.5*phase(t,.88,.97);batter.armR.rotation.z=1.4*phase(t,.88,.97)}
+ }else{
+  // Yellow team won while defending: existing yellow fielders, catcher and pitcher celebrate at the mound.
+  for(let i=0;i<fielders.length;i++){
+   const p=fielders[i],a=i/fielders.length*Math.PI*2;
+   const q=phase(t,.39,.80),destX=Math.sin(a)*2.2,destZ=-18+Math.cos(a)*2.1;
+   p.root.position.set(lerp(p.x,destX,q),Math.abs(Math.sin(t*44+i))*.08*q,lerp(p.z,destZ,q));
+   p.legL.rotation.x=Math.sin(t*46+i)*.45*q*(1-phase(t,.8,.94));p.legR.rotation.x=-p.legL.rotation.x;
+   const up=phase(t,.73,.86);p.armL.rotation.z=-2.2*up;p.armR.rotation.z=2.2*up;
+  }
+  const q=phase(t,.48,.81);
+  catcher.root.position.set(0,0,lerp(4.4,-15.4,q));catcher.legL.rotation.x=Math.sin(t*45)*.35*q*(1-phase(t,.83,.9));catcher.legR.rotation.x=-catcher.legL.rotation.x;
+  pitcher.armL.rotation.z=-1.7*phase(t,.77,.88);pitcher.armR.rotation.z=1.7*phase(t,.77,.88);
+  batter.root.visible=t<.42;bat.visible=t<.42;
+ }
+}
+function directorSign(t){
+ // A compact dugout sign - it happens before pitching and never overlaps contact.
+ const q=phase(t,.03,.23)*(1-phase(t,.30,.42));manager.root.visible=t<.43;
+ manager.root.position.set(-14,0,5);
+ manager.root.rotation.y=1.0;
+ manager.armR.rotation.z=-1.8*q;manager.armR.rotation.x=-.6*q;
+ manager.armL.rotation.z=1.1*q;
+ manager.torso.rotation.y=.18*q;
+}
+function replayMotion(t){
+ // Two passes of the SAME batted ball trajectory: live first, a short camera-dissolve, then replay.
+ if(t<.58){
+  const local=t/.58;
+  if(local<=CONTACT)throwMotion(local);else outfieldBall(local,true);
+  swingMotion(local,true);
+ }else if(t<.68){ball.visible=false;hitTrail.visible=false;batTrail.visible=false;}
+ else {
+  const local=(t-.68)/.32;
+  // Replay begins just before contact, not a second in-game home run.
+  const moment=.39+local*.39;
+  if(moment<=CONTACT)throwMotion(moment);else outfieldBall(moment,true);
+  swingMotion(moment,true);
+ }
+ displaySpecial(t,'REPLAY','다른 카메라에서 다시 보는 타격',t>=.62&&t<.73);
+}
+function dramaMotion(t,kind){
+ if(kind==='walkoff'||kind==='grandSlam'){
+  // Exactly one home-run flight. Home base is reached AFTER fielding and scoring animation.
+  if(t<=CONTACT)throwMotion(t);else outfieldBall(t,true);
+  swingMotion(t,true);
+  if(t>CONTACT){animateExistingRunners(t,'home');pathRunner(phase(t,CONTACT+.015,kind==='walkoff'?.92:.995),true,false)}
+  if(kind==='walkoff'){
+   afterGame(t,true);
+   displaySpecial(t,'WALK-OFF!','끝내기 승리 · 홈플레이트 세리머니',t>.91);
+  }else displaySpecial(t,'GRAND SLAM!','만루홈런 · 4득점',t>.77&&t<.92);
+ }else if(kind==='finalWin'){
+  if(t<=.38){const moment=t/.38*.94;throwMotion(moment);umpireStrike(moment)}
+  afterGame(t,false);
+  displaySpecial(t,'FINAL · WIN','승리팀 마운드 하이파이브',t>.82);
+ }else if(kind==='threeUp'){
+  if(nbEmbeddedToken===null&&t<=.44){const moment=t/.44*.94;throwMotion(moment);swingMotion(moment,false);umpireStrike(moment)}
+  const q=phase(t,.24,.45)*(1-phase(t,.87,.98));
+  pitcher.armL.rotation.z=-2.5*q;pitcher.armR.rotation.z=2.2*q;
+  pitcher.root.position.y=.12*Math.sin(q*Math.PI);
+  displaySpecial(t,'THREE UP, THREE DOWN','삼자범퇴 · SIDE RETIRED',t>.62&&t<.95);
+ }else if(kind==='strategyBunt'||kind==='strategyFly'){
+  directorSign(t);
+  // Play a normal pitch-and-action only after the signal; don't start a second ball early.
+  const local=phase(t,.29,.99);
+  if(local>0){
+   if(kind==='strategyBunt')sacBunt(local,true,false);
+   else{sacFly(local,true,false)}
+  }
+  displaySpecial(t,'MANAGER SIGNAL',kind==='strategyBunt'?'희생번트 작전':'희생플라이 작전',t>.10&&t<.28);
+ }
+}
+
+function umpireSafe(t){
+ const q=phase(t,.62,.82);
+ umpire.armL.rotation.z=-1.75*q; umpire.armR.rotation.z=1.75*q;
+ umpire.armL.rotation.x=.25*q; umpire.armR.rotation.x=.25*q;
+ umpire.root.position.y=.04*Math.sin(q*Math.PI);
+}
+function rbiCelebrationMotion(t){
+ // The pitched ball travels along the ORIGINAL timing shared with the single:
+ // release at .27 -> ball reaches the bat at .54 -> one outgoing hit ball.
+ if(t<=CONTACT)throwMotion(t);
+ else outfieldBall(t,false);
+ swingMotion(t,true); // barrel accelerates at contact; avoid time-remapping the pitch
+ if(t>CONTACT){
+   pathRunner(phase(t,CONTACT+.015,.77),false,false);
+   animateExistingRunners(t,'hit');
+   // RBI example: runner originally on second rounds third and crosses HOME.
+   const runner=baseRunners[1],q=phase(t,CONTACT+.015,.87);
+   if(baseMask&2){
+     const segment=q<.48?0:1,part=segment===0?q/.48:(q-.48)/.52;
+     moveActor(runner,segment===0?BASE_COORDS[1]:BASE_COORDS[2],segment===0?BASE_COORDS[2]:HOME_COORD,clamp(part));
+     if(q>=1)runner.root.visible=false;
+   }
+ }
+ if(t>.77){
+   batter.root.position.set(18.2,0,-18.5);
+   batter.root.rotation.y=-1.42;
+   batter.armR.rotation.z=-1.25*phase(t,.77,.86);
+   batter.armL.rotation.z=.55*phase(t,.77,.86);
+   batter.armR.rotation.x=-.25; batter.armL.rotation.x=-.1;
+   bat.visible=false;
+ }
+ // No celebratory text or additional banner; the player's fist motion alone communicates it.
+}
+
+function bullpenEnterMotion(t){
+ manager.root.visible=true;
+ if(t<.24){
+   manager.root.position.set(lerp(-15,0,phase(t,.02,.20)),0,lerp(5,-18,phase(t,.02,.20)));
+   manager.root.rotation.y=-.45;
+ }
+ if(t<.42){
+   pitcher.root.position.set(lerp(0,13,phase(t,.18,.42)),0,lerp(-18,-3,phase(t,.18,.42)));
+   pitcher.root.rotation.y=-.8;
+ } else pitcher.root.visible=false;
+ incomingPitcher.root.visible=true;
+ incomingPitcher.root.position.set(lerp(-34,0,phase(t,.30,.88)),0,lerp(-7,-18,phase(t,.30,.88)));
+ incomingPitcher.root.rotation.y=lerp(.65,0,phase(t,.56,.88));
+ incomingPitcher.legL.rotation.x=Math.sin(t*34)*.58*(1-phase(t,.86,.93));
+ incomingPitcher.legR.rotation.x=-incomingPitcher.legL.rotation.x;
+ incomingPitcher.armL.rotation.x=-incomingPitcher.legL.rotation.x*.4;
+ incomingPitcher.armR.rotation.x=incomingPitcher.legL.rotation.x*.35;
+ displaySpecial(t,'BULLPEN CALL','새 투수가 마운드로 향합니다',t>.40&&t<.92);
+}
+function homeSafeMotion(t){
+ batter.root.visible=false; bat.visible=false;
+ const runner = baseRunners[2]; runner.root.visible=true;
+ const p=phase(t,.10,.88);
+ runner.root.position.set(lerp(-18,0,p),0,lerp(-18,0,p));
+ runner.root.rotation.y=-2.35;
+ runner.legL.rotation.x=Math.sin(t*35)*.72*(1-phase(t,.85,.94));
+ runner.legR.rotation.x=-runner.legL.rotation.x;
+ if(homeSlideSelected)homeSlidePose(runner,t,.88);
+ catcher.root.position.set(0,0,4.4); catcher.root.rotation.y=Math.PI;
+ if(t>.36&&t<.80){
+   ball.visible=true;
+   const q=phase(t,.36,.78);
+   ball.position.set(lerp(25,0,q),lerp(2.8,1.55,q),lerp(-62,2.9,q));
+ }
+ if(t>=.88){ const q=phase(t,.88,.945);umpire.armL.rotation.z=-1.75*q;umpire.armR.rotation.z=1.75*q;displaySpecial(t,'SAFE!','',t>=.88&&t<.99); }
+}
+
+function escapeMotion(t){
+ if(nbEmbeddedToken===null){throwMotion(t); swingMotion(t,false); umpireStrike(t);}
+ if(nbEmbeddedToken===null){baseRunners[1].root.visible=true; baseRunners[2].root.visible=true;}
+ if(t>.62){
+   const q=phase(t,.62,.86);
+   pitcher.armL.rotation.z=-2.2*q; pitcher.armR.rotation.z=2.0*q;
+   pitcher.root.position.y=.10*Math.sin(q*Math.PI);
+   // No standalone celebratory words: the pitcher's arm movement is the celebration.
+ }
+}
+function batterExitMotion(t){
+ if(nbEmbeddedToken===null){throwMotion(Math.min(t,.66)); swingMotion(Math.min(t,.66),false); umpireStrike(Math.min(t,.72));}
+ else {ball.visible=false;bat.visible=false;}
+ if(t>(nbEmbeddedToken!==null?.12:.60)){
+   const q=phase(t,nbEmbeddedToken!==null?.12:.60,.98);
+   batter.root.rotation.y=Math.PI+q*Math.PI*.72;
+   batter.root.position.x=lerp(-2.6,-11,q);
+   batter.root.position.z=lerp(1.7,9,q);
+   batter.legL.rotation.x=Math.sin(t*28)*.55*(1-phase(t,.94,.99));
+   batter.legR.rotation.x=-batter.legL.rotation.x;
+ }
+}
+
+// v20: Three independent animations; no new game rules or scoring probabilities.
+function homerDugoutMotion(t){
+ const live=clamp(t/.80);
+ if(live<=CONTACT)throwMotion(live);
+ else outfieldBall(live,true);
+ swingMotion(live,true);
+ if(live>CONTACT)pathRunner(phase(live,CONTACT+.015,.995),true,false);
+ // A normal homer is followed by a modest dugout welcome, not the walk-off crowd at home.
+ const greeting=phase(t,.80,.95);
+ if(t>.80){
+  batter.root.position.set(lerp(0,-8,phase(t,.82,.985)),0,lerp(0,7,phase(t,.82,.985)));
+  batter.root.rotation.y=-.7;
+  batter.armR.rotation.z=-1.6*greeting;
+  batter.armL.rotation.z=.7*greeting;
+  const partners=[incomingPlayers[0],incomingPlayers[1],incomingPlayers[2]];
+  for(let i=0;i<partners.length;i++){
+   const p=partners[i];
+    // Incoming fielders are defensive stand-ins in other scenes, but here they
+    // represent the slugger's actual dugout teammates. Match BOTH jersey and cap.
+   p.shirtMat?.color.copy(batter.shirtMat.color);
+   p.capMat?.color.copy(batter.capMat.color);
+   const q=phase(t,.80+i*.018,.95+i*.007);
+   p.root.visible=true;
+   const target=[[-7,6],[-10,7.6],[-12,9]][i];
+   p.root.position.set(lerp(-22-i*2,target[0],q),0,lerp(11+i,target[1],q));
+   p.root.rotation.y=1.4;
+   p.legL.rotation.x=Math.sin(t*57+i)*.36*(1-q);
+   p.legR.rotation.x=-p.legL.rotation.x;
+   p.armR.rotation.z=-1.7*q;
+  }
+  bat.visible=false;
+ }
+}
+// V38: distinct 3D foul paths, never used to modify game state.
+const NB_FOUL_PATHS={
+ foulReset:{x:-4.3,z:6.2,height:1.6,label:'홈 근처 파울'},
+ foulLeft:{x:-34,z:-15,height:5.8,label:'3루선 바깥쪽 파울'},
+ foulRight:{x:34,z:-15,height:5.8,label:'1루선 바깥쪽 파울'},
+ foulBack:{x:0,z:27,height:11.5,label:'포수 뒤 백스톱 파울'},
+ foulHighLeft:{x:-26,z:-8,height:22,label:'3루 방향 높은 뜬파울'},
+ foulHighRight:{x:26,z:-8,height:22,label:'1루 방향 높은 뜬파울'}
+};
+function foulRestartMotion(t){
+ const path=NB_FOUL_PATHS[selection.id]||NB_FOUL_PATHS.foulReset;
+ const flightEnd=path.height>12?.80:.75;
+ if(t<=CONTACT){throwMotion(t);swingMotion(t,true)}
+ else if(t<flightEnd){
+  // The pitch ball is the SAME ball used for contact. One continuous visible
+  // arc travels into the selected foul territory; all views share this path.
+  const q=clamp((t-CONTACT)/(flightEnd-CONTACT));
+  const arc=4*path.height*q*(1-q);
+  const groundY=.30; // high pops also land inside foul territory
+  ball.visible=true;
+  ball.position.set(lerp(contactPoint.x,path.x,q),lerp(contactPoint.y,groundY,q)+arc,lerp(contactPoint.z,path.z,q));
+  const points=[];
+  for(let j=0;j<=26;j++){
+   const r=q*j/26;
+   points.push(new THREE.Vector3(lerp(contactPoint.x,path.x,r),lerp(contactPoint.y,groundY,r)+4*path.height*r*(1-r),lerp(contactPoint.z,path.z,r)));
+  }
+  hitTrailGeometry.setFromPoints(points);hitTrail.visible=q<.97;
+  swingMotion(t,true);
+  // Nearby fielders turn to follow high pop fouls; no catches/outs are awarded.
+  if(path.height>12){for(const f of fielders){f.root.rotation.y+=.25*Math.sign(path.x)*phase(t,.58,.70)*(1-phase(t,.84,.96));}}
+ }else{
+  hitTrail.visible=false;ball.visible=false;
+  swingMotion(t,true);
+ }
+ // After the old foul ball has landed, show a DIFFERENT, clean ball being
+ // tossed to the mound; never teleport the batted ball back into live play.
+ if(t>.82){
+  const q=phase(t,.83,.96);
+  const from=new THREE.Vector3(0,1.55,6.55),to=new THREE.Vector3(0,1.7,-18);
+  ball.visible=q<1;
+  ball.position.set(lerp(from.x,to.x,q),lerp(from.y,to.y,q)+1.5*Math.sin(Math.PI*q),lerp(from.z,to.z,q));
+  umpire.armR.rotation.x=-1.05*(1-phase(t,.95,.99));
+  batter.torso.rotation.set(0,0,0);
+  batter.armR.rotation.x=-.72;batter.armL.rotation.x=-.72;
+  bat.rotation.set(-.35,0,.60);
+  pitcher.torso.rotation.set(0,0,0);pitcher.armR.rotation.x=0;pitcher.armL.rotation.x=0;
+ }
+}
+function fielderReturnMotion(t){
+ // First 75% reuses the existing fly catch with original contact/catch physics.
+ const live=clamp(t/.76);
+ fieldingMotion(live,false);
+ if(t>.76){
+  const target=FIELD_TARGETS[fieldTarget]||FIELD_TARGETS.center;
+  let chosen=fielders[0],best=Infinity;
+  for(const p of fielders){
+   const d=(p.x-target.x)**2+(p.z-target.z)**2;
+   if(d<best){best=d;chosen=p}
+  }
+  const q=phase(t,.76,.985);
+  chosen.root.position.set(lerp(target.x,chosen.x,q),0,lerp(target.z,chosen.z,q));
+  const walking=Math.sin(t*90)*.58*(1-phase(t,.965,1));
+  chosen.legL.rotation.x=walking;chosen.legR.rotation.x=-walking;
+  chosen.armL.rotation.x=-walking*.40;chosen.armR.rotation.x=walking*.40;
+  chosen.root.rotation.y=Math.atan2(chosen.x-target.x,chosen.z-target.z)*(1-phase(t,.975,1));
+  ball.visible=false;hitTrail.visible=false;bat.visible=false;
+ }
+}
+
+
+function nextBatterEntry(t){
+ batter.root.visible=false;bat.visible=false;
+ nextBatterActor.root.visible=true;
+ const q=phase(t,.06,.90);
+ const px=lerp(-22,batter.x,q),pz=lerp(11,1.7,q);
+ nextBatterActor.root.position.set(px,0,pz);
+ const angle=Math.atan2(batter.x+22,1.7-11);
+ nextBatterActor.root.rotation.y=lerp(angle,Math.PI,phase(t,.80,.97));
+ const motion=Math.sin(t*47)*.52*(1-phase(t,.84,.94));
+ nextBatterActor.legL.rotation.x=motion;nextBatterActor.legR.rotation.x=-motion;
+ nextBatterActor.armL.rotation.x=-motion*.45;nextBatterActor.armR.rotation.x=motion*.45;
+ ball.visible=false;hitTrail.visible=false;
+}
+function scoredRunnerReturn(t){
+ batter.root.visible=false;bat.visible=false;ball.visible=false;
+ scoredRunnerActor.root.visible=true;
+ const q=phase(t,.08,.95);
+ scoredRunnerActor.root.position.set(lerp(0,-15,q),0,lerp(0,10,q));
+ scoredRunnerActor.root.rotation.y=Math.atan2(-15,10);
+ const steps=Math.sin(t*42)*.42*(1-phase(t,.92,1));
+ scoredRunnerActor.legL.rotation.x=steps;scoredRunnerActor.legR.rotation.x=-steps;
+ scoredRunnerActor.armL.rotation.x=-steps*.40;scoredRunnerActor.armR.rotation.x=steps*.40;
+}
+
+function nbExtraBaseHitMotion(t,n){
+ if(t<=CONTACT)throwMotion(t);else outfieldBall(t,false);
+ swingMotion(t,true);
+ if(t<=CONTACT)return;
+ const q=phase(t,CONTACT+.012,.975);
+ const points=[[batter.x,1.7],[18,-18],[0,-36],[-18,-18]];
+ const segment=Math.min(n-1,Math.floor(q*n));const f=q>=1?1:q*n-segment;
+ moveActor(batter,points[segment],points[segment+1],f);
+ bat.visible=false;
+ for(let i=0;i<3;i++){
+   if(!(baseMask&(1<<i)))continue;
+   const p=baseRunners[i],positions=[...BASE_COORDS.slice(i),HOME_COORD];
+   const steps=Math.min(n,positions.length-1),arrival=i===2?.74:i===1?.80:.86,progress=phase(t,CONTACT+.012,arrival);
+   const idx=Math.min(steps-1,Math.floor(progress*steps));const k=progress>=1?1:progress*steps-idx;
+   moveActor(p,positions[idx],positions[idx+1],k);
+   if(i===2&&homeSlideSelected)homeSlidePose(p,t,arrival);
+   if(i+n>=3&&progress>=1)p.root.visible=i===2&&homeSlideSelected&&t<arrival+.08;
+ }
+}
+
+
+function nbMappedScene(t,id){
+ if(id==='signalBunt'||id==='signalFly'){
+  directorSign(t); ball.visible=false;bat.visible=true;
+  caption.firstChild.nodeValue=id==='signalBunt'?'감독의 희생번트 작전 사인':'감독의 희생플라이 작전 사인';
+ }else if(id==='walkoffCelebrate'){
+  ball.visible=false;bat.visible=false;
+  // The ball was already put into play in the previous scene; only celebrate now.
+  afterGame(t,true); displaySpecial(t,'WALK-OFF!','끝내기 승리',t>.60&&t<.94);
+  caption.firstChild.nodeValue='끝내기 득점 후 선수들이 홈플레이트에서 축하합니다';
+ }else if(id==='finalCelebrate'){
+  ball.visible=false;bat.visible=false;afterGame(t,false);
+  displaySpecial(t,'FINAL','경기 종료',t>.72&&t<.95);
+  caption.firstChild.nodeValue='경기 종료 · 승리팀 마운드 세리머니';
+ }else if(id==='finalTie'){
+  ball.visible=false;bat.visible=false;
+  displaySpecial(t,'TIE GAME','무승부로 경기 종료',t>.28&&t<.94);
+  caption.firstChild.nodeValue='양 팀 무승부 · 경기 종료';
+ }else if(id==='double'||id==='triple'){
+  if(t<=CONTACT)throwMotion(t);else outfieldBall(t,false);
+  swingMotion(t,true);
+  const end=id==='double'?2:3;
+  if(t>CONTACT){
+   const pts=[[batter.x,1.7],[18,-18],[0,-36],[-18,-18]];
+   const q=phase(t,CONTACT+.015,.97),u=q*end,seg=Math.min(end-1,Math.floor(u)),v=seg===end-1&&q>=1?1:u-seg;
+   moveActor(batter,pts[seg],pts[seg+1],v);
+   batter.legL.rotation.x=Math.sin(t*83)*.6*(1-phase(t,.94,.99));
+   batter.legR.rotation.x=-batter.legL.rotation.x;bat.visible=false;
+   animateExistingRunners(t,'hit');
+  }
+  caption.firstChild.nodeValue=id==='double'?'장타! 타자가 2루에 도착합니다':'장타! 타자가 3루에 도착합니다';
+ }
+}
+
+function pose(){
+ const t=clamp(elapsed/sceneDuration);
+ for(const p of [pitcher,batter,catcher,umpire,manager,ghostRunner,firstCoach,firstBaseUmpire,...baseRunners,...fielders,...incomingPlayers,incomingPitcher,incomingCatcher,incomingBatter,nextBatterActor,scoredRunnerActor])reset(p);
+ updateHands();manager.root.visible=false;ghostRunner.root.visible=false;firstCoach.root.visible=false;firstBaseUmpire.root.visible=false;rosinBag.visible=true;showBaseRunners(t);incomingPlayers.forEach(p=>p.root.visible=false);incomingPitcher.root.visible=false;incomingCatcher.root.visible=false;incomingBatter.root.visible=false;nextBatterActor.root.visible=false;scoredRunnerActor.root.visible=false;document.getElementById('inningBanner').classList.remove('show');bat.visible=true;ball.visible=false;bat.rotation.set(-.35,0,.60);batter.armR.rotation.x=-.72;batter.armL.rotation.x=-.72;batter.armR.rotation.z=-.30;batter.armL.rotation.z=.36;batTrail.visible=false;hitTrail.visible=false;if(firstBaseCatchRing)firstBaseCatchRing.visible=false;
+ document.getElementById('batFlash').classList.remove('show');document.getElementById('specialOverlay').classList.remove('show');updateOverlays(t);
+ if(selection.id.startsWith('outVar_')){
+   if(selection.id==='outVar_foulTip'){sixFFoulTipMotion(t);caption.firstChild.nodeValue=t<.54?'투구! 타자의 배트에 공이 살짝 스칩니다':t<.76?'파울팁! 포수가 미트에 공을 담습니다':'파울팁 삼진 · OUT!';}
+   else if(selection.id==='outVar_firstSolo'){sixFFirstSoloMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.76?'1루수가 땅볼을 직접 포구합니다':t<.88?'1루수 직접 1루 베이스 터치!':'3U · 타자 아웃';}
+   else if(selection.id==='outVar_firstPitcher'){sixFFirstPitcherMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.79?'1루수 포구 · 투수 1루 베이스 커버!':t<.90?'1루수에서 투수에게 송구!':'3-1 · 타자 아웃';}
+   else {sixFPitcherLinerMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 배트에 정면으로 맞습니다':t<.73?'빠른 직선타! 투수가 글러브를 뻗습니다':'투수 직선타 포구 · OUT!';}
+ }else if(selection.id==='signalBunt'||selection.id==='signalFly'){
+   ball.visible=false;bat.visible=true;
+   directorSign(.24*t);
+   caption.firstChild.nodeValue=selection.id==='signalBunt'?'감독이 희생번트 작전을 지시합니다':'감독이 희생플라이 작전을 지시합니다';
+ }else if(selection.id==='double'||selection.id==='triple'){
+   nbExtraBaseHitMotion(t,selection.id==='double'?2:3);
+   caption.firstChild.nodeValue=selection.id==='double'?'2루타! 타자가 2루에 도착합니다':'3루타! 타자가 3루에 도착합니다';
+ }else if(selection.id==='finalTie'){
+   ball.visible=false;bat.visible=false;caption.firstChild.nodeValue='무승부 경기 종료';
+ }else if(selection.id==='walkoffCelebrate'||selection.id==='finalCelebrate'){
+   ball.visible=false;bat.visible=false;
+   afterGame(t,selection.id==='walkoffCelebrate');
+   if(selection.id==='walkoffCelebrate'){
+     batter.root.position.set(0,0,0);batter.root.rotation.y=Math.PI;
+     caption.firstChild.nodeValue='끝내기 득점 · 동료들과 홈플레이트에서 축하합니다';
+   }else{
+     caption.firstChild.nodeValue='경기 종료 · 승리팀이 마운드에서 세리머니합니다';
+   }
+ }else if(['signalBunt','signalFly','walkoffCelebrate','finalCelebrate','finalTie','double','triple'].includes(selection.id)){
+  nbMappedScene(t,selection.id);
+ }else if(['walkoff','finalWin','grandSlam','threeUp','replay','strategyBunt','strategyFly'].includes(selection.id)){
+  if(selection.id==='replay')replayMotion(t);else dramaMotion(t,selection.id);
+  const commentary={walkoff:'끝내기 홈런 · 홈에 도착한 타자를 동료들이 축하합니다',finalWin:'경기 종료 · 승리팀 선수들이 마운드에 모입니다',grandSlam:'만루홈런! · 주자 3명과 타자가 차례대로 홈인합니다',threeUp:'삼자범퇴 · 세 번째 아웃 후 투수 환호',replay:'중요 장면 · 다른 카메라에서 한 번 더 재생',strategyBunt:'감독 작전 사인 → 희생번트',strategyFly:'감독 작전 사인 → 희생플라이'};
+  caption.firstChild.nodeValue=commentary[selection.id];
+ }else if(selection.id==='homerDugout'){
+  homerDugoutMotion(t);
+  caption.firstChild.nodeValue=t<.80?(t<CONTACT*.8?'투구 중 · 공이 홈플레이트로 날아옵니다':t<.65?'타격! · 홈런 타구가 외야를 넘어갑니다':'타자가 베이스를 돌아 홈으로 향합니다'):'홈을 밟은 타자가 더그아웃 동료들과 하이파이브합니다';
+ }else if(NB_FOUL_PATHS[selection.id]){
+  foulRestartMotion(t);
+  const where=NB_FOUL_PATHS[selection.id];
+  const flightEnd=where.height>12?.80:.75;
+  caption.firstChild.nodeValue=t<CONTACT?'투구 중 · 타자가 스윙을 준비합니다':t<flightEnd?'파울! · '+where.label:t<.96?'심판이 새 공을 전달하고 타자·투수가 재정비합니다':'파울 판정 유지 · 다음 투구 준비';
+ }else if(selection.id==='countWhiff'){
+  throwMotion(t);swingMotion(t,false);
+  catcher.armL.rotation.x=-.22*phase(t,.60,.72)*(1-phase(t,.88,.98));
+  caption.firstChild.nodeValue=t<CONTACT?'투수가 던진 공에 타자가 반응합니다':t<PITCH_END?'헛스윙! · 배트는 공을 맞히지 못합니다':'포수 포구 · 삼진이 아닌 일반 카운트 진행';
+ }else if(selection.id==='countTake'){
+  throwMotion(t);
+  bat.rotation.set(-.35,0,.60);batter.armR.rotation.x=-.72;batter.armL.rotation.x=-.72;
+  batter.torso.rotation.y=.08*phase(t,.33,.55)*(1-phase(t,.80,.96));
+  catcher.armL.rotation.x=-.22*phase(t,.60,.72)*(1-phase(t,.88,.98));
+  caption.firstChild.nodeValue=t<CONTACT?'타자가 배트를 내지 않고 공을 지켜봅니다':t<PITCH_END?'지켜본 투구 · 포수 미트로 공이 향합니다':'포수 포구 · 기존 숫자 카운트만 반영';
+ }else if(selection.id==='fielderReturn'){
+  fielderReturnMotion(t);
+  caption.firstChild.nodeValue=t<.76?'타격 → 뜬공 포구 · 타자 아웃':t<.985?'포구한 수비수가 원래 수비 위치로 이동합니다':'수비 포지션 복귀 완료 · 다음 타자 준비';
+ }else if(selection.id==='rbiCelebrate'){
+  rbiCelebrationMotion(t);showFirstBaseSafeCall(t);
+   // Score is calculated in updateScoreboard only after second-base runner touches home.
+  caption.firstChild.nodeValue=t<CONTACT?'득점권 상황 · 투구를 기다립니다.':t<.77?'타격! · 공이 외야로 날아갑니다':t<.88?'2루 주자가 홈으로 뛰고 타자가 1루에 도착합니다':'득점 성공 · 타자가 더그아웃을 향해 손을 듭니다';
+ }else if(selection.id==='bullpenEnter'){
+  bullpenEnterMotion(t);ball.visible=false;bat.visible=false;
+  caption.firstChild.nodeValue=t<.24?'감독이 마운드에 올라와 교체를 알립니다':t<.46?'기존 투수가 내려갑니다':t<.90?'새 투수가 불펜에서 걸어와 마운드로 향합니다':'새 투수 마운드 도착 · 투구 준비 완료';
+ }else if(selection.id==='homeSafeCall'){
+  homeSafeMotion(t);
+  // updateScoreboard accounts for home crossing at t=.88.
+  caption.firstChild.nodeValue=t<.45?'3루 주자가 홈을 향해 질주합니다':t<.66?'송구가 홈으로 향합니다 · 포수 태그 준비':t<.88?'접전 · 주자가 홈플레이트로 향합니다':'SAFE!';
+ }else if(selection.id==='escapeK'){
+  escapeMotion(t);
+  if(nbEmbeddedToken===null)document.getElementById('scoreTag').innerHTML='AWAY <b>3</b> · HOME <b>2</b><br>8회 말 · B 0 S 2 O '+(t>.78?3:2);
+  caption.firstChild.nodeValue=t<CONTACT?'2·3루 위기 상황 · 투구가 들어갑니다':t<.62?'헛스윙! · 포수가 포구합니다':t<.82?'삼진으로 이닝 종료!':'투수의 위기 탈출 세리머니';
+ }else if(selection.id==='nextBatter'){
+  nextBatterEntry(t);
+  caption.firstChild.nodeValue=t<.80?'새 타자가 더그아웃에서 타석으로 이동합니다':'다음 타자 타석 도착 · 마운드를 바라보고 준비';
+ }else if(selection.id==='scoredReturn'){
+  scoredRunnerReturn(t);
+  caption.firstChild.nodeValue=t<.60?'득점을 마친 주자가 홈플레이트를 떠납니다':'득점 주자가 더그아웃으로 복귀합니다';
+ }else if(selection.id==='batterExit'){
+  batterExitMotion(t);
+  caption.firstChild.nodeValue=nbEmbeddedToken!==null?'아웃된 타자가 더그아웃으로 복귀합니다':(t<CONTACT?'투구 진행 중':t<.60?'삼진 · 타자가 잠시 아쉬워합니다':t<.90?'아웃된 타자가 더그아웃으로 돌아갑니다':'다음 타자 준비');
+ }else if(['buntSuccess','buntFoul','buntStrikeout'].includes(selection.id)){
+  const good=selection.id==='buntSuccess';sacBunt(t,good,selection.id==='buntStrikeout');
+  caption.firstChild.nodeValue=t<CONTACT?'투구 · 타자가 배트를 번트 자세로 댑니다':good?(t<.73?'번트 땅볼 · 수비수 포구':t<.85?'1루 송구! · 주자는 다음 베이스로 진루':'타자 1루에서 아웃 · 주자 진루 성공'):t<.81?'번트 파울 · 주자 움직임 없음':selection.id==='buntStrikeout'?'번트 파울 삼진 · 타자만 아웃':'번트 파울 · 스트라이크 +1, 아직 아웃 없음';
+ }else if(['sacFlySuccess','sacFlyOut','sacFlyCount'].includes(selection.id)){
+  const good=selection.id==='sacFlySuccess',countOnly=selection.id==='sacFlyCount';sacFly(t,good,countOnly);
+  caption.firstChild.nodeValue=t<CONTACT?'투수가 던진 공을 기다립니다':countOnly?'파울 타구 · 일반 S·B·F 카운트로 계속':t<.735?'뜬공이 외야로 날아갑니다':good?(t<.795?'외야 포구! · 3루 주자 태그업 준비':t<.895?'3루 주자 홈 쇄도 · 외야수 홈 송구!':'SAFE! 주자가 송구보다 먼저 홈 도착 · 타자 아웃'): '뜬공 포구 · 최선행 주자의 원래 베이스로 송구, 주자는 귀루하고 타자만 아웃';
+ }else if(selection.id==='umpireCall'){
+   throwMotion(t);swingMotion(t,false);umpireStrike(t);
+   caption.firstChild.nodeValue=t<PITCH_END?'투수가 던진 공이 포수 쪽으로 이동':'스트라이크 쓰리! · 심판 삼진 선언';
+ }else if(selection.id==='coach'){
+   coachRoutine(t);if(t>CONTACT)animateExistingRunners(t,'hit');caption.firstChild.nodeValue=t<.76?'안타 타구가 외야로 향합니다':t<.885?'타자가 1루에 안전하게 도착합니다':'1루 코치가 파울 지역에서 다가와 축하합니다';
+ }else if(selection.id==='fielding'||selection.id==='lineout'){
+   fieldingMotion(t,selection.id==='lineout');caption.firstChild.nodeValue=t<CONTACT?'공이 타자에게 도착하는 중':(selection.id==='lineout'?'직선타':'뜬공')+' · '+FIELD_TARGETS[fieldTarget].label+'에서 포구하여 아웃';
+ }else if(selection.id==='groundout'||selection.id==='firstBaseCatch'){
+   groundOutMotion(t);
+   caption.firstChild.nodeValue=t<CONTACT?'투수가 공을 던지고 타자가 타격합니다':t<.735?'땅볼! · 내야수가 공을 잡습니다':t<.842?'1루 송구 · 1루수가 글러브를 뻗습니다':t<.87?'1루수 포구 완료! · 타자보다 먼저 도착':'타자 1루 아웃'+(firstBaseCall?' · 1루심 아웃 콜':'');
+ }else if(selection.id==='slideFirst'){
+   slideFirstMotion(t);
+   caption.firstChild.nodeValue=t<CONTACT?'투구가 들어오고 타자는 공을 기다립니다':t<.735?'뜬공이 외야로 날아갑니다':t<.80?'뜬공 포구 · 3루 주자가 홈으로 출발':t<.895?'3루 주자가 홈에 슬라이딩합니다':'3루 주자 홈플레이트 터치 · 득점';
+ }else if(selection.id==='firstBaseSafe'){
+   firstBaseSafeMotion(t);
+   if(t>.865&&t<.985)displaySpecial(t,'SAFE!','1루 접전 세이프',true); else displaySpecial(t,'','',false);
+   caption.firstChild.nodeValue=t<CONTACT?'투수가 공을 던지고 타자가 타격합니다':t<.735?'땅볼! · 내야수가 공을 잡습니다':t<.848?'1루 송구 · 타자가 끝까지 뛰어갑니다':t<.885?'접전! · 타자가 반 발 먼저 1루를 밟습니다':'1루심 세이프 콜';
+ }else if(selection.id==='error'){
+   errorMotion(t);if(t>CONTACT)animateExistingRunners(t,'hit');caption.firstChild.nodeValue=t<CONTACT?'공이 타자에게 접근 중':t<.695?'땅볼! · 내야수가 공을 향해 움직입니다':t<.755?'땅볼 포구 · 1루로 송구 준비':t<.88?'1루 악송구! · 공이 베이스 옆으로 빗나갑니다':'실책성 출루 · 1루 도착 (득점과 주자 위치는 기존 4B 그대로)';
+ }else if(selection.id==='pinchHit'){
+   substitution(t,false);ball.visible=false;caption.firstChild.nodeValue=t<.78?'PINCH HITTER · 더그아웃에서 대타 등장':'대타 타석 도착 · 준비 완료';
+ }else if(selection.id==='pinchRun'){
+   substitution(t,true);ball.visible=false;caption.firstChild.nodeValue=t<.45?'PINCH RUNNER · '+(pinchBaseIndex+1)+'루 기존 주자 퇴장':t<.89?'새 대주자가 '+(pinchBaseIndex+1)+'루로 입장':'새 대주자가 '+(pinchBaseIndex+1)+'루를 인계받았습니다';
+ }else if(selection.id==='inning'){
+   if(integration.active)baseRunners.forEach(p=>p.root.visible=false);
+   inningChange(t);ball.visible=false;caption.firstChild.nodeValue=nbEmbeddedSameTeams?(t<.54?'공격 이닝 종료 · 수비진과 타자 재정비':'다음 이닝 · 같은 공격팀과 수비팀 준비 완료'):(t<.54?'3아웃 · 양 팀 더그아웃으로 이동':'공수교대 · 새 수비진과 타자 입장');
+ }else if(selection.id==='manager'){
+  manager.root.visible=true;manager.root.position.set(lerp(-15,0,phase(t,.04,.76)),Math.abs(Math.sin(t*48))*.085,lerp(5,-18,phase(t,.04,.76)));
+  manager.root.rotation.y=-.45;manager.legL.rotation.x=Math.sin(t*40)*.5*(1-phase(t,.7,.78));manager.legR.rotation.x=-manager.legL.rotation.x;
+  manager.armL.rotation.x=-manager.legL.rotation.x*.5;manager.armR.rotation.x=manager.legL.rotation.x*.5;
+  caption.firstChild.nodeValue=t<.7?'감독이 마운드로 향합니다.':'투수교체 · 숫자 변경 여부는 비공개';
+ }else if(['walk','catcherVisit','hbpDemo','ibbDemo'].includes(selection.id)){
+  // The pitch and batter's advance always use the original 5.9-second timing.
+  // A mound visit starts ONLY AFTER the runner has completely reached first.
+  const walkT=clamp(elapsed/5900);
+  throwMotion(walkT);
+  if(walkT>PITCH_END){pathRunner(phase(walkT,.66,.975),false,true);animateExistingRunners(walkT,'force');}
+  if(catcherVisit && elapsed>=5900)visitMound(clamp((elapsed-5900)/(sceneDuration-5900)));
+  const situation=walkType==='HBP'?'몸에 맞는 공':walkType==='IBB'?'고의사구':'볼넷';
+  updateOverlays(walkT);
+  caption.firstChild.nodeValue=walkT<CONTACT?'공이 날아오는 중 · 아직 출루하지 않습니다.':walkT<PITCH_END?'투구 완료 대기 · 아직 주루하지 않습니다.':walkT<.975?situation+' · 타자가 1루로 이동 중':catcherVisit?(elapsed<5900?'타자 1루 도착 · 포수가 기다립니다.':situation+' · 포수가 1루 출루 후 마운드 방문 및 복귀'):situation+' · 타자 1루 도착';
+ }else if(selection.id==='single'){
+  if(errorSelected)errorMotion(t);else if(coachSelected)coachRoutine(t);else{if(t<=CONTACT)throwMotion(t);else outfieldBall(t,false);swingMotion(t,true);if(t>CONTACT)pathRunner(phase(t,CONTACT+.015,.97),false,false)}
+  if(t>CONTACT)animateExistingRunners(t,'hit');
+  showFirstBaseSafeCall(t);
+  caption.firstChild.nodeValue=errorSelected?(t<CONTACT?'공이 타자에게 접근합니다':t<.75?'땅볼 처리 · 내야수의 1루 송구 준비':t<.89?'1루 악송구!':'실책성 출루 · 1루 도착'):t<CONTACT?'투구가 홈플레이트로 접근합니다.':t<.76?'타격! '+(hitDirection>0?'1·2루 사이':'2·3루 사이')+'로 향하는 타구 궤적':coachSelected&&t>.885?'1루 도착 후 코치와 인사': '1루타 · 타자 1루 질주';
+ }else if(selection.id==='homerun'){
+  if(t<=CONTACT)throwMotion(t);else outfieldBall(t,true)
+  swingMotion(t,true);
+  // Home-run hitter starts the circuit on contact; no second or delayed ball flight.
+  if(t>CONTACT)animateExistingRunners(t,'home');
+  if(t>CONTACT)pathRunner(phase(t,CONTACT+.015,.995),true,false);
+  caption.firstChild.nodeValue=t<CONTACT?'투구가 도착할 때까지 기다립니다.':t<.78?'배트에 맞은 공이 한 번만 높고 길게 날아갑니다.':'HOME RUN! · 천천히 베이스 일주';
+ }else if(selection.id==='whiff'){
+  throwMotion(t);swingMotion(t,false);umpireStrike(t);
+  if(t>.74){batter.torso.rotation.x=.15*phase(t,.74,.88);batter.root.rotation.y=Math.PI+phase(t,.82,.98)*Math.PI*.68;batter.root.position.z+=2*phase(t,.84,.99)}
+  caption.firstChild.nodeValue=t<CONTACT?'투구 중 · 타자는 공을 기다립니다.':'헛스윙 삼진 · 포구 완료';
+ }else if(selection.id==='looking'){
+  throwMotion(t);umpireStrike(t);bat.rotation.z=-.45;batter.armR.rotation.z=-.2;batter.armL.rotation.z=.2;
+  if(t>.69){batter.root.rotation.y=Math.PI+.32*phase(t,.69,.85);batter.torso.rotation.y=-.25*phase(t,.73,.9)}
+  caption.firstChild.nodeValue=t<CONTACT?'루킹 · 배트를 내지 않습니다.':'루킹 삼진 · 다양한 ABS 보더라인 연출';
+ }else{
+  throwMotion(t);swingMotion(t,false);
+  caption.firstChild.nodeValue=t<CONTACT?'투구가 홈플레이트에 접근합니다.':t<.8?'공이 도착한 순간 시원한 풀스윙':'풀스윙 종료 · 다음 장면 준비';
+ }
+ if(['buntSuccess','buntStrikeout','sacFlySuccess','sacFlyOut','slideFirst'].includes(selection.id)){
+   const oneOut=(selection.id==='buntSuccess'?t>.86:selection.id==='buntStrikeout'?t>.84:['sacFlySuccess','sacFlyOut','slideFirst'].includes(selection.id)?t>.735:false);
+   const run=['sacFlySuccess','slideFirst'].includes(selection.id)&&t>.895;
+   document.getElementById('scoreTag').innerHTML='AWAY <b>'+(run?1:0)+'</b> · HOME <b>0</b><br>1회 초 · B 0 S 0 O '+(oneOut?1:0);
+ }
+ // The broadcast caption is released only after catch. For batted-ball plays, use actual bat contact instead,
+ // because a ball hit into play never reaches the catcher.
+ const catchesBall=['pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall'].includes(selection.id)&&walkType!=='HBP';
+ if(catchesBall&&t<PITCH_END+.012)caption.firstChild.nodeValue='투구 진행 중 · 포수의 포구를 기다립니다';
+ updateScoreboard(t);applySceneCamera(t);if(integration.active)renderIntegratedState(t);bar.style.width=(t*100).toFixed(1)+'%';if(t>=1&&playing){playing=false;status.textContent='장면 종료 · 다시 재생 가능';document.getElementById('pause').textContent='▶ 계속'}
+}
+function applySceneCamera(t){
+ const v=document.getElementById('cameraMode').value;
+ if(v!=='broadcast'){setCamera();return} // user's manual camera choice is honored
+ const bx=0,by=6.6,bz=21,tx=0,ty=1,tz=-27;
+ let mix=0,cx=bx,cy=by,cz=bz,lx=tx,ly=ty,lz=tz;
+ if(selection.id==='outVar_firstSolo'||selection.id==='outVar_firstPitcher'){
+  mix=phase(t,.58,.70)*(1-phase(t,.955,1));
+  cx=30;cy=7;cz=-2;lx=18;ly=1.35;lz=-17.5;
+ }else if(selection.id==='outVar_pitcherLiner'){
+  mix=phase(t,.54,.63)*(1-phase(t,.94,1));
+  cx=-9;cy=6;cz=-7;lx=0;ly=1.9;lz=-18;
+ }else if(selection.id==='outVar_foulTip'){
+  mix=phase(t,.57,.67)*(1-phase(t,.91,.98));
+  cx=-7;cy=3.7;cz=10.8;lx=0;ly=1.5;lz=3.5;
+ }else if(selection.id==='firstBaseCatch'||selection.id==='firstBaseSafe'){
+  // The full pitch/contact stays in the original broadcast view. Cut toward first only during the throw.
+  mix=phase(t,.735,.790)*(1-phase(t,.960,1));
+  cx=30;cy=6.9;cz=-4;lx=17.7;ly=1.4;lz=-18;
+ }else if(NB_FOUL_PATHS[selection.id]){
+  // V39: keep the ball in frame rather than simply cutting to a fixed foul-line camera.
+  // The same trajectory is used by foulRestartMotion(), and the new-ball return is NOT tracked.
+  const path=NB_FOUL_PATHS[selection.id],end=path.height>12?.80:.75;
+  const q=clamp((t-CONTACT)/(end-CONTACT));
+  const x=lerp(contactPoint.x,path.x,q),z=lerp(contactPoint.z,path.z,q);
+  const y=lerp(contactPoint.y,.30,q)+4*path.height*q*(1-q);
+  const side=path.x===0?0:(path.x<0?-1:1);
+  const rise=path.height>12?11.5:7.8;
+  // Follow through launch, apex and landing; release the shot before the fresh ball arrives.
+  mix=phase(t,CONTACT+.015,CONTACT+.085)*(1-phase(t,end+.025,.90));
+  cx=x*.58+side*4;cy=Math.max(7,y+rise);cz=z+22;
+  lx=x;ly=Math.max(.5,y);lz=z;
+ }else if(selection.id==='replay'){
+  mix=phase(t,.67,.72)*(1-phase(t,.98,1));cx=-21;cy=10;cz=13;lx=0;ly=1;lz=-24;
+ }else if(selection.id==='strategyBunt'||selection.id==='strategyFly'){
+  mix=phase(t,0,.06)*(1-phase(t,.24,.30));cx=-18;cy=5;cz=12;lx=-14;ly=1;lz=5;
+ }else if(selection.id==='walkoff'||selection.id==='grandSlam'){
+  mix=phase(t,.62,.74)*(1-phase(t,.90,.99));cx=0;cy=36;cz=26;lx=0;ly=0;lz=-25;
+ }else if(selection.id==='fielderReturn'){
+  mix=phase(t,CONTACT*.76+.02,CONTACT*.76+.12)*(1-phase(t,.75,.84));
+  cx=0;cy=59;cz=35;lx=0;ly=0;lz=-26;
+ }else if(selection.id==='fielding'||selection.id==='sacFlySuccess'||selection.id==='sacFlyOut'||selection.id==='slideFirst'){
+  // Keep the original broadcast through the pitch and contact, THEN rise to top-down.
+  mix=phase(t,CONTACT+.02,CONTACT+.13);
+  cx=0;cy=59;cz=35;lx=0;ly=0;lz=-26;
+ }else if(selection.id==='coach'||(selection.id==='single'&&coachSelected&&!errorSelected)||selection.id==='rbiCelebrate'){
+  // Show a temporary 1B-coach close angle only as the player and coach greet.
+  mix=phase(t,.82,.88)*(1-phase(t,.975,1));
+  cx=22;cy=7;cz=-2;lx=18;ly=1.5;lz=-18;
+ }else if(selection.id==='homeSafeCall'){
+  mix=phase(t,.58,.70)*(1-phase(t,.93,1));
+  cx=6;cy=5;cz=14;lx=0;ly=1.1;lz=1;
+ }else if(selection.id==='bullpenEnter'){
+  mix=phase(t,.36,.55)*(1-phase(t,.92,1));
+  cx=-17;cy=7;cz=6;lx=0;ly=1.6;lz=-18;
+ }else if(selection.id==='escapeK'){
+  mix=phase(t,.70,.82)*(1-phase(t,.96,1));
+  cx=-10;cy=5;cz=-10;lx=0;ly=1.6;lz=-18;
+ }else if(selection.id==='batterExit'){
+  mix=phase(t,.64,.78)*(1-phase(t,.98,1));
+  cx=-11;cy=5;cz=10;lx=-9;ly=1.4;lz=8;
+ }
+ camera.position.set(lerp(bx,cx,mix),lerp(by,cy,mix),lerp(bz,cz,mix));
+ camera.lookAt(lerp(tx,lx,mix),lerp(ty,ly,mix),lerp(tz,lz,mix));
+}
+function setCamera(){const v=document.getElementById('cameraMode').value;if(v==='broadcast'){camera.position.set(0,6.6,21);camera.lookAt(0,1,-27)}else if(v==='side'){camera.position.set(-21,10,13);camera.lookAt(0,1,-24)}else if(v==='top'){camera.position.set(0,59,35);camera.lookAt(0,0,-26)}else if(v==='batterClose'){camera.position.set(-10,4.1,9);camera.lookAt(0,1.3,1.4)}else{camera.position.set(-8,4.2,-10);camera.lookAt(0,1.5,-18)}}
+makeStadium();updateHands();setCamera();select('pitch');
+
+// Embedded-game interface: this lab is VISUAL ONLY. It never writes to the game's score/outs/bases.
+let nbEmbeddedToken=null,nbEmbeddedComplete=false,nbEmbeddedLastProgress=-1,nbEmbeddedSameTeams=false;
+// V39: timeline-aligned SFX cues. Parent page owns AudioContext so user sound consent is respected.
+const NB39_FOUL_SCENES=new Set(Object.keys(NB_FOUL_PATHS));
+const NB39_CONTACT_SCENES=new Set(['outVar_foulTip','outVar_firstSolo','outVar_firstPitcher','outVar_pitcherLiner',
+ 'single','double','triple','homerun','homerDugout','grandSlam','walkoff',
+ 'fielding','lineout','groundout','firstBaseCatch','firstBaseSafe','fielderReturn',
+ 'sacFlySuccess','sacFlyOut','slideFirst','strategyFly','strategyBunt',
+ 'buntSuccess','buntFoul','buntStrikeout','replay','rbiCelebrate',
+ ...NB39_FOUL_SCENES
+]);
+const NB39_MITT_SCENES=new Set(['outVar_foulTip','pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall','escapeK']);
+let nb39SoundSent=new Set();
+function nb39CueOnce(label,type,pan=0){
+ if(nbEmbeddedToken===null||nb39SoundSent.has(label))return;
+ nb39SoundSent.add(label);
+ window.parent.postMessage({source:'NBLab',type:'SFX',token:nbEmbeddedToken,kind:type,pan},'*');
+}
+function nb39SceneSounds(t){
+ if(!playing||nbEmbeddedToken===null)return;
+ const id=selection.id;
+ if(NB39_CONTACT_SCENES.has(id)&&t>=CONTACT)nb39CueOnce('contact','batCrack',NB39_FOUL_SCENES.has(id)?Math.sign(NB_FOUL_PATHS[id].x)*.35:0);
+ if(NB39_MITT_SCENES.has(id)&&t>=PITCH_END+.015)nb39CueOnce('catch','mittCatch');
+ if(NB39_FOUL_SCENES.has(id)&&t>=.65){
+  const path=NB_FOUL_PATHS[id];
+  nb39CueOnce('foulReaction',path.height>12?'crowdFoulHigh':'crowdFoul',Math.sign(path.x)*.65);
+ }
+}
+function nbSetTeamColors(half,uniforms){
+ const parse=(index,part,fallback)=>{const h=uniforms?.[index]?.[part];return typeof h==='string'&&/^#[a-f\d]{6}$/i.test(h)?Number.parseInt(h.slice(1),16):fallback};
+ const palettes=[{primary:parse(0,'primary',0x4087c6),accent:parse(0,'accent',0x173e65)},
+                 {primary:parse(1,'primary',0xe6b765),accent:parse(1,'accent',0x7d4d1a)}];
+ const off=palettes[half],def=palettes[1-half];
+ const color=(p,c)=>{if(p?.shirtMat)p.shirtMat.color.setHex(c.primary);if(p?.capMat)p.capMat.color.setHex(c.accent)};
+ [batter,ghostRunner,nextBatterActor,scoredRunnerActor,firstCoach,manager,...baseRunners].forEach(p=>color(p,off));
+ [pitcher,catcher,...fielders,incomingPitcher,incomingCatcher,...incomingPlayers].forEach(p=>color(p,def));
+ color(incomingBatter,off);
+ return palettes;
+}
+function nbPlayEmbedded(d){
+ if(!d||typeof d.scene!=='string'||!SCENES.some(s=>s.id===d.scene)){window.parent.postMessage({source:'NBLab',type:'ERROR',token:d?.token,message:'지원하지 않는 장면: '+String(d?.scene)},'*');return;}
+ const choose=document.getElementById('baseSituation');
+ choose.value=String(Number(d.baseMask)&7);
+ document.getElementById('scoreSituation').value=d.defenseLead?'narrow':'normal';
+ document.getElementById('fieldLocation').value=d.fieldLocation||'random';
+ select(d.scene);integration.active=false;integration.auto=false;updateIntegrationControls();
+ nbEmbeddedSameTeams=d.sameTeams===true;
+ if(['batterExit','escapeK','foulReset','foulLeft','foulRight','foulBack','foulHighLeft','foulHighRight','countWhiff','countTake'].includes(d.scene)){choose.value=String(Number(d.baseMask)&7);baseMask=Number(d.baseMask)&7;}
+ if(d.scene==='walk'){
+   // The v27 game records BB; show NO cosmetic HBP/IBB without an actual corresponding game result.
+   walkType='BB'; document.getElementById('walkOutcome').textContent='이번 판정: 볼넷';
+ }
+ if(d.scene==='single'||d.scene==='rbiCelebrate'){
+   // Do not visually present a recorded HIT as an error, which has no official E in v27.
+   errorSelected=false;
+ }
+ const nbPalettes=nbSetTeamColors(Number(d.half)===1?1:0,d.teamColors);
+ if(d.scene==='inning'){
+   const sameTeams=d.sameTeams===true;
+   const currentOffense=Number(d.half)===1?1:0;
+   const nextDefense=nbPalettes[sameTeams?1-currentOffense:currentOffense];
+   const nextBatter=nbPalettes[sameTeams?currentOffense:1-currentOffense];
+   const recolor=(p,c)=>{p?.shirtMat?.color.setHex(c.primary);p?.capMat?.color.setHex(c.accent)};
+   [...incomingPlayers,incomingPitcher,incomingCatcher].forEach(p=>recolor(p,nextDefense));
+   recolor(incomingBatter,nextBatter);
+ }
+ if(d.scene==='pinchRun'&&Number.isInteger(d.selectedBase)){
+   const choice=document.getElementById('pinchBase');
+   choice.value=String(d.selectedBase+1);
+   pinchBaseIndex=syncPinchBaseOptions(String(d.selectedBase+1));
+ }
+ if(d.forceHomeSlide===true)homeSlideSelected=true;
+ if(d.forceHomeSlide===false)homeSlideSelected=false;
+ if(d.forceSafe===true)firstSafeSelected=true;
+ if(d.forceSafe===false)firstSafeSelected=false;
+ if(d.forceCoach===true){coachSelected=true;firstSafeSelected=false;sceneDuration=Math.max(sceneDuration,7500)}
+ if(d.forceCoach===false)coachSelected=false;
+ if(d.camera==='side'){document.getElementById('cameraMode').value='side';setCamera()}
+
+ nbEmbeddedToken=d.token;nbEmbeddedComplete=false;nbEmbeddedLastProgress=-1;nb39SoundSent.clear();
+ elapsed=0;playing=true;
+ speed=1;
+ last=0; // Ignore any long frame gap from the previous scene or iframe tab suspension.
+ pose();
+ window.parent.postMessage({source:'NBLab',type:'START',token:nbEmbeddedToken,scene:selection.id,duration:sceneDuration/speed},'*');
+}
+window.addEventListener('message',event=>{
+ if(event.source!==window.parent||!event.data||event.data.source!=='NBGame')return;
+ if(event.data.type==='PLAY')nbPlayEmbedded(event.data);
+ else if(event.data.type==='SPEED'){speed=1;}
+ else if(event.data.type==='CANCEL'){nbEmbeddedToken=null;playing=false;nbEmbeddedComplete=true;nb39SoundSent.clear()}
+});
+// Inform the owner only once 3D and the scene list are fully initialized.
+// v37: report GPU context failure and allow the parent to reload this iframe alone.
+renderer.domElement.addEventListener('webglcontextlost',event=>{
+ event.preventDefault();
+ const token=nbEmbeddedToken;nbEmbeddedToken=null;playing=false;
+ window.parent.postMessage({source:'NBLab',type:'ERROR',token,message:'WebGL 그래픽 컨텍스트 손실'},'*');
+});
+// A heartbeat also detects iframe crashes without a DOM error event in the parent.
+if(window.parent!==window)setInterval(()=>{
+ window.parent.postMessage({source:'NBLab',type:'HEARTBEAT'},'*');
+},1500);
+window.parent.postMessage({source:'NBLab',type:'READY'},'*');
+
+let resizeObserver=new ResizeObserver(()=>{const w=Math.max(1,V.clientWidth),h=Math.max(1,V.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});resizeObserver.observe(V);
+function tick(ts){requestAnimationFrame(tick);if(last&&playing)elapsed=Math.min(sceneDuration,elapsed+Math.min(60,ts-last)*speed);last=ts;if(nbEmbeddedToken!==null){try{pose();nb39SceneSounds(clamp(elapsed/sceneDuration));renderer.render(scene,camera)}catch(err){window.parent.postMessage({source:'NBLab',type:'ERROR',token:nbEmbeddedToken,message:'3D 렌더링 오류: '+String(err?.message||err)},'*');nbEmbeddedToken=null;playing=false;return}}{
+   const t=clamp(elapsed/sceneDuration);
+   if(t-nbEmbeddedLastProgress>=.015||t>=1){
+     nbEmbeddedLastProgress=t;
+     window.parent.postMessage({source:'NBLab',type:'PROGRESS',token:nbEmbeddedToken,progress:t},'*');
+   }
+   if(t>=1&&!nbEmbeddedComplete){
+     nbEmbeddedComplete=true;playing=false;
+     window.parent.postMessage({source:'NBLab',type:'DONE',token:nbEmbeddedToken},'*');
+   }
+ }
+}requestAnimationFrame(tick);
+})();
+</script></body></html>

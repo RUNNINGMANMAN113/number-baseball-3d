@@ -1,0 +1,2797 @@
+{
+  "KT": {
+    "name": "KT 위즈",
+    "code": "KT",
+    "short": "KT",
+    "color": "#141414",
+    "accent": "#ea252b",
+    "batters": [
+      {
+        "name": "최원준",
+        "number": "",
+        "games": 140
+      },
+      {
+        "name": "힐리어드",
+        "number": "",
+        "games": 142
+      },
+      {
+        "name": "김현수",
+        "number": "",
+        "games": 142
+      },
+      {
+        "name": "허경민",
+        "number": "",
+        "games": 109
+      },
+      {
+        "name": "김상수",
+        "number": "",
+        "games": 131
+      },
+      {
+        "name": "김민혁",
+        "number": "",
+        "games": 117
+      },
+      {
+        "name": "안현민",
+        "number": "",
+        "games": 94
+      },
+      {
+        "name": "한승택",
+        "number": "",
+        "games": 128
+      },
+      {
+        "name": "류현인",
+        "number": "",
+        "games": 90
+      },
+      {
+        "name": "권동진",
+        "number": "",
+        "games": 127
+      },
+      {
+        "name": "오윤석",
+        "number": "",
+        "games": 113
+      },
+      {
+        "name": "장성우",
+        "number": "",
+        "games": 76
+      },
+      {
+        "name": "이강민",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "장준원",
+        "number": "",
+        "games": 100
+      },
+      {
+        "name": "배정대",
+        "number": "",
+        "games": 95
+      },
+      {
+        "name": "이정훈",
+        "number": "",
+        "games": 81
+      },
+      {
+        "name": "조대현",
+        "number": "",
+        "games": 57
+      },
+      {
+        "name": "장진혁",
+        "number": "",
+        "games": 70
+      },
+      {
+        "name": "유준규",
+        "number": "",
+        "games": 54
+      },
+      {
+        "name": "강현우",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "이정범",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "이재원",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "문상철",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "강민성",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "손민석",
+        "number": "",
+        "games": 14
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "고영표",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "소형준",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "오원석",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "로건",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "사우어",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "스기모토",
+        "number": "",
+        "games": 73
+      },
+      {
+        "name": "대니엘",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "배제성",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "박영현",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "보쉴리",
+        "number": "",
+        "games": 11
+      },
+      {
+        "name": "손동현",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "전용주",
+        "number": "",
+        "games": 63
+      },
+      {
+        "name": "한승혁",
+        "number": "",
+        "games": 35
+      },
+      {
+        "name": "김민수",
+        "number": "",
+        "games": 39
+      },
+      {
+        "name": "김정운",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "주권",
+        "number": "",
+        "games": 50
+      },
+      {
+        "name": "우규민",
+        "number": "",
+        "games": 51
+      },
+      {
+        "name": "이상동",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "문용익",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "한차현",
+        "number": "",
+        "games": 3
+      },
+      {
+        "name": "이정현",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "한승주",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "장민호",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "SS": {
+    "name": "삼성 라이온즈",
+    "code": "SS",
+    "short": "삼성",
+    "color": "#184ea2",
+    "accent": "#c8cdd5",
+    "batters": [
+      {
+        "name": "디아즈",
+        "number": "",
+        "games": 144
+      },
+      {
+        "name": "구자욱",
+        "number": "",
+        "games": 114
+      },
+      {
+        "name": "최형우",
+        "number": "",
+        "games": 137
+      },
+      {
+        "name": "김지찬",
+        "number": "",
+        "games": 134
+      },
+      {
+        "name": "류지혁",
+        "number": "",
+        "games": 139
+      },
+      {
+        "name": "김성윤",
+        "number": "",
+        "games": 125
+      },
+      {
+        "name": "박승규",
+        "number": "",
+        "games": 106
+      },
+      {
+        "name": "강민호",
+        "number": "",
+        "games": 111
+      },
+      {
+        "name": "전병우",
+        "number": "",
+        "games": 118
+      },
+      {
+        "name": "이재현",
+        "number": "",
+        "games": 85
+      },
+      {
+        "name": "김헌곤",
+        "number": "",
+        "games": 85
+      },
+      {
+        "name": "김영웅",
+        "number": "",
+        "games": 57
+      },
+      {
+        "name": "김도환",
+        "number": "",
+        "games": 66
+      },
+      {
+        "name": "양우현",
+        "number": "",
+        "games": 79
+      },
+      {
+        "name": "김상준",
+        "number": "",
+        "games": 62
+      },
+      {
+        "name": "심재훈",
+        "number": "",
+        "games": 41
+      },
+      {
+        "name": "김현준",
+        "number": "",
+        "games": 38
+      },
+      {
+        "name": "박계범",
+        "number": "",
+        "games": 52
+      },
+      {
+        "name": "박세혁",
+        "number": "",
+        "games": 39
+      },
+      {
+        "name": "이창용",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "김재상",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "김태훈",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "장승현",
+        "number": "",
+        "games": 71
+      },
+      {
+        "name": "이진용",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "이해승",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "김재혁",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "윤정빈",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "이성규",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "홍현빈",
+        "number": "",
+        "games": 11
+      },
+      {
+        "name": "함수호",
+        "number": "",
+        "games": 11
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "최원태",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "원태인",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "후라도",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "오러클린",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "페덱",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "양창섭",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "김재윤",
+        "number": "",
+        "games": 64
+      },
+      {
+        "name": "이승민",
+        "number": "",
+        "games": 74
+      },
+      {
+        "name": "장찬희",
+        "number": "",
+        "games": 41
+      },
+      {
+        "name": "이승현(2002년생)",
+        "number": "",
+        "games": 20
+      },
+      {
+        "name": "배찬승",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "이승현(1991년생)",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "임기영",
+        "number": "",
+        "games": 43
+      },
+      {
+        "name": "보스",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "미야지",
+        "number": "",
+        "games": 36
+      },
+      {
+        "name": "김태훈",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "최지광",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "백정현",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "이재희",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "사토시",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "김백산",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "이재익",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "김무신",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "HT": {
+    "name": "KIA 타이거즈",
+    "code": "HT",
+    "short": "KIA",
+    "color": "#bc152b",
+    "accent": "#171717",
+    "batters": [
+      {
+        "name": "나성범",
+        "number": "",
+        "games": 140
+      },
+      {
+        "name": "김도영",
+        "number": "",
+        "games": 135
+      },
+      {
+        "name": "박재현",
+        "number": "",
+        "games": 132
+      },
+      {
+        "name": "김호령",
+        "number": "",
+        "games": 141
+      },
+      {
+        "name": "카스트로",
+        "number": "",
+        "games": 99
+      },
+      {
+        "name": "김선빈",
+        "number": "",
+        "games": 137
+      },
+      {
+        "name": "한준수",
+        "number": "",
+        "games": 115
+      },
+      {
+        "name": "하주석",
+        "number": "",
+        "games": 71
+      },
+      {
+        "name": "김태군",
+        "number": "",
+        "games": 88
+      },
+      {
+        "name": "김규성",
+        "number": "",
+        "games": 105
+      },
+      {
+        "name": "박정우",
+        "number": "",
+        "games": 110
+      },
+      {
+        "name": "박민",
+        "number": "",
+        "games": 91
+      },
+      {
+        "name": "아데를린",
+        "number": "",
+        "games": 32
+      },
+      {
+        "name": "박상준",
+        "number": "",
+        "games": 45
+      },
+      {
+        "name": "데일",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "변우혁",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "오선우",
+        "number": "",
+        "games": 32
+      },
+      {
+        "name": "이호연",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "김민규",
+        "number": "",
+        "games": 74
+      },
+      {
+        "name": "정현창",
+        "number": "",
+        "games": 123
+      },
+      {
+        "name": "윤도현",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "한승연",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "주효상",
+        "number": "",
+        "games": 20
+      },
+      {
+        "name": "고종욱",
+        "number": "",
+        "games": 27
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "올러",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "네일",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "양현종",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "이의리",
+        "number": "",
+        "games": 39
+      },
+      {
+        "name": "황동하",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "시라카와",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "김태형",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "정해영",
+        "number": "",
+        "games": 55
+      },
+      {
+        "name": "조상우",
+        "number": "",
+        "games": 72
+      },
+      {
+        "name": "성영탁",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "전상현",
+        "number": "",
+        "games": 46
+      },
+      {
+        "name": "곽도규",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "김범수",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "최지민",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "한재승",
+        "number": "",
+        "games": 45
+      },
+      {
+        "name": "이태양",
+        "number": "",
+        "games": 33
+      },
+      {
+        "name": "홍민규",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "김건국",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "장재혁",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "김시훈",
+        "number": "",
+        "games": 3
+      },
+      {
+        "name": "홍건희",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "지현",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "LG": {
+    "name": "LG 트윈스",
+    "code": "LG",
+    "short": "LG",
+    "color": "#bf2031",
+    "accent": "#222222",
+    "batters": [
+      {
+        "name": "오스틴",
+        "number": "",
+        "games": 144
+      },
+      {
+        "name": "박해민",
+        "number": "",
+        "games": 144
+      },
+      {
+        "name": "송찬의",
+        "number": "",
+        "games": 118
+      },
+      {
+        "name": "신민재",
+        "number": "",
+        "games": 138
+      },
+      {
+        "name": "홍창기",
+        "number": "",
+        "games": 128
+      },
+      {
+        "name": "오지환",
+        "number": "",
+        "games": 126
+      },
+      {
+        "name": "구본혁",
+        "number": "",
+        "games": 135
+      },
+      {
+        "name": "문보경",
+        "number": "",
+        "games": 108
+      },
+      {
+        "name": "문정빈",
+        "number": "",
+        "games": 91
+      },
+      {
+        "name": "박동원",
+        "number": "",
+        "games": 128
+      },
+      {
+        "name": "천성호",
+        "number": "",
+        "games": 97
+      },
+      {
+        "name": "문성주",
+        "number": "",
+        "games": 76
+      },
+      {
+        "name": "이재원",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "이주헌",
+        "number": "",
+        "games": 76
+      },
+      {
+        "name": "이영빈",
+        "number": "",
+        "games": 70
+      },
+      {
+        "name": "최원영",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "손용준",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "김현종",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "강민균",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "김민수",
+        "number": "",
+        "games": 4
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "톨허스트",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "임찬규",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "웰스",
+        "number": "",
+        "games": 19
+      },
+      {
+        "name": "송승기",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "박시원",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "카라스코",
+        "number": "",
+        "games": 11
+      },
+      {
+        "name": "손주영",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "우강훈",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "장현식",
+        "number": "",
+        "games": 32
+      },
+      {
+        "name": "김진수",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "김영우",
+        "number": "",
+        "games": 51
+      },
+      {
+        "name": "김진성",
+        "number": "",
+        "games": 53
+      },
+      {
+        "name": "치리노스",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "고우석",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "이정용",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "이우찬",
+        "number": "",
+        "games": 32
+      },
+      {
+        "name": "배재준",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "케네디",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "함덕주",
+        "number": "",
+        "games": 37
+      },
+      {
+        "name": "김윤식",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "리오스",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "유영찬",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "김강률",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "김유영",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "백승현",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "조원태",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "이상영",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "성동현",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "양우진",
+        "number": "",
+        "games": 4
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "OB": {
+    "name": "두산 베어스",
+    "code": "OB",
+    "short": "두산",
+    "color": "#172750",
+    "accent": "#dbb67c",
+    "batters": [
+      {
+        "name": "박찬호",
+        "number": "",
+        "games": 143
+      },
+      {
+        "name": "김민석",
+        "number": "",
+        "games": 135
+      },
+      {
+        "name": "정수빈",
+        "number": "",
+        "games": 142
+      },
+      {
+        "name": "안재석",
+        "number": "",
+        "games": 110
+      },
+      {
+        "name": "박준순",
+        "number": "",
+        "games": 98
+      },
+      {
+        "name": "양의지",
+        "number": "",
+        "games": 135
+      },
+      {
+        "name": "카메론",
+        "number": "",
+        "games": 75
+      },
+      {
+        "name": "박지훈",
+        "number": "",
+        "games": 114
+      },
+      {
+        "name": "강승호",
+        "number": "",
+        "games": 107
+      },
+      {
+        "name": "조수행",
+        "number": "",
+        "games": 119
+      },
+      {
+        "name": "세베리노",
+        "number": "",
+        "games": 46
+      },
+      {
+        "name": "손아섭",
+        "number": "",
+        "games": 54
+      },
+      {
+        "name": "윤준호",
+        "number": "",
+        "games": 112
+      },
+      {
+        "name": "오명진",
+        "number": "",
+        "games": 77
+      },
+      {
+        "name": "양석환",
+        "number": "",
+        "games": 54
+      },
+      {
+        "name": "김대한",
+        "number": "",
+        "games": 49
+      },
+      {
+        "name": "이유찬",
+        "number": "",
+        "games": 104
+      },
+      {
+        "name": "류승민",
+        "number": "",
+        "games": 43
+      },
+      {
+        "name": "김기연",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "김인태",
+        "number": "",
+        "games": 46
+      },
+      {
+        "name": "임종성",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "홍성호",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "류현준",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "전다민",
+        "number": "",
+        "games": 16
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "곽빈",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "벤자민",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "잭로그",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "최민석",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "이영하",
+        "number": "",
+        "games": 61
+      },
+      {
+        "name": "최승용",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "김택연",
+        "number": "",
+        "games": 55
+      },
+      {
+        "name": "김정우",
+        "number": "",
+        "games": 61
+      },
+      {
+        "name": "타카다",
+        "number": "",
+        "games": 39
+      },
+      {
+        "name": "박치국",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "이용찬",
+        "number": "",
+        "games": 49
+      },
+      {
+        "name": "이병헌",
+        "number": "",
+        "games": 58
+      },
+      {
+        "name": "양재훈",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "박신지",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "최준호",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "윤태호",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "타무라",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "김동주",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "최지강",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "최주형",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "김한중",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "김영현",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "박정수",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "서준오",
+        "number": "",
+        "games": 4
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "SK": {
+    "name": "SSG 랜더스",
+    "code": "SK",
+    "short": "SSG",
+    "color": "#c9212b",
+    "accent": "#f6e7bd",
+    "batters": [
+      {
+        "name": "박성한",
+        "number": "",
+        "games": 144
+      },
+      {
+        "name": "최지훈",
+        "number": "",
+        "games": 141
+      },
+      {
+        "name": "정준재",
+        "number": "",
+        "games": 129
+      },
+      {
+        "name": "에레디아",
+        "number": "",
+        "games": 115
+      },
+      {
+        "name": "김재환",
+        "number": "",
+        "games": 131
+      },
+      {
+        "name": "조형우",
+        "number": "",
+        "games": 107
+      },
+      {
+        "name": "최정",
+        "number": "",
+        "games": 71
+      },
+      {
+        "name": "전의산",
+        "number": "",
+        "games": 86
+      },
+      {
+        "name": "오태곤",
+        "number": "",
+        "games": 106
+      },
+      {
+        "name": "고명준",
+        "number": "",
+        "games": 57
+      },
+      {
+        "name": "안상현",
+        "number": "",
+        "games": 94
+      },
+      {
+        "name": "한유섬",
+        "number": "",
+        "games": 71
+      },
+      {
+        "name": "이지영",
+        "number": "",
+        "games": 62
+      },
+      {
+        "name": "김성욱",
+        "number": "",
+        "games": 63
+      },
+      {
+        "name": "임근우",
+        "number": "",
+        "games": 45
+      },
+      {
+        "name": "홍대인",
+        "number": "",
+        "games": 84
+      },
+      {
+        "name": "채현우",
+        "number": "",
+        "games": 80
+      },
+      {
+        "name": "마드리스",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "최준우",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "김정민",
+        "number": "",
+        "games": 38
+      },
+      {
+        "name": "안재연",
+        "number": "",
+        "games": 19
+      },
+      {
+        "name": "김민식",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "류효승",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "신범수",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "최윤석",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "오시후",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "김민준",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "석정우",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "김건우",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "아빌라",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "김민준",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "타케다",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "최민준",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "김민",
+        "number": "",
+        "games": 71
+      },
+      {
+        "name": "조병현",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "베니지아노",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "전영준",
+        "number": "",
+        "games": 63
+      },
+      {
+        "name": "이로운",
+        "number": "",
+        "games": 50
+      },
+      {
+        "name": "박시후",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "해치",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "이건욱",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "노경은",
+        "number": "",
+        "games": 52
+      },
+      {
+        "name": "문승원",
+        "number": "",
+        "games": 62
+      },
+      {
+        "name": "화이트",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "한두솔",
+        "number": "",
+        "games": 36
+      },
+      {
+        "name": "긴지로",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "서진용",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "백승건",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "장지훈",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "이준기",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "최용준",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "이기순",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "김도현",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "정동윤",
+        "number": "",
+        "games": 3
+      },
+      {
+        "name": "신상연",
+        "number": "",
+        "games": 4
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "LT": {
+    "name": "롯데 자이언츠",
+    "code": "LT",
+    "short": "롯데",
+    "color": "#073e82",
+    "accent": "#e12529",
+    "batters": [
+      {
+        "name": "레이예스",
+        "number": "",
+        "games": 144
+      },
+      {
+        "name": "황성빈",
+        "number": "",
+        "games": 121
+      },
+      {
+        "name": "전민재",
+        "number": "",
+        "games": 140
+      },
+      {
+        "name": "고승민",
+        "number": "",
+        "games": 112
+      },
+      {
+        "name": "한동희",
+        "number": "",
+        "games": 109
+      },
+      {
+        "name": "나승엽",
+        "number": "",
+        "games": 105
+      },
+      {
+        "name": "손성빈",
+        "number": "",
+        "games": 129
+      },
+      {
+        "name": "장두성",
+        "number": "",
+        "games": 102
+      },
+      {
+        "name": "윤동희",
+        "number": "",
+        "games": 84
+      },
+      {
+        "name": "전준우",
+        "number": "",
+        "games": 74
+      },
+      {
+        "name": "한태양",
+        "number": "",
+        "games": 80
+      },
+      {
+        "name": "노진혁",
+        "number": "",
+        "games": 89
+      },
+      {
+        "name": "손호영",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "박승욱",
+        "number": "",
+        "games": 107
+      },
+      {
+        "name": "유강남",
+        "number": "",
+        "games": 58
+      },
+      {
+        "name": "조세진",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "박건우",
+        "number": "",
+        "games": 36
+      },
+      {
+        "name": "박찬형",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "김세민",
+        "number": "",
+        "games": 73
+      },
+      {
+        "name": "김동현",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "김동혁",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "이호준",
+        "number": "",
+        "games": 57
+      },
+      {
+        "name": "박재엽",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "김민성",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "신윤후",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "정대선",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "최항",
+        "number": "",
+        "games": 4
+      },
+      {
+        "name": "정보근",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "조민영",
+        "number": "",
+        "games": 5
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "로드리게스",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "비슬리",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "나균안",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "박세웅",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "김진욱",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "박정민",
+        "number": "",
+        "games": 63
+      },
+      {
+        "name": "최준용",
+        "number": "",
+        "games": 61
+      },
+      {
+        "name": "김원중",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "이민석",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "현도훈",
+        "number": "",
+        "games": 53
+      },
+      {
+        "name": "이이무라",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "정철원",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "이영재",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "김한결",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "이진하",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "쿄야마",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "김태균",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "김강현",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "박준우",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "최이준",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "홍민기",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "구승민",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "김기준",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "정현수",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "이준서",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "박세진",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "이승헌",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "윤성빈",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "김창훈",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "NC": {
+    "name": "NC 다이노스",
+    "code": "NC",
+    "short": "NC",
+    "color": "#315288",
+    "accent": "#c2a57d",
+    "batters": [
+      {
+        "name": "박민우",
+        "number": "",
+        "games": 138
+      },
+      {
+        "name": "김주원",
+        "number": "",
+        "games": 131
+      },
+      {
+        "name": "박건우",
+        "number": "",
+        "games": 129
+      },
+      {
+        "name": "이우성",
+        "number": "",
+        "games": 123
+      },
+      {
+        "name": "김형준",
+        "number": "",
+        "games": 130
+      },
+      {
+        "name": "천재환",
+        "number": "",
+        "games": 111
+      },
+      {
+        "name": "김휘집",
+        "number": "",
+        "games": 90
+      },
+      {
+        "name": "블레인",
+        "number": "",
+        "games": 66
+      },
+      {
+        "name": "최정원",
+        "number": "",
+        "games": 120
+      },
+      {
+        "name": "권희동",
+        "number": "",
+        "games": 100
+      },
+      {
+        "name": "안중열",
+        "number": "",
+        "games": 85
+      },
+      {
+        "name": "한석현",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "서호철",
+        "number": "",
+        "games": 61
+      },
+      {
+        "name": "박시원",
+        "number": "",
+        "games": 70
+      },
+      {
+        "name": "김한별",
+        "number": "",
+        "games": 96
+      },
+      {
+        "name": "신재인",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "오태양",
+        "number": "",
+        "games": 48
+      },
+      {
+        "name": "고준휘",
+        "number": "",
+        "games": 37
+      },
+      {
+        "name": "오장한",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "도태훈",
+        "number": "",
+        "games": 77
+      },
+      {
+        "name": "한재환",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "오영수",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "홍종표",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "윤준혁",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "김정호",
+        "number": "",
+        "games": 9
+      },
+      {
+        "name": "허윤",
+        "number": "",
+        "games": 18
+      },
+      {
+        "name": "이희성",
+        "number": "",
+        "games": 5
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "라일리",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "구창모",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "토다",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "테일러",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "임지민",
+        "number": "",
+        "games": 49
+      },
+      {
+        "name": "신영우",
+        "number": "",
+        "games": 42
+      },
+      {
+        "name": "배재환",
+        "number": "",
+        "games": 60
+      },
+      {
+        "name": "전사민",
+        "number": "",
+        "games": 69
+      },
+      {
+        "name": "손주환",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "김진호",
+        "number": "",
+        "games": 58
+      },
+      {
+        "name": "김태경",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "송명기",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "이준혁",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "류진욱",
+        "number": "",
+        "games": 40
+      },
+      {
+        "name": "버하겐",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "클레빈저",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "김영규",
+        "number": "",
+        "games": 28
+      },
+      {
+        "name": "김준원",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "이용준",
+        "number": "",
+        "games": 32
+      },
+      {
+        "name": "신민혁",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "원종해",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "임정호",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "김태훈",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "이재학",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "하준영",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "최우석",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "최요한",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "최성영",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "목지훈",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "박지한",
+        "number": "",
+        "games": 3
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "HH": {
+    "name": "한화 이글스",
+    "code": "HH",
+    "short": "한화",
+    "color": "#ff6600",
+    "accent": "#1a1a1a",
+    "batters": [
+      {
+        "name": "문현빈",
+        "number": "",
+        "games": 132
+      },
+      {
+        "name": "강백호",
+        "number": "",
+        "games": 131
+      },
+      {
+        "name": "노시환",
+        "number": "",
+        "games": 127
+      },
+      {
+        "name": "페라자",
+        "number": "",
+        "games": 132
+      },
+      {
+        "name": "허인서",
+        "number": "",
+        "games": 130
+      },
+      {
+        "name": "심우준",
+        "number": "",
+        "games": 128
+      },
+      {
+        "name": "김태연",
+        "number": "",
+        "games": 128
+      },
+      {
+        "name": "이도윤",
+        "number": "",
+        "games": 117
+      },
+      {
+        "name": "최인호",
+        "number": "",
+        "games": 79
+      },
+      {
+        "name": "이원석",
+        "number": "",
+        "games": 97
+      },
+      {
+        "name": "채은성",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "오재원",
+        "number": "",
+        "games": 76
+      },
+      {
+        "name": "박정현",
+        "number": "",
+        "games": 79
+      },
+      {
+        "name": "한지윤",
+        "number": "",
+        "games": 41
+      },
+      {
+        "name": "황영묵",
+        "number": "",
+        "games": 72
+      },
+      {
+        "name": "이진영",
+        "number": "",
+        "games": 51
+      },
+      {
+        "name": "유민",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "최재훈",
+        "number": "",
+        "games": 55
+      },
+      {
+        "name": "장규현",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "정은원",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "권광민",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "유로결",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "최유빈",
+        "number": "",
+        "games": 25
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "류현진",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "왕옌청",
+        "number": "",
+        "games": 26
+      },
+      {
+        "name": "화이트",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "황준서",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "박준영(2003년생)",
+        "number": "",
+        "games": 37
+      },
+      {
+        "name": "조동욱",
+        "number": "",
+        "games": 75
+      },
+      {
+        "name": "정우주",
+        "number": "",
+        "games": 45
+      },
+      {
+        "name": "박상원",
+        "number": "",
+        "games": 56
+      },
+      {
+        "name": "에르난데스",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "이상규",
+        "number": "",
+        "games": 54
+      },
+      {
+        "name": "박준영(2002년생)",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "장유호",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "이민우",
+        "number": "",
+        "games": 59
+      },
+      {
+        "name": "짐머맨",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "김종수",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "김서현",
+        "number": "",
+        "games": 30
+      },
+      {
+        "name": "쿠싱",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "강재민",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "이형범",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "강건우",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "문동주",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "윤산흠",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "권민규",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "주현상",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "원종혁",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "김도빈",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "이교훈",
+        "number": "",
+        "games": 3
+      },
+      {
+        "name": "박재규",
+        "number": "",
+        "games": 9
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  },
+  "WO": {
+    "name": "키움 히어로즈",
+    "code": "WO",
+    "short": "키움",
+    "color": "#761c42",
+    "accent": "#e6d19a",
+    "batters": [
+      {
+        "name": "데이비슨",
+        "number": "",
+        "games": 124
+      },
+      {
+        "name": "서건창",
+        "number": "",
+        "games": 99
+      },
+      {
+        "name": "안치홍",
+        "number": "",
+        "games": 117
+      },
+      {
+        "name": "김건희",
+        "number": "",
+        "games": 122
+      },
+      {
+        "name": "추재현",
+        "number": "",
+        "games": 79
+      },
+      {
+        "name": "히우라",
+        "number": "",
+        "games": 72
+      },
+      {
+        "name": "박찬혁",
+        "number": "",
+        "games": 100
+      },
+      {
+        "name": "김웅빈",
+        "number": "",
+        "games": 100
+      },
+      {
+        "name": "권혁빈",
+        "number": "",
+        "games": 107
+      },
+      {
+        "name": "임병욱",
+        "number": "",
+        "games": 83
+      },
+      {
+        "name": "최주환",
+        "number": "",
+        "games": 93
+      },
+      {
+        "name": "이형종",
+        "number": "",
+        "games": 68
+      },
+      {
+        "name": "박주홍",
+        "number": "",
+        "games": 65
+      },
+      {
+        "name": "브룩스",
+        "number": "",
+        "games": 41
+      },
+      {
+        "name": "여동욱",
+        "number": "",
+        "games": 76
+      },
+      {
+        "name": "이주형",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "어준서",
+        "number": "",
+        "games": 38
+      },
+      {
+        "name": "김동헌",
+        "number": "",
+        "games": 43
+      },
+      {
+        "name": "임지열",
+        "number": "",
+        "games": 31
+      },
+      {
+        "name": "오선진",
+        "number": "",
+        "games": 61
+      },
+      {
+        "name": "염승원",
+        "number": "",
+        "games": 19
+      },
+      {
+        "name": "김재현",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "김지석",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "박수종",
+        "number": "",
+        "games": 44
+      },
+      {
+        "name": "송지후",
+        "number": "",
+        "games": 13
+      },
+      {
+        "name": "양현종",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "원성준",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "최재영",
+        "number": "",
+        "games": 41
+      },
+      {
+        "name": "박한결",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "전태현",
+        "number": "",
+        "games": 10
+      },
+      {
+        "name": "박성빈",
+        "number": "",
+        "games": 17
+      },
+      {
+        "name": "박채울",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "주성원",
+        "number": "",
+        "games": 11
+      },
+      {
+        "name": "김태진",
+        "number": "",
+        "games": 14
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "알칸타라",
+        "number": "",
+        "games": 25
+      },
+      {
+        "name": "안우진",
+        "number": "",
+        "games": 23
+      },
+      {
+        "name": "하영민",
+        "number": "",
+        "games": 27
+      },
+      {
+        "name": "박준현",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "배동현",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "유토",
+        "number": "",
+        "games": 59
+      },
+      {
+        "name": "박정훈",
+        "number": "",
+        "games": 42
+      },
+      {
+        "name": "전준표",
+        "number": "",
+        "games": 21
+      },
+      {
+        "name": "원종현",
+        "number": "",
+        "games": 53
+      },
+      {
+        "name": "로젠버그",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "박지성",
+        "number": "",
+        "games": 42
+      },
+      {
+        "name": "조영건",
+        "number": "",
+        "games": 47
+      },
+      {
+        "name": "박진형",
+        "number": "",
+        "games": 36
+      },
+      {
+        "name": "김성진",
+        "number": "",
+        "games": 34
+      },
+      {
+        "name": "김윤하",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "오석주",
+        "number": "",
+        "games": 14
+      },
+      {
+        "name": "윤석원",
+        "number": "",
+        "games": 22
+      },
+      {
+        "name": "와일스",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "김서준",
+        "number": "",
+        "games": 16
+      },
+      {
+        "name": "정다훈",
+        "number": "",
+        "games": 29
+      },
+      {
+        "name": "김선기",
+        "number": "",
+        "games": 24
+      },
+      {
+        "name": "정현우",
+        "number": "",
+        "games": 15
+      },
+      {
+        "name": "김성민",
+        "number": "",
+        "games": 12
+      },
+      {
+        "name": "이강준",
+        "number": "",
+        "games": 11
+      },
+      {
+        "name": "이준우",
+        "number": "",
+        "games": 8
+      },
+      {
+        "name": "김재웅",
+        "number": "",
+        "games": 19
+      },
+      {
+        "name": "임진묵",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "김연주",
+        "number": "",
+        "games": 3
+      },
+      {
+        "name": "정세영",
+        "number": "",
+        "games": 6
+      },
+      {
+        "name": "김동규",
+        "number": "",
+        "games": 5
+      },
+      {
+        "name": "최현우",
+        "number": "",
+        "games": 7
+      },
+      {
+        "name": "박윤성",
+        "number": "",
+        "games": 6
+      }
+    ],
+    "snapshot": "2026 정규시즌 1군 3경기 이상 누적기록 대조본 · 전 경기 공식 기록 전수검증 미완료",
+    "source": "2026 정규시즌 누적 경기 기록 대조표 (일부 사이트 안타/탈삼진 순위 누락 가능)",
+    "verified": false
+  }
+}
