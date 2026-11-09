@@ -1,0 +1,8 @@
+index.html: inline JS syntax PASS
+ai.html: inline JS syntax PASS
+attack.html: inline JS syntax PASS
+animation_engine.html: inline JS syntax PASS
+index.html: gameplay PASS (6F no-out, 3F, K/foul-tip, runners, KBO color, isolated save)
+ai.html: gameplay PASS (6F no-out, 3F, K/foul-tip, runners, KBO color, isolated save)
+attack.html: gameplay PASS (6F no-out, 3F, K/foul-tip, runners, KBO color, isolated save)
+animation_engine.html: out variants, 3D runner retention PASS

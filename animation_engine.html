@@ -45,10 +45,10 @@ body.nblab-embedded #specialOverlay{pointer-events:none}
 <script>
 (()=>{'use strict';
 const SCENES=[
- {id:'sixF_foulTip',title:'6F ① 포수 파울팁 삼진',sub:'배트 스침 → 포수 미트 포구 → 삼진',tag:'6F · FOUL TIP STRIKEOUT',duration:6900,desc:'포수 파울팁 포구 · 삼진 · 주자 없음 · 1아웃. 6F 발생 결과를 파울팁으로 연출.'},
- {id:'sixF_firstSolo',title:'6F ② 1루수 직접 아웃',sub:'1루 땅볼 → 직접 잡고 베이스 터치',tag:'6F · FIRST BASE UNASSISTED',duration:7400,desc:'1루수가 1루 방향 땅볼을 포구하고 직접 베이스를 밟아 아웃 처리(3U).'},
- {id:'sixF_firstPitcher',title:'6F ③ 1루수→투수 3-1 아웃',sub:'1루수 땅볼 포구 → 투수 베이스 커버',tag:'6F · 3–1 GROUND OUT',duration:7900,desc:'1루수가 땅볼을 포구해 1루를 커버하는 투수에게 송구하고 타자가 아웃(3-1).'},
- {id:'sixF_pitcherLiner',title:'6F ④ 투수 직선타 아웃',sub:'강한 투수 앞 라인드라이브 → 직접 포구',tag:'6F · LINE OUT TO PITCHER',duration:6800,desc:'타자의 빠른 직선타를 투수가 마운드에서 직접 포구하는 라인드라이브 아웃(1).'},
+ {id:'outVar_foulTip',title:'기존 삼진 ① 포수 파울팁 포구',sub:'배트 스침 → 포수 미트 포구 → 삼진',tag:'FOUL TIP · STRIKEOUT',duration:6900,desc:'기존 삼진이 확정됐을 때만 선택되는 포수 파울팁 포구 연출. 새로운 아웃을 만들지 않습니다.'},
+ {id:'outVar_firstSolo',title:'기존 아웃 ② 1루수 직접 처리',sub:'1루 땅볼 → 직접 잡고 베이스 터치',tag:'FIRST BASE · 3U',duration:7400,desc:'1루수가 1루 방향 땅볼을 포구하고 직접 베이스를 밟아 아웃 처리(3U).'},
+ {id:'outVar_firstPitcher',title:'기존 아웃 ③ 투수 1루 커버',sub:'1루수 땅볼 포구 → 투수 베이스 커버',tag:'FIRST BASE · 3–1 OUT',duration:7900,desc:'1루수가 땅볼을 포구해 1루를 커버하는 투수에게 송구하고 타자가 아웃(3-1).'},
+ {id:'outVar_pitcherLiner',title:'기존 아웃 ④ 투수 직선타 포구',sub:'강한 투수 앞 라인드라이브 → 직접 포구',tag:'PITCHER · LINE OUT',duration:6800,desc:'타자의 빠른 직선타를 투수가 마운드에서 직접 포구하는 라인드라이브 아웃(1).'},
 
  {id:'walkoff',title:'① 끝내기 승리 세리머니',sub:'끝내기 홈런 → 홈 도착 → 동료들 축하',tag:'WALK-OFF WIN',duration:15900,desc:'끝내기 홈런: 공이 한 번 높게 날아가고 주자와 타자가 홈인한 뒤, 홈플레이트 주변에 동료들이 모여 축하해.'},
  {id:'finalWin',title:'② 일반 경기 종료',sub:'마지막 아웃 → 승리팀 마운드 집결',tag:'FINAL · WIN',duration:7800,desc:'마지막 아웃을 잡은 뒤 승리팀 수비수가 마운드로 모여 하이파이브해. 끝내기 축하와 구분해.'},
@@ -162,7 +162,7 @@ function select(id){
  baseMask=Number(document.getElementById('baseSituation').value)||0;
  if(id==='pinchRun'&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
  pinchBaseIndex=syncPinchBaseOptions();
- if((['groundout','firstBaseCatch'].includes(id)||id.startsWith('sixF_'))&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
+ if((['groundout','firstBaseCatch'].includes(id)||(id.startsWith('outVar_')&&id!=='outVar_foulTip'))&&baseMask!==0){document.getElementById('baseSituation').value='0';baseMask=0;}
  if(['buntSuccess','buntFoul','buntStrikeout','strategyBunt'].includes(id)&&baseMask===0){document.getElementById('baseSituation').value='1';baseMask=1;}
  if(['grandSlam','walkoff'].includes(id)){document.getElementById('baseSituation').value='7';baseMask=7;}
  if(['threeUp','finalWin','replay','homerDugout','fielderReturn'].includes(id)){document.getElementById('baseSituation').value='0';baseMask=0;}
@@ -343,7 +343,7 @@ const mat=(color,roughness=.85)=>new THREE.MeshStandardMaterial({color,roughness
 const GRASS=mat(0x43ad68),DIRT=mat(0xaa724e),WHITE=mat(0xf5f0e0),SKIN=mat(0xd9a37a),PANTS=mat(0xf0eee6),SHOES=mat(0x17283b),BALL=mat(0xffffff,.22);
 const group=(p=scene)=>{const g=new THREE.Group();p.add(g);return g};
 function polygon(pts,c,y){let coords=[];for(let i=1;i<pts.length-1;i++)for(const xy of [pts[0],pts[i],pts[i+1]])coords.push(xy[0],y,xy[1]);const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(coords,3));geo.computeVertexNormals();const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:c,side:THREE.DoubleSide}));scene.add(m)}
-function createPlayer(x,z,shirt,scale=1){const root=group();root.position.set(x,0,z);root.scale.setScalar(scale);const torso=group(root),shirtMat=mat(shirt);cube(torso,shirtMat,.42,.57,.24,0,1.15,0);sph(torso,SKIN,.18,0,1.62,0);cube(torso,shirtMat,.43,.10,.3,0,1.77,0);const armL=group(torso),armR=group(torso),legL=group(root),legR=group(root);armL.position.set(-.29,1.35,0);armR.position.set(.29,1.35,0);legL.position.set(-.13,.77,0);legR.position.set(.13,.77,0);cube(armL,shirtMat,.15,.48,.16,-.03,-.22,0);cube(armR,shirtMat,.15,.48,.16,.03,-.22,0);cube(legL,PANTS,.17,.58,.17,0,-.27,0);cube(legR,PANTS,.17,.58,.17,0,-.27,0);cube(legL,SHOES,.21,.12,.3,0,-.54,.08);cube(legR,SHOES,.21,.12,.3,0,-.54,.08);return {root,torso,armL,armR,legL,legR,x,z,shirt,shirtMat}}
+function createPlayer(x,z,shirt,scale=1){const root=group();root.position.set(x,0,z);root.scale.setScalar(scale);const torso=group(root),shirtMat=mat(shirt),capMat=mat(shirt);cube(torso,shirtMat,.42,.57,.24,0,1.15,0);cube(torso,capMat,.34,.045,.25,0,1.39,.016);sph(torso,SKIN,.18,0,1.62,0);cube(torso,capMat,.43,.10,.3,0,1.77,0);const armL=group(torso),armR=group(torso),legL=group(root),legR=group(root);armL.position.set(-.29,1.35,0);armR.position.set(.29,1.35,0);legL.position.set(-.13,.77,0);legR.position.set(.13,.77,0);cube(armL,shirtMat,.15,.48,.16,-.03,-.22,0);cube(armR,shirtMat,.15,.48,.16,.03,-.22,0);cube(legL,PANTS,.17,.58,.17,0,-.27,0);cube(legR,PANTS,.17,.58,.17,0,-.27,0);cube(legL,SHOES,.21,.12,.3,0,-.54,.08);cube(legR,SHOES,.21,.12,.3,0,-.54,.08);return {root,torso,armL,armR,legL,legR,x,z,shirt,shirtMat,capMat}}
 function makeStadium(){const plane=mesh(new THREE.PlaneGeometry(220,220),GRASS,scene,0,-.045,-30);plane.rotation.x=-Math.PI/2;polygon([[0,5],[23,-18],[0,-41],[-23,-18]],0xb78057,.005);polygon([[0,-3.2],[14.7,-18],[0,-32.8],[-14.7,-18]],0x4fbc71,.02);for(const [x,z] of [[0,0],[18,-18],[0,-36],[-18,-18]])cube(scene,WHITE,1.35,.16,1.35,x,.13,z).rotation.y=Math.PI/4;mesh(new THREE.CylinderGeometry(3.2,3.2,.22,24),DIRT,scene,0,.08,-18);
 for(let i=0;i<46;i++){const angle=Math.PI*(.08+i/45*.84),x=86*Math.cos(angle),z=-86*Math.sin(angle);const f=cube(scene,mat(0x2878a3),4,5,.8,x,2.5,z);f.rotation.y=angle-Math.PI/2;for(let tier=0;tier<6;tier++){let r=92+tier*3.5,px=r*Math.cos(angle),pz=-r*Math.sin(angle),color=[0x60a9db,0x7fc4eb,0xf4c76e,0xf3eee4,0x4497cc][(i*3+tier)%5],seat=cube(scene,mat(color),4,1.5,2.4,px,3+tier*1.45,pz);seat.rotation.y=angle-Math.PI/2}}
 for(let x of [-70,70]){cube(scene,mat(0x7a9aa5),.6,23,.6,x,11,-65);const light=cube(scene,mat(0xfff3cc,.2),13,1.5,1,x,23,-65);light.material.emissive=new THREE.Color(0xe0c785);light.material.emissiveIntensity=1.3}
@@ -595,7 +595,7 @@ function showBaseRunners(t){
  }
 }
 
-// FULL COUNT · 6F VARIANTS PREVIEW (visual-only; base empty). ------------------
+// FULL COUNT · OUT VARIANTS PREVIEW (visual-only; base empty). ------------------
 function sixFRunner(t){
   if(t<=.61)return;
   const q=phase(t,.61,.97), dest=[17.5,-17.3];
@@ -607,14 +607,14 @@ function sixFRunner(t){
   if(t>.9){batter.root.position.x=lerp(17.5,20.5,phase(t,.90,1))}
 }
 function sixFRecordOut(t,at=.88){
-  const first=selection.id!=='sixF_foulTip'&&selection.id!=='sixF_pitcherLiner';
+  const first=selection.id!=='outVar_foulTip'&&selection.id!=='outVar_pitcherLiner';
   const q=phase(t,at+.02,at+.09);
   if(first&&t>at){
     firstBaseUmpire.root.visible=true;
     firstBaseUmpire.armR.rotation.x=-1.65*q;
     firstBaseUmpire.armR.rotation.z=1.05*q;
   }
-  if(t>at+.03){displaySpecial(t,'OUT!','6F · '+(selection.id==='sixF_foulTip'?'FOUL TIP K':selection.id==='sixF_firstSolo'?'3U':selection.id==='sixF_firstPitcher'?'3–1':'PITCHER LINE OUT'),t<.98)}
+  if(t>at+.03){displaySpecial(t,'OUT!','OUT · '+(selection.id==='outVar_foulTip'?'FOUL TIP K':selection.id==='outVar_firstSolo'?'3U':selection.id==='outVar_firstPitcher'?'3–1':'PITCHER LINE OUT'),t<.98)}
 }
 function sixFFoulTipMotion(t){
   throwMotion(t);swingMotion(t,t>.52);
@@ -1073,7 +1073,7 @@ function updateScoreboard(t){
  if(selection.id==='strategyFly'&&t>=.94)runs=1;
  if(selection.id==='buntSuccess')outs=t>=.85?1:0;
  if(['groundout','firstBaseCatch'].includes(selection.id))outs=t>=.842?1:0;
- if(selection.id.startsWith('sixF_'))outs=t>=(selection.id==='sixF_foulTip'?.76:selection.id==='sixF_pitcherLiner'?.73:.88)?1:0;
+ if(selection.id.startsWith('outVar_'))outs=t>=(selection.id==='outVar_foulTip'?.76:selection.id==='outVar_pitcherLiner'?.73:.88)?1:0;
  if(selection.id==='firstBaseSafe')outs=0;
  if(selection.id==='buntStrikeout')outs=t>=.83?1:0;
  const score=document.getElementById('scoreTag');
@@ -1117,6 +1117,7 @@ function cheerMotion(p,t,baseX,baseZ,arrive=.78,side=0){
 function afterGame(t,walkoff){
  const teammates=[...incomingPlayers, incomingPitcher, incomingCatcher];
  if(walkoff){
+  for(const p of teammates){p.shirtMat?.color.copy(batter.shirtMat.color);p.capMat?.color.copy(batter.capMat.color)}
   // Hide the losing defense before the winning team's home-plate celebration.
   if(t>=.61){fielders.forEach(p=>p.root.visible=false);pitcher.root.visible=false;catcher.root.visible=false;}
   for(let i=0;i<teammates.length;i++){
@@ -1307,6 +1308,10 @@ function homerDugoutMotion(t){
   const partners=[incomingPlayers[0],incomingPlayers[1],incomingPlayers[2]];
   for(let i=0;i<partners.length;i++){
    const p=partners[i];
+    // Incoming fielders are defensive stand-ins in other scenes, but here they
+    // represent the slugger's actual dugout teammates. Match BOTH jersey and cap.
+   p.shirtMat?.color.copy(batter.shirtMat.color);
+   p.capMat?.color.copy(batter.capMat.color);
    const q=phase(t,.80+i*.018,.95+i*.007);
    p.root.visible=true;
    const target=[[-7,6],[-10,7.6],[-12,9]][i];
@@ -1472,10 +1477,10 @@ function pose(){
  for(const p of [pitcher,batter,catcher,umpire,manager,ghostRunner,firstCoach,firstBaseUmpire,...baseRunners,...fielders,...incomingPlayers,incomingPitcher,incomingCatcher,incomingBatter,nextBatterActor,scoredRunnerActor])reset(p);
  updateHands();manager.root.visible=false;ghostRunner.root.visible=false;firstCoach.root.visible=false;firstBaseUmpire.root.visible=false;rosinBag.visible=true;showBaseRunners(t);incomingPlayers.forEach(p=>p.root.visible=false);incomingPitcher.root.visible=false;incomingCatcher.root.visible=false;incomingBatter.root.visible=false;nextBatterActor.root.visible=false;scoredRunnerActor.root.visible=false;document.getElementById('inningBanner').classList.remove('show');bat.visible=true;ball.visible=false;bat.rotation.set(-.35,0,.60);batter.armR.rotation.x=-.72;batter.armL.rotation.x=-.72;batter.armR.rotation.z=-.30;batter.armL.rotation.z=.36;batTrail.visible=false;hitTrail.visible=false;if(firstBaseCatchRing)firstBaseCatchRing.visible=false;
  document.getElementById('batFlash').classList.remove('show');document.getElementById('specialOverlay').classList.remove('show');updateOverlays(t);
- if(selection.id.startsWith('sixF_')){
-   if(selection.id==='sixF_foulTip'){sixFFoulTipMotion(t);caption.firstChild.nodeValue=t<.54?'투구! 타자의 배트에 공이 살짝 스칩니다':t<.76?'파울팁! 포수가 미트에 공을 담습니다':'파울팁 삼진 · OUT!';}
-   else if(selection.id==='sixF_firstSolo'){sixFFirstSoloMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.76?'1루수가 땅볼을 직접 포구합니다':t<.88?'1루수 직접 1루 베이스 터치!':'3U · 타자 아웃';}
-   else if(selection.id==='sixF_firstPitcher'){sixFFirstPitcherMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.79?'1루수 포구 · 투수 1루 베이스 커버!':t<.90?'1루수에서 투수에게 송구!':'3-1 · 타자 아웃';}
+ if(selection.id.startsWith('outVar_')){
+   if(selection.id==='outVar_foulTip'){sixFFoulTipMotion(t);caption.firstChild.nodeValue=t<.54?'투구! 타자의 배트에 공이 살짝 스칩니다':t<.76?'파울팁! 포수가 미트에 공을 담습니다':'파울팁 삼진 · OUT!';}
+   else if(selection.id==='outVar_firstSolo'){sixFFirstSoloMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.76?'1루수가 땅볼을 직접 포구합니다':t<.88?'1루수 직접 1루 베이스 터치!':'3U · 타자 아웃';}
+   else if(selection.id==='outVar_firstPitcher'){sixFFirstPitcherMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 1루 방면 땅볼':t<.79?'1루수 포구 · 투수 1루 베이스 커버!':t<.90?'1루수에서 투수에게 송구!':'3-1 · 타자 아웃';}
    else {sixFPitcherLinerMotion(t);caption.firstChild.nodeValue=t<.54?'투구 · 배트에 정면으로 맞습니다':t<.73?'빠른 직선타! 투수가 글러브를 뻗습니다':'투수 직선타 포구 · OUT!';}
  }else if(selection.id==='signalBunt'||selection.id==='signalFly'){
    ball.visible=false;bat.visible=true;
@@ -1633,13 +1638,13 @@ function applySceneCamera(t){
  if(v!=='broadcast'){setCamera();return} // user's manual camera choice is honored
  const bx=0,by=6.6,bz=21,tx=0,ty=1,tz=-27;
  let mix=0,cx=bx,cy=by,cz=bz,lx=tx,ly=ty,lz=tz;
- if(selection.id==='sixF_firstSolo'||selection.id==='sixF_firstPitcher'){
+ if(selection.id==='outVar_firstSolo'||selection.id==='outVar_firstPitcher'){
   mix=phase(t,.58,.70)*(1-phase(t,.955,1));
   cx=30;cy=7;cz=-2;lx=18;ly=1.35;lz=-17.5;
- }else if(selection.id==='sixF_pitcherLiner'){
+ }else if(selection.id==='outVar_pitcherLiner'){
   mix=phase(t,.54,.63)*(1-phase(t,.94,1));
   cx=-9;cy=6;cz=-7;lx=0;ly=1.9;lz=-18;
- }else if(selection.id==='sixF_foulTip'){
+ }else if(selection.id==='outVar_foulTip'){
   mix=phase(t,.57,.67)*(1-phase(t,.91,.98));
   cx=-7;cy=3.7;cz=10.8;lx=0;ly=1.5;lz=3.5;
  }else if(selection.id==='firstBaseCatch'||selection.id==='firstBaseSafe'){
@@ -1699,14 +1704,14 @@ makeStadium();updateHands();setCamera();select('pitch');
 let nbEmbeddedToken=null,nbEmbeddedComplete=false,nbEmbeddedLastProgress=-1,nbEmbeddedSameTeams=false;
 // V39: timeline-aligned SFX cues. Parent page owns AudioContext so user sound consent is respected.
 const NB39_FOUL_SCENES=new Set(Object.keys(NB_FOUL_PATHS));
-const NB39_CONTACT_SCENES=new Set(['sixF_foulTip','sixF_firstSolo','sixF_firstPitcher','sixF_pitcherLiner',
+const NB39_CONTACT_SCENES=new Set(['outVar_foulTip','outVar_firstSolo','outVar_firstPitcher','outVar_pitcherLiner',
  'single','double','triple','homerun','homerDugout','grandSlam','walkoff',
  'fielding','lineout','groundout','firstBaseCatch','firstBaseSafe','fielderReturn',
  'sacFlySuccess','sacFlyOut','slideFirst','strategyFly','strategyBunt',
  'buntSuccess','buntFoul','buntStrikeout','replay','rbiCelebrate',
  ...NB39_FOUL_SCENES
 ]);
-const NB39_MITT_SCENES=new Set(['sixF_foulTip','pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall','escapeK']);
+const NB39_MITT_SCENES=new Set(['outVar_foulTip','pitch','countWhiff','countTake','whiff','looking','walk','catcherVisit','ibbDemo','umpireCall','escapeK']);
 let nb39SoundSent=new Set();
 function nb39CueOnce(label,type,pan=0){
  if(nbEmbeddedToken===null||nb39SoundSent.has(label))return;
@@ -1723,13 +1728,16 @@ function nb39SceneSounds(t){
   nb39CueOnce('foulReaction',path.height>12?'crowdFoulHigh':'crowdFoul',Math.sign(path.x)*.65);
  }
 }
-function nbSetTeamColors(half){
- const offense=half===0?0x4087c6:0xe6b765;
- const defense=half===0?0xe6b765:0x4087c6;
- const color=(p,c)=>{if(p&&p.shirtMat)p.shirtMat.color.setHex(c)};
- [batter,ghostRunner,nextBatterActor,scoredRunnerActor,firstCoach,...baseRunners].forEach(p=>color(p,offense));
- [pitcher,catcher,...fielders,incomingPitcher,incomingCatcher,...incomingPlayers].forEach(p=>color(p,defense));
- [incomingBatter].forEach(p=>color(p,offense));
+function nbSetTeamColors(half,uniforms){
+ const parse=(index,part,fallback)=>{const h=uniforms?.[index]?.[part];return typeof h==='string'&&/^#[a-f\d]{6}$/i.test(h)?Number.parseInt(h.slice(1),16):fallback};
+ const palettes=[{primary:parse(0,'primary',0x4087c6),accent:parse(0,'accent',0x173e65)},
+                 {primary:parse(1,'primary',0xe6b765),accent:parse(1,'accent',0x7d4d1a)}];
+ const off=palettes[half],def=palettes[1-half];
+ const color=(p,c)=>{if(p?.shirtMat)p.shirtMat.color.setHex(c.primary);if(p?.capMat)p.capMat.color.setHex(c.accent)};
+ [batter,ghostRunner,nextBatterActor,scoredRunnerActor,firstCoach,manager,...baseRunners].forEach(p=>color(p,off));
+ [pitcher,catcher,...fielders,incomingPitcher,incomingCatcher,...incomingPlayers].forEach(p=>color(p,def));
+ color(incomingBatter,off);
+ return palettes;
 }
 function nbPlayEmbedded(d){
  if(!d||typeof d.scene!=='string'||!SCENES.some(s=>s.id===d.scene)){window.parent.postMessage({source:'NBLab',type:'ERROR',token:d?.token,message:'지원하지 않는 장면: '+String(d?.scene)},'*');return;}
@@ -1748,13 +1756,15 @@ function nbPlayEmbedded(d){
    // Do not visually present a recorded HIT as an error, which has no official E in v27.
    errorSelected=false;
  }
- nbSetTeamColors(Number(d.half)===1?1:0);
+ const nbPalettes=nbSetTeamColors(Number(d.half)===1?1:0,d.teamColors);
  if(d.scene==='inning'){
    const sameTeams=d.sameTeams===true;
-   const defenseTeamColor=Number(d.half)===0?(sameTeams?0xe6b765:0x4087c6):(sameTeams?0x4087c6:0xe6b765);
-   const battingTeamColor=Number(d.half)===0?(sameTeams?0x4087c6:0xe6b765):(sameTeams?0xe6b765:0x4087c6);
-   [...incomingPlayers,incomingPitcher,incomingCatcher].forEach(p=>p.shirtMat?.color.setHex(defenseTeamColor));
-   incomingBatter.shirtMat?.color.setHex(battingTeamColor);
+   const currentOffense=Number(d.half)===1?1:0;
+   const nextDefense=nbPalettes[sameTeams?1-currentOffense:currentOffense];
+   const nextBatter=nbPalettes[sameTeams?currentOffense:1-currentOffense];
+   const recolor=(p,c)=>{p?.shirtMat?.color.setHex(c.primary);p?.capMat?.color.setHex(c.accent)};
+   [...incomingPlayers,incomingPitcher,incomingCatcher].forEach(p=>recolor(p,nextDefense));
+   recolor(incomingBatter,nextBatter);
  }
  if(d.scene==='pinchRun'&&Number.isInteger(d.selectedBase)){
    const choice=document.getElementById('pinchBase');
